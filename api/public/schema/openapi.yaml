@@ -1924,6 +1924,2894 @@ paths:
             schema:
               $ref: '#/components/schemas/ChangeLog-write'
         description: 'The updated ChangeLog resource'
+  /clusters:
+    get:
+      tags:
+        - Cluster
+      operationId: getClusterCollection
+      summary: 'Retrieves the collection of Cluster resources.'
+      responses:
+        200:
+          description: 'Cluster collection response'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Cluster:jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json+ld:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Cluster:jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            application/json+hal:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            application/json+vnd.api:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            application/health+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            application/json+health:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+            default: 1
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      produces:
+        - application/health+json
+    post:
+      tags:
+        - Cluster
+      operationId: postClusterCollection
+      summary: 'Creates a Cluster resource.'
+      responses:
+        201:
+          description: 'Cluster resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Cluster:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Cluster:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+          links:
+            GetClusterItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getClusterItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /clusters/{id}`.'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Cluster:jsonld'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/Cluster:jsonld'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+        description: 'The new Cluster resource'
+      parameters:
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+  '/clusters/{id}':
+    get:
+      tags:
+        - Cluster
+      operationId: getClusterItem
+      summary: 'Retrieves a Cluster resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Cluster resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Cluster:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Cluster:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+    delete:
+      tags:
+        - Cluster
+      operationId: deleteClusterItem
+      summary: 'Removes the Cluster resource.'
+      responses:
+        204:
+          description: 'Cluster resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+    put:
+      tags:
+        - Cluster
+      operationId: putClusterItem
+      summary: 'Replaces the Cluster resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'Cluster resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Cluster:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Cluster:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Cluster:jsonld'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/Cluster:jsonld'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+        description: 'The updated Cluster resource'
+    patch:
+      tags:
+        - Cluster
+      operationId: patchClusterItem
+      summary: 'Updates the Cluster resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'Cluster resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Cluster:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Cluster:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Cluster:jsonld'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          applications/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Cluster'
+        description: 'The updated Cluster resource'
+  /components:
+    get:
+      tags:
+        - Component
+      operationId: getComponentCollection
+      summary: 'Retrieves the collection of Component resources.'
+      responses:
+        200:
+          description: 'Component collection response'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Component:jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json+ld:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Component:jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            application/json+hal:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            application/json+vnd.api:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            application/health+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            application/json+health:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Component'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+            default: 1
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      produces:
+        - application/health+json
+    post:
+      tags:
+        - Component
+      operationId: postComponentCollection
+      summary: 'Creates a Component resource.'
+      responses:
+        201:
+          description: 'Component resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Component'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Component'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Component'
+          links:
+            GetComponentItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getComponentItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /components/{id}`.'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Component:jsonld'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/Component:jsonld'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Component'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Component'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Component'
+        description: 'The new Component resource'
+      parameters:
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+  '/components/{id}':
+    get:
+      tags:
+        - Component
+      operationId: getComponentItem
+      summary: 'Retrieves a Component resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Component resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Component'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Component'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Component'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+    delete:
+      tags:
+        - Component
+      operationId: deleteComponentItem
+      summary: 'Removes the Component resource.'
+      responses:
+        204:
+          description: 'Component resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+    put:
+      tags:
+        - Component
+      operationId: putComponentItem
+      summary: 'Replaces the Component resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'Component resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Component'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Component'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Component'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Component:jsonld'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/Component:jsonld'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Component'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Component'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Component'
+        description: 'The updated Component resource'
+    patch:
+      tags:
+        - Component
+      operationId: patchComponentItem
+      summary: 'Updates the Component resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'Component resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Component'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Component'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Component'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Component'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Component:jsonld'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/Component'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Component'
+          applications/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Component'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Component'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Component'
+        description: 'The updated Component resource'
+  /domains:
+    get:
+      tags:
+        - Domain
+      operationId: getDomainCollection
+      summary: 'Retrieves the collection of Domain resources.'
+      responses:
+        200:
+          description: 'Domain collection response'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Domain:jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json+ld:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Domain:jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            application/json+hal:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            application/json+vnd.api:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            application/health+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            application/json+health:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+            default: 1
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      produces:
+        - application/health+json
+    post:
+      tags:
+        - Domain
+      operationId: postDomainCollection
+      summary: 'Creates a Domain resource.'
+      responses:
+        201:
+          description: 'Domain resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Domain'
+          links:
+            GetDomainItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getDomainItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /domains/{id}`.'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Domain:jsonld'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/Domain:jsonld'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Domain'
+        description: 'The new Domain resource'
+      parameters:
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+  '/domains/{id}':
+    get:
+      tags:
+        - Domain
+      operationId: getDomainItem
+      summary: 'Retrieves a Domain resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Domain resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Domain'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+    delete:
+      tags:
+        - Domain
+      operationId: deleteDomainItem
+      summary: 'Removes the Domain resource.'
+      responses:
+        204:
+          description: 'Domain resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+    put:
+      tags:
+        - Domain
+      operationId: putDomainItem
+      summary: 'Replaces the Domain resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'Domain resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Domain'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Domain:jsonld'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/Domain:jsonld'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Domain'
+        description: 'The updated Domain resource'
+    patch:
+      tags:
+        - Domain
+      operationId: patchDomainItem
+      summary: 'Updates the Domain resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'Domain resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Domain'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Domain'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/Domain:jsonld'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          applications/x-yaml:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/Domain'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/Domain'
+        description: 'The updated Domain resource'
+  /health_logs:
+    get:
+      tags:
+        - HealthLog
+      operationId: getHealthLogCollection
+      summary: 'Retrieves the collection of HealthLog resources.'
+      responses:
+        200:
+          description: 'HealthLog collection response'
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/HealthLog:jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/json+ld:
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/HealthLog:jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            application/json+hal:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            application/vnd.api+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            application/json+vnd.api:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            application/health+json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            application/json+health:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            text/csv:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HealthLog'
+      parameters:
+        -
+          name: page
+          in: query
+          required: false
+          description: 'The collection page number'
+          schema:
+            type: integer
+            default: 1
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      produces:
+        - application/health+json
+    post:
+      tags:
+        - HealthLog
+      operationId: postHealthLogCollection
+      summary: 'Creates a HealthLog resource.'
+      responses:
+        201:
+          description: 'HealthLog resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/HealthLog:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+          links:
+            GetHealthLogItem:
+              parameters:
+                id: '$response.body#/id'
+              operationId: getHealthLogItem
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /health_logs/{id}`.'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog:jsonld'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/HealthLog:jsonld'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+        description: 'The new HealthLog resource'
+      parameters:
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+  '/health_logs/{id}':
+    get:
+      tags:
+        - HealthLog
+      operationId: getHealthLogItem
+      summary: 'Retrieves a HealthLog resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'HealthLog resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/HealthLog:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+    delete:
+      tags:
+        - HealthLog
+      operationId: deleteHealthLogItem
+      summary: 'Removes the HealthLog resource.'
+      responses:
+        204:
+          description: 'HealthLog resource deleted'
+        404:
+          description: 'Resource not found'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+    put:
+      tags:
+        - HealthLog
+      operationId: putHealthLogItem
+      summary: 'Replaces the HealthLog resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'HealthLog resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/HealthLog:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog:jsonld'
+          application/json+ld:
+            schema:
+              $ref: '#/components/schemas/HealthLog:jsonld'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/json+hal:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/json+vnd.api:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/health+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/json+health:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+        description: 'The updated HealthLog resource'
+    patch:
+      tags:
+        - HealthLog
+      operationId: patchHealthLogItem
+      summary: 'Updates the HealthLog resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+      responses:
+        200:
+          description: 'HealthLog resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog:jsonld'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/HealthLog:jsonld'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/HealthLog'
+        400:
+          description: 'Invalid input'
+        404:
+          description: 'Resource not found'
+      requestBody:
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog:jsonld'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/hal+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          applications/x-yaml:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/HealthLog'
+        description: 'The updated HealthLog resource'
 components:
   schemas:
     AuditTrail-read:
@@ -2308,6 +5196,274 @@ components:
         '@type':
           readOnly: true
           type: string
+    Cluster:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        kubeconfig:
+          type: string
+        ip:
+          type: string
+        token:
+          type: string
+        domains:
+          type: array
+          items:
+            type: string
+        dateCreated:
+          type: string
+          format: date-time
+        dateModified:
+          type: string
+          format: date-time
+    'Cluster:jsonld':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        kubeconfig:
+          type: string
+        ip:
+          type: string
+        token:
+          type: string
+        domains:
+          type: array
+          items:
+            type: string
+        dateCreated:
+          type: string
+          format: date-time
+        dateModified:
+          type: string
+          format: date-time
+    Component:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        environment:
+          type: string
+        dbUsername:
+          type: string
+        dbPassword:
+          type: string
+        authorization:
+          type: string
+        domains:
+          type: array
+          items:
+            type: string
+        dateCreated:
+          type: string
+          format: date-time
+        dateModified:
+          type: string
+          format: date-time
+        healthLogs:
+          type: array
+          items:
+            type: string
+    'Component:jsonld':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        environment:
+          type: string
+        dbUsername:
+          type: string
+        dbPassword:
+          type: string
+        authorization:
+          type: string
+        domains:
+          type: array
+          items:
+            type: string
+        dateCreated:
+          type: string
+          format: date-time
+        dateModified:
+          type: string
+          format: date-time
+        healthLogs:
+          type: array
+          items:
+            type: string
+    Domain:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        ip:
+          type: string
+        dateCreated:
+          type: string
+          format: date-time
+        dateModified:
+          type: string
+          format: date-time
+        cluster:
+          type: string
+        databaseUrl:
+          type: string
+        components:
+          type: array
+          items:
+            type: string
+        healthLogs:
+          type: array
+          items:
+            type: string
+    'Domain:jsonld':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        ip:
+          type: string
+        dateCreated:
+          type: string
+          format: date-time
+        dateModified:
+          type: string
+          format: date-time
+        cluster:
+          type: string
+        databaseUrl:
+          type: string
+        components:
+          type: array
+          items:
+            type: string
+        healthLogs:
+          type: array
+          items:
+            type: string
+    HealthLog:
+      type: object
+      description: ''
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        domain:
+          type: string
+        component:
+          type: string
+        dateCreated:
+          type: string
+          format: date-time
+        dateModified:
+          type: string
+          format: date-time
+    'HealthLog:jsonld':
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        domain:
+          type: string
+        component:
+          type: string
+        dateCreated:
+          type: string
+          format: date-time
+        dateModified:
+          type: string
+          format: date-time
 definitions:
   AuditTrail-read:
     properties:
@@ -2413,12 +5569,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-02 12:49:07'
+        example: '2020-04-02 14:58:00'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-02 12:49:07'
+        example: '2020-04-02 14:58:00'
     required: []
   AuditTrail-write:
     properties:
@@ -2466,12 +5622,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-02 12:49:07'
+        example: '2020-04-02 14:58:00'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-02 12:49:07'
+        example: '2020-04-02 14:58:00'
     required: []
   ChangeLog-write:
     properties:
@@ -2494,6 +5650,30 @@ tags:
       An resource representing a log line.
       
       This entity represents a product that can be ordered via the OrderRegistratieComponent.
+  -
+    name: Cluster
+    description: |
+      
+      
+      
+  -
+    name: Component
+    description: |
+      
+      
+      
+  -
+    name: Domain
+    description: |
+      
+      
+      
+  -
+    name: HealthLog
+    description: |
+      
+      
+      
 securityDefinitions:
   JWT-Oauth:
     type: oauth2
