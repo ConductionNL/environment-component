@@ -184,6 +184,19 @@ class Component
     private $githubRepository;
 
     /**
+     * @var string A personal access token for github that can be used to trigger actions on this component
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"write"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $githubToken;
+
+    /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\ManyToMany(targetEntity="App\Entity\Domain", inversedBy="components")
@@ -214,11 +227,6 @@ class Component
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $githubToken;
 
     public function __construct()
     {
