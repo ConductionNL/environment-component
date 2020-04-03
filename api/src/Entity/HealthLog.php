@@ -19,42 +19,67 @@ class HealthLog
     private $id;
 
     /**
+     * @name string the name of this health log
+     * @TODO: Shouldn't this be a reference
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
+     * @var string the description of this health log
+     *
+     * @example This health logs contains the health logs for x
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
+     * @var string The status of the checked resource
+     *
+     * @example OK
+     * @Assert\Choice({"OK","WARNING","DANGER"})
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
      * @ORM\Column(type="string", length=255)
      */
     private $status;
 
     /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="healthLogs")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $domain;
 
     /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Component", inversedBy="healthLogs")
      */
     private $component;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @var Datetime The moment this entity was created
+     *
+     * @Groups({"read"})
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateCreated;
 
     /**
+     * @var Datetime The moment this entity last Modified
+     *
+     * @Groups({"read"})
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
