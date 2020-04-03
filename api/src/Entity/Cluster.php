@@ -159,10 +159,19 @@ class Cluster
      */
     private $dateModified;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster", orphanRemoval=true)
+     */
+    private $environments;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
+<<<<<<< Updated upstream
         $this->environments = new ArrayCollection();
+=======
+        $this->enviroments = new ArrayCollection();
+>>>>>>> Stashed changes
     }
 
     public function getId(): ?Uuid
@@ -290,14 +299,24 @@ class Cluster
      */
     public function getEnvironments(): Collection
     {
+<<<<<<< Updated upstream
         return $this->environments;
+=======
+    	return $this->environments;
+>>>>>>> Stashed changes
     }
 
     public function addEnvironment(Environment $environment): self
     {
+<<<<<<< Updated upstream
         if (!$this->environments->contains($environment)) {
             $this->environments[] = $environment;
             $environment->setCluster($this);
+=======
+    	if (!$this->environments->contains($environment)) {
+    		$this->environments[] = $environment;
+    		$environment->setCluster($this);
+>>>>>>> Stashed changes
         }
 
         return $this;
@@ -305,11 +324,19 @@ class Cluster
 
     public function removeEnvironment(Environment $environment): self
     {
+<<<<<<< Updated upstream
         if ($this->environments->contains($environment)) {
             $this->environments->removeElement($environment);
             // set the owning side to null (unless already changed)
             if ($environment->getCluster() === $this) {
                 $environment->setCluster(null);
+=======
+    	if ($this->environments->contains($environment)) {
+    		$this->environments->removeElement($environment);
+            // set the owning side to null (unless already changed)
+    		if ($environment->getCluster() === $this) {
+    			$environment->setCluster(null);
+>>>>>>> Stashed changes
             }
         }
 

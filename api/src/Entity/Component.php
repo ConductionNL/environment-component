@@ -122,6 +122,8 @@ class Component
      * )
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="components")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $dbUsername;
 
@@ -255,12 +257,12 @@ class Component
         return $this;
     }
 
-    public function getEnvironment(): ?string
+    public function getEnvironment(): ?Environment
     {
         return $this->environment;
     }
 
-    public function setEnvironment(string $environment): self
+    public function setEnvironment(?Environment $environment): self
     {
         $this->environment = $environment;
 
