@@ -66,19 +66,8 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
                 $renderType = 'json';
         }
 
-        $results = $this->installService->;
+        $results = $this->installService->update($component);
 
-        if (!$result instanceof Paginator) {
-            $result['serviceID'] = $result->getid();
-            $result['description'] = $this->em->getMetadataFactory()->getMetadataFor(get_class($result))->getName();
-        }
-
-        /*
-
-
-        $results = $this->em->getRepository('App:AuditTrail')->findBy(['resource'=> $itemId,'resourceType'=> $entityType]);
-
-        */
         $response = $this->serializer->serialize(
             $results,
             'json',
