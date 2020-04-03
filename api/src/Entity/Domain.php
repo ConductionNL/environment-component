@@ -174,10 +174,16 @@ class Domain
      */
     private $environment;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="domain")
+     */
+    private $components1;
+
     public function __construct()
     {
         $this->components = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
+        $this->components1 = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -348,6 +354,37 @@ class Domain
     public function setEnvironment(?Environment $environment): self
     {
         $this->environment = $environment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Component[]
+     */
+    public function getComponents1(): Collection
+    {
+        return $this->components1;
+    }
+
+    public function addComponents1(Component $components1): self
+    {
+        if (!$this->components1->contains($components1)) {
+            $this->components1[] = $components1;
+            $components1->setDomain($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComponents1(Component $components1): self
+    {
+        if ($this->components1->contains($components1)) {
+            $this->components1->removeElement($components1);
+            // set the owning side to null (unless already changed)
+            if ($components1->getDomain() === $this) {
+                $components1->setDomain(null);
+            }
+        }
 
         return $this;
     }

@@ -228,6 +228,11 @@ class Component
      */
     private $dateModified;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="components1")
+     */
+    private $domain;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
@@ -436,6 +441,18 @@ class Component
     public function setGithubToken(?string $githubToken): self
     {
         $this->githubToken = $githubToken;
+
+        return $this;
+    }
+
+    public function getDomain(): ?Domain
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(?Domain $domain): self
+    {
+        $this->domain = $domain;
 
         return $this;
     }
