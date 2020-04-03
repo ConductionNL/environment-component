@@ -170,6 +170,20 @@ class Component
     private $authorization;
 
     /**
+     * @var string the Github Repository that contains this component
+     *
+     * @example https://github.com/ConductionNL/environment-component
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $githubRepository;
+
+    /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\ManyToMany(targetEntity="App\Entity\Domain", inversedBy="components")
@@ -200,11 +214,6 @@ class Component
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $githubRepository;
 
     public function __construct()
     {
