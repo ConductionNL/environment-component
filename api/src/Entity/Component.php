@@ -201,6 +201,11 @@ class Component
      */
     private $dateModified;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $githubRepository;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
@@ -385,6 +390,18 @@ class Component
     public function setDbName(string $dbName): self
     {
         $this->dbName = $dbName;
+
+        return $this;
+    }
+
+    public function getGithubRepository(): ?string
+    {
+        return $this->githubRepository;
+    }
+
+    public function setGithubRepository(string $githubRepository): self
+    {
+        $this->githubRepository = $githubRepository;
 
         return $this;
     }
