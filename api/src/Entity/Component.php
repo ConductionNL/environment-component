@@ -196,12 +196,20 @@ class Component
      */
     private $githubToken;
 
+
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\ManyToMany(targetEntity="App\Entity\Domain", inversedBy="components")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="components")
      */
-    private $domains;
+    private $domain;
+
+    /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="components")
+     */
+    private $environment;
 
     /**
      * @Groups({"read","write"})
@@ -209,7 +217,6 @@ class Component
      * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="component")
      */
     private $healthLogs;
-
     /**
      * @var Datetime The moment this entity was created
      *
@@ -227,16 +234,6 @@ class Component
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="components1")
-     */
-    private $domain;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="components")
-     */
-    private $environment;
 
     public function __construct()
     {
@@ -273,12 +270,12 @@ class Component
         return $this;
     }
 
-    public function getEnvironment(): ?string
+    public function getEnvironment(): ?Environment
     {
         return $this->environment;
     }
 
-    public function setEnvironment(string $environment): self
+    public function setEnvironment(Environment $environment): self
     {
         $this->environment = $environment;
 

@@ -125,6 +125,15 @@ class Environment
     private $domains;
 
     /**
+     * @var ArrayCollection The components in this environment
+     *
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="environment")
+     */
+    private $components;
+
+    /**
      * @var Datetime The moment this entity was created
      *
      * @Groups({"read"})
@@ -141,11 +150,6 @@ class Environment
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="environment")
-     */
-    private $components;
 
     public function __construct()
     {

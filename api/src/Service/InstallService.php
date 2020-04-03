@@ -39,7 +39,7 @@ class InstallService
         $request['domain'] = $component->getDomain()->getName();
         $request['dburl'] = $this->formDbUrl($request['domain']->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
         $request['authorization'] = $component->getAuthorization();
-        $request['kubeconfig'] = $component->getEnvironment()->getKubeconfig();
+        $request['kubeconfig'] = $component->getEnvironment()->getCluster()->getKubeconfig();
         $request['eventType'] = "start_upgrade_workflow";
 
         $result = $this->client->post($url,
@@ -62,14 +62,16 @@ class InstallService
 
     }
 
-    public function install(Cluster $cluster, Environment $environment, Domain $domain, Component $component, string $event)
+    public function install(Component $component)
     {
         $url = $this->getGithubAPIUrl($component->getGithubRepository());
-        $request['environment'] = $environment->getName();
-        $request['domain'] = $domain->getName();
-        $request['dburl'] = $this->formDbUrl($domain->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
+        $request['environment'] = $component->getEnvironment()->getName();
+        $request['domain'] = $component->getDomain()->getName();
+        $request['dburl'] = $this->formDbUrl($request['domain']->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
         $request['authorization'] = $component->getAuthorization();
-        $request['kubeconfig'] = $cluster->getKubeconfig();
+        $request['kubeconfig'] = $component->getEnvironment()->getCluster()->getKubeconfig();
+        $request['eventType'] = "start_install_workflow";
+
         $result = $this->client->post($url,
             [
                 'body' => json_encode($request),

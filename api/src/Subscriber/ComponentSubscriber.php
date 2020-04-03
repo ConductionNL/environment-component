@@ -48,12 +48,6 @@ class ComponentSubscriber implements EventSubscriberInterface
         if ($method != 'GET' || !strpos($route, '_install_item') || !strpos($route, '_upgrade_item')) {
             return;
         }
-        elseif(strpos($route, '_install_item')){
-            $event = 'install';
-        }
-        else{
-            $event = 'upgrade';
-        }
 
         // Lets get the rest of the data
         $result = $event->getControllerResult();
@@ -76,9 +70,18 @@ class ComponentSubscriber implements EventSubscriberInterface
                 $renderType = 'json';
         }
         if($result instanceof Component){
-
+            if(strpos($route, '_install_item')){
+                $response = $this->installService->install($result);
+            }else{
+                $response = $this->installService->update($result);
+            }
         }
-
+        if($result == 1){
+            
+        }
+        else{
+            $result['message'] = $response;
+        }
 
 
         $response = $this->serializer->serialize(

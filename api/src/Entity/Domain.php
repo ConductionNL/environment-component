@@ -169,15 +169,10 @@ class Domain
     private $healthLogs;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="domains")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="domain")
      * @ORM\JoinColumn(nullable=false)
      */
     private $environment;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="domain")
-     */
-    private $components1;
 
     public function __construct()
     {
