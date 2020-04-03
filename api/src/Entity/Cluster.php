@@ -134,6 +134,14 @@ class Cluster
     private $domains;
 
     /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")
+     */
+    private $environments;
+
+    /**
      * @var Datetime The moment this entity was created
      *
      * @Groups({"read"})
@@ -150,11 +158,6 @@ class Cluster
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")
-     */
-    private $environments;
 
     public function __construct()
     {

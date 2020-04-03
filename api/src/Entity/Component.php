@@ -85,6 +85,21 @@ class Component
     private $name;
 
     /**
+     * @var string The full name of this component
+     *
+     * @example environment component
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $title;
+
+    /**
      * @var string the description of this component
      *
      * @example This common ground component describes common ground components
@@ -111,7 +126,7 @@ class Component
     private $dbUsername;
 
     /**
-     * @var string The username that is needed to log into the cluster database
+     * @var string The password that is needed to log into the cluster database
      *
      *
      * @Gedmo\Versioned
@@ -125,7 +140,22 @@ class Component
     private $dbPassword;
 
     /**
-     * @var string The password that is needed to log into the cluster database
+     * @var string The name of the database this component uses
+     *
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\Column(type="string", length=255)
+     */
+    private $dbName;
+
+    /**
+     * @var string The authentication token that is needed to access this token
      *
      * @example evc-dev
      *
@@ -138,6 +168,20 @@ class Component
      * @ORM\Column(type="string", length=255)
      */
     private $authorization;
+
+    /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\ManyToMany(targetEntity="App\Entity\Domain", inversedBy="components")
+     */
+    private $domains;
+
+    /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="component")
+     */
+    private $healthLogs;
 
     /**
      * @var Datetime The moment this entity was created
@@ -156,30 +200,6 @@ class Component
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
-
-    /**
-     * @Groups({"read","write"})
-     * @MaxDepth(1)
-     * @ORM\ManyToMany(targetEntity="App\Entity\Domain", inversedBy="components")
-     */
-    private $domains;
-
-    /**
-     * @Groups({"read","write"})
-     * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="component")
-     */
-    private $healthLogs;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $title;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $dbName;
 
     public function __construct()
     {
