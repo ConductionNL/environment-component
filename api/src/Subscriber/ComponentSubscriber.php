@@ -43,14 +43,14 @@ class ComponentSubscriber implements EventSubscriberInterface
     {
         $method = $event->getRequest()->getMethod();
         $route = $event->getRequest()->attributes->get('_route');
+        $result = $event->getControllerResult();
 
         // Only do somthing if we are on te log route and the entity is logable
-        if ($method != 'GET' || !strpos($route, '_install_item') || !strpos($route, '_upgrade_item')) {
+        if ($method != 'GET' || !($result instanceof Component) || !strpos($route, '_install_item') && !strpos($route, '_update_item')) {
             return;
         }
 
         // Lets get the rest of the data
-        $result = $event->getControllerResult();
         $contentType = $event->getRequest()->headers->get('accept');
         if (!$contentType) {
             $contentType = $event->getRequest()->headers->get('Accept');
@@ -69,19 +69,13 @@ class ComponentSubscriber implements EventSubscriberInterface
                 $contentType = 'application/json';
                 $renderType = 'json';
         }
-        if($result instanceof Component){
-            if(strpos($route, '_install_item')){
-                $response = $this->installService->install($result);
-            }else{
-                $response = $this->installService->update($result);
-            }
+
+        if(strpos($route, '_install_item')){
+            $response = $this->installService->install($result);
+        }else{
+            $response = $this->installService->update($result);
         }
-        if($result == 1){
-            
-        }
-        else{
-            $result['message'] = $response;
-        }
+        $result['message'] = $response;
 
 
         $response = $this->serializer->serialize(

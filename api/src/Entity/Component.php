@@ -27,6 +27,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		"get",
  * 	    "put",
  * 	   "delete",
+ *     "install_item"={
+ *              "path"="/install"
+ *              "method"="post"
+ *              "swagger_context" = {
+ *                  "summary"="install",
+ *                  "description"="Installs this component to a cluster"
+ *              }
+ *     }
+ *     "update_item"={
+ *              "path"="/update"
+ *              "method"="post"
+ *              "swagger_context" = {
+ *                  "summary"="update",
+ *                  "description"="Updates this component to a cluster"
+ *              }
+ *     }
  *     "get_change_logs"={
  *              "path"="/components/{id}/change_log",
  *              "method"="get",

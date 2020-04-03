@@ -57,7 +57,7 @@ class InstallService
             return "Action triggered, check {$component->getGithubRepository()}/actions for the status";
         }
         else{
-            return 1;
+            throw new Symfony\Component\HttpKernel\Exception\HttpException($result->getStatusCode(), $url.' returned: '.json_encode($result->getBody()));
         }
 
     }
