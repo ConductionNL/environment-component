@@ -233,6 +233,11 @@ class Component
      */
     private $domain;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="components")
+     */
+    private $environment;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();

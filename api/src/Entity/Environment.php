@@ -142,9 +142,15 @@ class Environment
      */
     private $dateModified;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="environment")
+     */
+    private $components;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
+        $this->components = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
