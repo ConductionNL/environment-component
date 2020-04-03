@@ -1,0 +1,320 @@
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Core\Annotation\ApiResource;
+<<<<<<< Updated upstream
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ApiResource(
+ *     	normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
+ *     	denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
+ *     itemOperations={
+ * 		"get",
+ * 	    "put",
+ * 	   "delete",
+ *     "get_change_logs"={
+ *              "path"="/environments/{id}/change_log",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="Changelogs",
+ *                  "description"="Gets al the change logs for this resource"
+ *              }
+ *          },
+ *     "get_audit_trail"={
+ *              "path"="/environments/{id}/audit_trail",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="Audittrail",
+ *                  "description"="Gets the audit trail for this resource"
+ *              }
+ *          }
+ * 		},
+ * )
+ * @ORM\Entity(repositoryClass="App\Repository\EnvironmentRepository")
+ * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ *
+ * @ApiFilter(BooleanFilter::class)
+ * @ApiFilter(OrderFilter::class)
+ * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
+ * @ApiFilter(SearchFilter::class)
+=======
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ApiResource()
+ * @ORM\Entity(repositoryClass="App\Repository\EnviromentRepository")
+>>>>>>> Stashed changes
+ */
+class Environment
+{
+    /**
+<<<<<<< Updated upstream
+     * @var UuidInterface The UUID identifier of this resource
+     *
+     * @example e2984465-190a-4562-829e-a8cca81aa35d
+     *
+     * @Assert\Uuid
+     * @Groups({"read"})
+     * @ORM\Id
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     */
+    private $id;
+
+    /**
+     * @var string The name of this component
+     *
+     * @example evc
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string the description of this component
+     *
+     * @example This common ground component describes common ground components
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string Should components be deployed to this environment with debuggin on or off?
+     *
+     * @example 1
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
+     * @Assert\NotNull
+     * @Assert\Choice({0, 1})
+     * @ORM\Column(type="integer")
+     */
+    private $debug;
+
+    /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+=======
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+>>>>>>> Stashed changes
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="environments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $cluster;
+
+    /**
+<<<<<<< Updated upstream
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity="App\Entity\Domain", mappedBy="environment")
+     */
+    private $domains;
+
+    /**
+     * @var Datetime The moment this entity was created
+     *
+     * @Groups({"read"})
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateCreated;
+
+    /**
+     * @var Datetime The moment this entity last Modified
+     *
+     * @Groups({"read"})
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateModified;
+
+    public function __construct()
+    {
+        $this->domains = new ArrayCollection();
+    }
+
+    public function getId(): ?Uuid
+=======
+     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="environment", orphanRemoval=true)
+     */
+    private $components;
+
+    public function __construct()
+    {
+        $this->components = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+>>>>>>> Stashed changes
+    {
+        return $this->id;
+    }
+
+<<<<<<< Updated upstream
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getDebug(): ?int
+    {
+        return $this->debug;
+    }
+
+    public function setDebug(int $debug): self
+    {
+        $this->debug = $debug;
+
+        return $this;
+    }
+
+=======
+>>>>>>> Stashed changes
+    public function getCluster(): ?Cluster
+    {
+        return $this->cluster;
+    }
+
+    public function setCluster(?Cluster $cluster): self
+    {
+        $this->cluster = $cluster;
+
+        return $this;
+    }
+
+    /**
+<<<<<<< Updated upstream
+     * @return Collection|Domain[]
+     */
+    public function getDomains(): Collection
+    {
+        return $this->domains;
+    }
+
+    public function addDomain(Domain $domain): self
+    {
+        if (!$this->domains->contains($domain)) {
+            $this->domains[] = $domain;
+            $domain->setEnvironment($this);
+=======
+     * @return Collection|Component[]
+     */
+    public function getComponents(): Collection
+    {
+        return $this->components;
+    }
+
+    public function addComponent(Component $component): self
+    {
+        if (!$this->components->contains($component)) {
+            $this->components[] = $component;
+            $component->setEnviroment($this);
+>>>>>>> Stashed changes
+        }
+
+        return $this;
+    }
+
+<<<<<<< Updated upstream
+    public function removeDomain(Domain $domain): self
+    {
+        if ($this->domains->contains($domain)) {
+            $this->domains->removeElement($domain);
+            // set the owning side to null (unless already changed)
+            if ($domain->getEnvironment() === $this) {
+                $domain->setEnvironment(null);
+=======
+    public function removeComponent(Component $component): self
+    {
+        if ($this->components->contains($component)) {
+            $this->components->removeElement($component);
+            // set the owning side to null (unless already changed)
+            if ($component->getEnviroment() === $this) {
+                $component->setEnviroment(null);
+>>>>>>> Stashed changes
+            }
+        }
+
+        return $this;
+    }
+<<<<<<< Updated upstream
+
+    public function getDateCreated(): ?\DateTimeInterface
+    {
+        return $this->dateCreated;
+    }
+
+    public function setDateCreated(\DateTimeInterface $dateCreated): self
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    public function getDateModified(): ?\DateTimeInterface
+    {
+        return $this->dateModified;
+    }
+
+    public function setDateModified(?\DateTimeInterface $dateModified): self
+    {
+        $this->dateModified = $dateModified;
+
+        return $this;
+    }
+=======
+>>>>>>> Stashed changes
+}
