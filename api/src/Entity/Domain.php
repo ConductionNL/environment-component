@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 	    "put",
  * 	   "delete",
  *     "get_change_logs"={
- *              "path"="/components/{id}/change_log",
+ *              "path"="/domains/{id}/change_log",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="Changelogs",
@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              }
  *          },
  *     "get_audit_trail"={
- *              "path"="/components/{id}/audit_trail",
+ *              "path"="/domains/{id}/audit_trail",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="Audittrail",
