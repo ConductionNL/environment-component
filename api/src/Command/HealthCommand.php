@@ -29,7 +29,7 @@ class HealthCommand extends Command
         ->setHelp('This command allows you to create a new hel chart from the helm template')
         ->setAliases(['app:helm:export'])
         ->setDescription('Dump the OpenAPI documentation')
-        ->addOption('component', null, InputOption::VALUE_OPTIONAL, 'the component that you want to health check')
+        ->addOption('component', null, InputOption::VALUE_OPTIONAL, 'the component that you want to health check');
     }
 
     /**
@@ -43,9 +43,9 @@ class HealthCommand extends Command
 
         // get component
 
-        if (!$component) {
-        	throw new InvalidOptionException(sprintf('A component with given id could not be found ("%s" given).', $componentId));
-        }
+//        if (!$component) {
+//        	throw new InvalidOptionException(sprintf('A component with given id could not be found ("%s" given).', $componentId));
+//        }
 
         // do some magic
 

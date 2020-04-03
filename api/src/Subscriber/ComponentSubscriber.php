@@ -76,7 +76,7 @@ class AuditTrailSubscriber implements EventSubscriberInterface
                 $renderType = 'json';
         }
         if($result instanceof Component){
-            
+
         }
 
 
