@@ -333,33 +333,6 @@ class Component
 
         return $this;
     }
-
-    /**
-     * @return Collection|Domain[]
-     */
-    public function getDomains(): Collection
-    {
-        return $this->domains;
-    }
-
-    public function addDomain(Domain $domain): self
-    {
-        if (!$this->domains->contains($domain)) {
-            $this->domains[] = $domain;
-        }
-
-        return $this;
-    }
-
-    public function removeDomain(Domain $domain): self
-    {
-        if ($this->domains->contains($domain)) {
-            $this->domains->removeElement($domain);
-        }
-
-        return $this;
-    }
-
     public function getDateCreated(): ?\DateTimeInterface
     {
         return $this->dateCreated;

@@ -157,7 +157,7 @@ class Domain
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\ManyToMany(targetEntity="App\Entity\Component", mappedBy="domains")
+     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="domains")
      */
     private $components;
 
@@ -169,7 +169,7 @@ class Domain
     private $healthLogs;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="domain")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="domains")
      * @ORM\JoinColumn(nullable=false)
      */
     private $environment;
@@ -178,7 +178,6 @@ class Domain
     {
         $this->components = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
-        $this->components1 = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -294,7 +293,7 @@ class Domain
     {
         if (!$this->components->contains($component)) {
             $this->components[] = $component;
-            $component->addDomain($this);
+            $component->setDomain($this);
         }
 
         return $this;
@@ -304,7 +303,10 @@ class Domain
     {
         if ($this->components->contains($component)) {
             $this->components->removeElement($component);
-            $component->removeDomain($this);
+            // set the owning side to null (unless already changed)
+            if ($component->getDomain() === $this) {
+                $component->setDomain(null);
+            }
         }
 
         return $this;
@@ -349,37 +351,6 @@ class Domain
     public function setEnvironment(?Environment $environment): self
     {
         $this->environment = $environment;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Component[]
-     */
-    public function getComponents1(): Collection
-    {
-        return $this->components1;
-    }
-
-    public function addComponents1(Component $components1): self
-    {
-        if (!$this->components1->contains($components1)) {
-            $this->components1[] = $components1;
-            $components1->setDomain($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComponents1(Component $components1): self
-    {
-        if ($this->components1->contains($components1)) {
-            $this->components1->removeElement($components1);
-            // set the owning side to null (unless already changed)
-            if ($components1->getDomain() === $this) {
-                $components1->setDomain(null);
-            }
-        }
 
         return $this;
     }
