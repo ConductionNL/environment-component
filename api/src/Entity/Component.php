@@ -215,6 +215,11 @@ class Component
      */
     private $dateModified;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $githubToken;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
@@ -411,6 +416,18 @@ class Component
     public function setGithubRepository(string $githubRepository): self
     {
         $this->githubRepository = $githubRepository;
+
+        return $this;
+    }
+
+    public function getGithubToken(): ?string
+    {
+        return $this->githubToken;
+    }
+
+    public function setGithubToken(?string $githubToken): self
+    {
+        $this->githubToken = $githubToken;
 
         return $this;
     }
