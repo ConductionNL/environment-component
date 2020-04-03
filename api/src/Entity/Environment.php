@@ -117,12 +117,7 @@ class Environment
      */
     private $cluster;
 
-    /**
-     * @Groups({"read","write"})
-     * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Domain", mappedBy="environment")
-     */
-    private $domains;
+
 
     /**
      * @var ArrayCollection The components in this environment
@@ -151,9 +146,17 @@ class Environment
      */
     private $dateModified;
 
+    /**
+     * @var Domain the domain linked to this environment
+     *
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="environments")
+     */
+    private $domain;
+
     public function __construct()
     {
-        $this->domains = new ArrayCollection();
         $this->components = new ArrayCollection();
     }
 
@@ -210,31 +213,6 @@ class Environment
     }
 
     /**
-     * @return Collection|Domain[]
-     */
-    public function getDomains(): Collection
-    {
-        return $this->domains;
-    }
-
-    public function addDomain(Domain $domain): self
-    {
-        if (!$this->domains->contains($domain)) {
-            $this->domains[] = $domain;
-            $domain->setEnvironment($this);
-        }
-    }
-    public function removeDomain(Domain $domain): self
-    {
-        if ($this->domains->contains($domain)) {
-            $this->domains->removeElement($domain);
-            // set the owning side to null (unless already changed)
-            if ($domain->getEnvironment() === $this) {
-                $domain->setEnvironment(null);
-            }
-        }
-    }
-    /**
      * @return Collection|Component[]
      */
     public function getComponents(): Collection
@@ -286,6 +264,18 @@ class Environment
     public function setDateModified(?\DateTimeInterface $dateModified): self
     {
         $this->dateModified = $dateModified;
+
+        return $this;
+    }
+
+    public function getDomain(): ?Domain
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(?Domain $domain): self
+    {
+        $this->domain = $domain;
 
         return $this;
     }

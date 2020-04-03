@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -20,8 +22,9 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
     private $em;
     private $serializer;
     private $nlxLogService;
+    private $installService;
 
-    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SerializerInterface $serializer, InstallService $InstallService)
+    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SerializerInterface $serializer, InstallService $installService)
     {
         $this->params = $params;
         $this->em = $em;
@@ -36,12 +39,12 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function HelmUpdate(GetResponseForControllerResultEvent $event)
+    public function HelmUpdate(ViewEvent $event)
     {
         $method = $event->getRequest()->getMethod();
         $contentType = $event->getRequest()->headers->get('accept');
         $route = $event->getRequest()->attributes->get('_route');
-        $result = $event->getControllerResult();
+        $component = $event->getControllerResult();
         if (!$contentType) {
             $contentType = $event->getRequest()->headers->get('Accept');
         }
@@ -68,8 +71,9 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
 
         $results = $this->installService->update($component);
 
+        $result['message'] = $results;
         $response = $this->serializer->serialize(
-            $results,
+            $result,
             'json',
             ['enable_max_depth'=> true]
         );

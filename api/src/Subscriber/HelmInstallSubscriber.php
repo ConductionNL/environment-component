@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -20,6 +21,7 @@ class HelmInstallSubscriber implements EventSubscriberInterface
     private $em;
     private $serializer;
     private $nlxLogService;
+    private $installService;
 
     public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SerializerInterface $serializer, InstallService $installService)
     {
@@ -36,12 +38,12 @@ class HelmInstallSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function HelmInstall(GetResponseForControllerResultEvent $event)
+    public function HelmInstall(ViewEvent $event)
     {
         $method = $event->getRequest()->getMethod();
         $contentType = $event->getRequest()->headers->get('accept');
         $route = $event->getRequest()->attributes->get('_route');
-        $result = $event->getControllerResult();
+        $component = $event->getControllerResult();
 
         if (!$contentType) {
             $contentType = $event->getRequest()->headers->get('Accept');
@@ -69,9 +71,9 @@ class HelmInstallSubscriber implements EventSubscriberInterface
         }
 
         $results = $this->installService->install($component);
-
+        $result['message'] = $results;
         $response = $this->serializer->serialize(
-            $results,
+            $result,
             'json',
             ['enable_max_depth'=> true]
         );

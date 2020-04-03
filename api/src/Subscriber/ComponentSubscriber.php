@@ -41,56 +41,57 @@ class ComponentSubscriber implements EventSubscriberInterface
 
     public function Audittrail(GetResponseForControllerResultEvent $event)
     {
-        $method = $event->getRequest()->getMethod();
-        $route = $event->getRequest()->attributes->get('_route');
-        $result = $event->getControllerResult();
-
-        // Only do somthing if we are on te log route and the entity is logable
-        if ($method != 'GET' || !($result instanceof Component) || !strpos($route, '_install_item') && !strpos($route, '_update_item')) {
-            return;
-        }
-
-        // Lets get the rest of the data
-        $contentType = $event->getRequest()->headers->get('accept');
-        if (!$contentType) {
-            $contentType = $event->getRequest()->headers->get('Accept');
-        }
-        switch ($contentType) {
-            case 'application/json':
-                $renderType = 'json';
-                break;
-            case 'application/ld+json':
-                $renderType = 'jsonld';
-                break;
-            case 'application/hal+json':
-                $renderType = 'jsonhal';
-                break;
-            default:
-                $contentType = 'application/json';
-                $renderType = 'json';
-        }
-
-        if(strpos($route, '_install_item')){
-            $response = $this->installService->install($result);
-        }else{
-            $response = $this->installService->update($result);
-        }
-        $result['message'] = $response;
-
-
-        $response = $this->serializer->serialize(
-            $result,
-            $renderType,
-            ['enable_max_depth'=> true]
-        );
-
-        // Creating a response
-        $response = new Response(
-            $response,
-            Response::HTTP_CREATED,
-            ['content-type' => $contentType]
-        );
-
-        $event->setResponse($response);
+        return;
+//        $method = $event->getRequest()->getMethod();
+//        $route = $event->getRequest()->attributes->get('_route');
+//        $result = $event->getControllerResult();
+//
+//        // Only do somthing if we are on te log route and the entity is logable
+//        if ($method != 'GET' || !($result instanceof Component) || !strpos($route, '_install_item') && !strpos($route, '_update_item')) {
+//            return;
+//        }
+//
+//        // Lets get the rest of the data
+//        $contentType = $event->getRequest()->headers->get('accept');
+//        if (!$contentType) {
+//            $contentType = $event->getRequest()->headers->get('Accept');
+//        }
+//        switch ($contentType) {
+//            case 'application/json':
+//                $renderType = 'json';
+//                break;
+//            case 'application/ld+json':
+//                $renderType = 'jsonld';
+//                break;
+//            case 'application/hal+json':
+//                $renderType = 'jsonhal';
+//                break;
+//            default:
+//                $contentType = 'application/json';
+//                $renderType = 'json';
+//        }
+//
+//        if(strpos($route, '_install_item')){
+//            $response = $this->installService->install($result);
+//        }else{
+//            $response = $this->installService->update($result);
+//        }
+//        $result['message'] = $response;
+//
+//
+//        $response = $this->serializer->serialize(
+//            $result,
+//            $renderType,
+//            ['enable_max_depth'=> true]
+//        );
+//
+//        // Creating a response
+//        $response = new Response(
+//            $response,
+//            Response::HTTP_CREATED,
+//            ['content-type' => $contentType]
+//        );
+//
+//        $event->setResponse($response);
     }
 }

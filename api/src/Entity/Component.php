@@ -27,22 +27,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		"get",
  * 	    "put",
  * 	   "delete",
- *     "install_item"={
- *              "path"="/install"
- *              "method"="post"
+ *     "helm_install"={
+ *              "path"="/components/{id}/install",
+ *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="install",
  *                  "description"="Installs this component to a cluster"
  *              }
- *     }
- *     "update_item"={
- *              "path"="/update"
- *              "method"="post"
+ *     },
+ *     "helm_update"={
+ *              "path"="/components/{id}/update",
+ *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="update",
  *                  "description"="Updates this component to a cluster"
  *              }
- *     }
+ *     },
  *     "get_change_logs"={
  *              "path"="/components/{id}/change_log",
  *              "method"="get",
@@ -194,7 +194,7 @@ class Component
      * @Assert\Length(
      *      max = 255
      * )
-     * @Groups({"write"})
+     * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
     private $githubRepository;
@@ -253,7 +253,6 @@ class Component
 
     public function __construct()
     {
-        $this->domains = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
     }
 
@@ -444,7 +443,7 @@ class Component
     public function setDomain(?Domain $domain): self
     {
         $this->domain = $domain;
-
+        $domain->addComponent($this);
         return $this;
     }
 }
