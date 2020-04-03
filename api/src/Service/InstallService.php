@@ -37,7 +37,7 @@ class InstallService
         $url = $this->getGithubAPIUrl($component->getGithubRepository());
         $request['environment'] = $component->getEnvironment()->getName();
         $request['domain'] = $component->getDomain()->getName();
-        $request['dburl'] = $this->formDbUrl($domain->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
+        $request['dburl'] = $this->formDbUrl($request['domain']->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
         $request['authorization'] = $component->getAuthorization();
         $request['kubeconfig'] = $component->getEnvironment()->getKubeconfig();
         $request['eventType'] = "start_upgrade_workflow";
@@ -70,16 +70,6 @@ class InstallService
         $request['dburl'] = $this->formDbUrl($domain->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
         $request['authorization'] = $component->getAuthorization();
         $request['kubeconfig'] = $cluster->getKubeconfig();
-        switch($event){
-            case "install":
-                $request['eventType'] = "start_install_workflow";
-                break;
-            case "upgrade":
-                $request['eventType'] = "start_upgrade_workflow";
-                break;
-            default:
-                return 1;
-        }
         $result = $this->client->post($url,
             [
                 'body' => json_encode($request),

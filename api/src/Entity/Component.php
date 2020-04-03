@@ -27,22 +27,23 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		"get",
  * 	    "put",
  * 	   "delete",
- *     "helm_update"={
- *              "path"="/components/{id}/update",
+ *     "get_change_logs"={
+ *              "path"="/components/{id}/change_log",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="Changelogs",
- *                  "description"="Updates the component on its designated cluster"
+ *                  "description"="Gets al the change logs for this resource"
  *              }
  *          },
- *     "helm_isntall"={
- *              "path"="/components/{id}/install",
+ *     "get_audit_trail"={
+ *              "path"="/components/{id}/audit_trail",
  *              "method"="get",
  *              "swagger_context" = {
- *                  "summary"="Install",
- *                  "description"="Installs the component on its designated cluster"
+ *                  "summary"="Audittrail",
+ *                  "description"="Gets the audit trail for this resource"
  *              }
- *          },
+ *          }
+ * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ComponentRepository")
  * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
@@ -121,8 +122,6 @@ class Component
      * )
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
-     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="components")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $dbUsername;
 
@@ -264,12 +263,12 @@ class Component
         return $this;
     }
 
-    public function getEnvironment(): ?Environment
+    public function getEnvironment(): ?string
     {
         return $this->environment;
     }
 
-    public function setEnvironment(?Environment $environment): self
+    public function setEnvironment(string $environment): self
     {
         $this->environment = $environment;
 
