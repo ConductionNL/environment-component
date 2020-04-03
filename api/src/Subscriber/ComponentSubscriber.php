@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class AuditTrailSubscriber implements EventSubscriberInterface
+class ComponentSubscriber implements EventSubscriberInterface
 {
     private $params;
     private $em;
