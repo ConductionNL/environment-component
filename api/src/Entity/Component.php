@@ -171,6 +171,16 @@ class Component
      */
     private $healthLogs;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $title;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $dbName;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
@@ -331,6 +341,30 @@ class Component
                 $healthLog->setComponent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDbName(): ?string
+    {
+        return $this->dbName;
+    }
+
+    public function setDbName(string $dbName): self
+    {
+        $this->dbName = $dbName;
 
         return $this;
     }

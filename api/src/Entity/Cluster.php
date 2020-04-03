@@ -151,9 +151,15 @@ class Cluster
      */
     private $dateModified;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")
+     */
+    private $environments;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
+        $this->environments = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -272,6 +278,37 @@ class Cluster
     public function setDateModified(?\DateTimeInterface $dateModified): self
     {
         $this->dateModified = $dateModified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Environment[]
+     */
+    public function getEnvironments(): Collection
+    {
+        return $this->environments;
+    }
+
+    public function addEnvironment(Environment $environment): self
+    {
+        if (!$this->environments->contains($environment)) {
+            $this->environments[] = $environment;
+            $environment->setCluster($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnvironment(Environment $environment): self
+    {
+        if ($this->environments->contains($environment)) {
+            $this->environments->removeElement($environment);
+            // set the owning side to null (unless already changed)
+            if ($environment->getCluster() === $this) {
+                $environment->setCluster(null);
+            }
+        }
 
         return $this;
     }

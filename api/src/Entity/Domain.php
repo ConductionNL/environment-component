@@ -168,6 +168,12 @@ class Domain
      */
     private $healthLogs;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="domains")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $environment;
+
     public function __construct()
     {
         $this->components = new ArrayCollection();
@@ -330,6 +336,18 @@ class Domain
                 $healthLog->setDomain(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEnvironment(): ?Environment
+    {
+        return $this->environment;
+    }
+
+    public function setEnvironment(?Environment $environment): self
+    {
+        $this->environment = $environment;
 
         return $this;
     }
