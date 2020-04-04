@@ -106,6 +106,7 @@ class Domain
      *     max=255
      * )
      * @Assert\NotNull
+     * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
     private $location;
@@ -123,6 +124,7 @@ class Domain
     /**
      * @var string the base url for the managed database that this domain uses
      *
+     * @Groups({"read","write"})
      * @example pgsql://db-cluster.vuga.com:25060/
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -157,7 +159,7 @@ class Domain
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\ManyToMany(targetEntity="App\Entity\Component", mappedBy="domains")
+     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="domain")
      */
     private $components;
 
@@ -169,15 +171,17 @@ class Domain
     private $healthLogs;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="domains")
-     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="domain")
      */
-    private $environment;
+    private $environments;
 
     public function __construct()
     {
         $this->components = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
+        $this->environments = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -293,7 +297,7 @@ class Domain
     {
         if (!$this->components->contains($component)) {
             $this->components[] = $component;
-            $component->addDomain($this);
+            $component->setDomain($this);
         }
 
         return $this;
@@ -303,7 +307,10 @@ class Domain
     {
         if ($this->components->contains($component)) {
             $this->components->removeElement($component);
-            $component->removeDomain($this);
+            // set the owning side to null (unless already changed)
+            if ($component->getDomain() === $this) {
+                $component->setDomain(null);
+            }
         }
 
         return $this;
@@ -340,14 +347,33 @@ class Domain
         return $this;
     }
 
-    public function getEnvironment(): ?Environment
+    /**
+     * @return Collection|Environment[]
+     */
+    public function getEnvironments(): Collection
     {
-        return $this->environment;
+        return $this->environments;
     }
 
-    public function setEnvironment(?Environment $environment): self
+    public function addEnvironment(Environment $environment): self
     {
-        $this->environment = $environment;
+        if (!$this->environments->contains($environment)) {
+            $this->environments[] = $environment;
+            $environment->setDomain($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnvironment(Environment $environment): self
+    {
+        if ($this->environments->contains($environment)) {
+            $this->environments->removeElement($environment);
+            // set the owning side to null (unless already changed)
+            if ($environment->getDomain() === $this) {
+                $environment->setDomain(null);
+            }
+        }
 
         return $this;
     }

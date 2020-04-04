@@ -27,22 +27,39 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		"get",
  * 	    "put",
  * 	   "delete",
+ *     "helm_install"={
+ *              "path"="/components/{id}/install",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="install",
+ *                  "description"="Installs this component to a cluster"
+ *              }
+ *     },
  *     "helm_update"={
  *              "path"="/components/{id}/update",
  *              "method"="get",
  *              "swagger_context" = {
- *                  "summary"="Changelogs",
- *                  "description"="Updates the component on its designated cluster"
+ *                  "summary"="update",
+ *                  "description"="Updates this component to a cluster"
  *              }
- *          },
- *     "helm_isntall"={
- *              "path"="/components/{id}/install",
+ *     },
+ *     "get_change_logs"={
+ *              "path"="/components/{id}/change_log",
  *              "method"="get",
  *              "swagger_context" = {
- *                  "summary"="Install",
- *                  "description"="Installs the component on its designated cluster"
+ *                  "summary"="Changelogs",
+ *                  "description"="Gets al the change logs for this resource"
  *              }
  *          },
+ *     "get_audit_trail"={
+ *              "path"="/components/{id}/audit_trail",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="Audittrail",
+ *                  "description"="Gets the audit trail for this resource"
+ *              }
+ *          }
+ * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ComponentRepository")
  * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
@@ -121,8 +138,6 @@ class Component
      * )
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
-     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="components")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $dbUsername;
 
@@ -179,7 +194,7 @@ class Component
      * @Assert\Length(
      *      max = 255
      * )
-     * @Groups({"write"})
+     * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
     private $githubRepository;
@@ -197,12 +212,20 @@ class Component
      */
     private $githubToken;
 
+
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\ManyToMany(targetEntity="App\Entity\Domain", inversedBy="components")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="components")
      */
-    private $domains;
+    private $domain;
+
+    /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="components")
+     */
+    private $environment;
 
     /**
      * @Groups({"read","write"})
@@ -210,7 +233,6 @@ class Component
      * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="component")
      */
     private $healthLogs;
-
     /**
      * @var Datetime The moment this entity was created
      *
@@ -231,7 +253,6 @@ class Component
 
     public function __construct()
     {
-        $this->domains = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
     }
 
@@ -269,7 +290,7 @@ class Component
         return $this->environment;
     }
 
-    public function setEnvironment(?Environment $environment): self
+    public function setEnvironment(Environment $environment): self
     {
         $this->environment = $environment;
 
@@ -311,33 +332,6 @@ class Component
 
         return $this;
     }
-
-    /**
-     * @return Collection|Domain[]
-     */
-    public function getDomains(): Collection
-    {
-        return $this->domains;
-    }
-
-    public function addDomain(Domain $domain): self
-    {
-        if (!$this->domains->contains($domain)) {
-            $this->domains[] = $domain;
-        }
-
-        return $this;
-    }
-
-    public function removeDomain(Domain $domain): self
-    {
-        if ($this->domains->contains($domain)) {
-            $this->domains->removeElement($domain);
-        }
-
-        return $this;
-    }
-
     public function getDateCreated(): ?\DateTimeInterface
     {
         return $this->dateCreated;
@@ -438,6 +432,18 @@ class Component
     {
         $this->githubToken = $githubToken;
 
+        return $this;
+    }
+
+    public function getDomain(): ?Domain
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(?Domain $domain): self
+    {
+        $this->domain = $domain;
+        $domain->addComponent($this);
         return $this;
     }
 }

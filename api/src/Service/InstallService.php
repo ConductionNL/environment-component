@@ -22,7 +22,7 @@ class InstallService
 
     public function formDbUrl($dbBaseUrl, $dbUsername, $dbPassword, $dbName){
         $parsedUrl = parse_url($dbBaseUrl);
-        return "{$parsedUrl['schema']}://$dbUsername:$dbPassword@{$parsedUrl['host']}:{$parsedUrl['port']}/$dbName?sslmode=require&serverVersion=11";
+        return "{$parsedUrl['scheme']}://$dbUsername:$dbPassword@{$parsedUrl['host']}:{$parsedUrl['port']}/$dbName?sslmode=require&serverVersion=11";
     }
 
     public function getGithubAPIUrl($repository){
@@ -35,13 +35,15 @@ class InstallService
     public function update(Component $component)
     {
         $url = $this->getGithubAPIUrl($component->getGithubRepository());
-        $request['environment'] = $component->getEnvironment()->getName();
-        $request['domain'] = $component->getDomain()->getName();
-        $request['dburl'] = $this->formDbUrl($domain->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
-        $request['authorization'] = $component->getAuthorization();
-        $request['kubeconfig'] = $component->getEnvironment()->getKubeconfig();
-        $request['eventType'] = "start_upgrade_workflow";
-
+        $data['environment'] = $component->getEnvironment()->getName();
+        $data['domain'] = $component->getDomain()->getName();
+        $data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
+        $data['authorization'] = $component->getAuthorization();
+        $data['kubeconfig'] = $component->getEnvironment()->getCluster()->getKubeconfig();
+        $request['event_type'] = "start-upgrade-workflow";
+        $request['client_payload'] = $data;
+//        var_dump(json_encode($request));
+//        die;
         $result = $this->client->post($url,
             [
                 'body' => json_encode($request),
@@ -57,29 +59,22 @@ class InstallService
             return "Action triggered, check {$component->getGithubRepository()}/actions for the status";
         }
         else{
-            return 1;
+            throw new Symfony\Component\HttpKernel\Exception\HttpException($result->getStatusCode(), $url.' returned: '.json_encode($result->getBody()));
         }
 
     }
 
-    public function install(Cluster $cluster, Environment $environment, Domain $domain, Component $component, string $event)
+    public function install(Component $component)
     {
         $url = $this->getGithubAPIUrl($component->getGithubRepository());
-        $request['environment'] = $environment->getName();
-        $request['domain'] = $domain->getName();
-        $request['dburl'] = $this->formDbUrl($domain->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
-        $request['authorization'] = $component->getAuthorization();
-        $request['kubeconfig'] = $cluster->getKubeconfig();
-        switch($event){
-            case "install":
-                $request['eventType'] = "start_install_workflow";
-                break;
-            case "upgrade":
-                $request['eventType'] = "start_upgrade_workflow";
-                break;
-            default:
-                return 1;
-        }
+        $data['environment'] = $component->getEnvironment()->getName();
+        $data['domain'] = $component->getDomain()->getName();
+        $data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
+        $data['authorization'] = $component->getAuthorization();
+        $data['kubeconfig'] = $component->getEnvironment()->getCluster()->getKubeconfig();
+        $request['event_type'] = "start-install-workflow";
+        $request['client_payload'] = $data;
+
         $result = $this->client->post($url,
             [
                 'body' => json_encode($request),
@@ -95,7 +90,7 @@ class InstallService
             return "Action triggered, check {$component->getGithubRepository()}/actions for the status";
         }
         else{
-            return 1;
+            throw new Symfony\Component\HttpKernel\Exception\HttpException($result->getStatusCode(), $url.' returned: '.json_encode($result->getBody()));
         }
     }
 }

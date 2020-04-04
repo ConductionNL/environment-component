@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-<<<<<<< Updated upstream
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
@@ -53,16 +52,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
  * @ApiFilter(SearchFilter::class)
-=======
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ApiResource()
- * @ORM\Entity(repositoryClass="App\Repository\EnviromentRepository")
->>>>>>> Stashed changes
- */
+*/
 class Environment
 {
     /**
@@ -122,27 +112,21 @@ class Environment
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-=======
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
->>>>>>> Stashed changes
      * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="environments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $cluster;
 
+
+
     /**
-<<<<<<< Updated upstream
+     * @var ArrayCollection The components in this environment
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Domain", mappedBy="environment")
+     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="environment")
      */
-    private $domains;
+    private $components;
 
     /**
      * @var Datetime The moment this entity was created
@@ -162,29 +146,25 @@ class Environment
      */
     private $dateModified;
 
-    public function __construct()
-    {
-        $this->domains = new ArrayCollection();
-    }
-
-    public function getId(): ?Uuid
-=======
-     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="environment", orphanRemoval=true)
+    /**
+     * @var Domain the domain linked to this environment
+     *
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="environments")
      */
-    private $components;
+    private $domain;
 
     public function __construct()
     {
         $this->components = new ArrayCollection();
     }
 
-    public function getId(): ?int
->>>>>>> Stashed changes
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-<<<<<<< Updated upstream
     public function getName(): ?string
     {
         return $this->name;
@@ -220,9 +200,6 @@ class Environment
 
         return $this;
     }
-
-=======
->>>>>>> Stashed changes
     public function getCluster(): ?Cluster
     {
         return $this->cluster;
@@ -236,20 +213,6 @@ class Environment
     }
 
     /**
-<<<<<<< Updated upstream
-     * @return Collection|Domain[]
-     */
-    public function getDomains(): Collection
-    {
-        return $this->domains;
-    }
-
-    public function addDomain(Domain $domain): self
-    {
-        if (!$this->domains->contains($domain)) {
-            $this->domains[] = $domain;
-            $domain->setEnvironment($this);
-=======
      * @return Collection|Component[]
      */
     public function getComponents(): Collection
@@ -262,21 +225,12 @@ class Environment
         if (!$this->components->contains($component)) {
             $this->components[] = $component;
             $component->setEnviroment($this);
->>>>>>> Stashed changes
         }
 
         return $this;
     }
 
-<<<<<<< Updated upstream
-    public function removeDomain(Domain $domain): self
-    {
-        if ($this->domains->contains($domain)) {
-            $this->domains->removeElement($domain);
-            // set the owning side to null (unless already changed)
-            if ($domain->getEnvironment() === $this) {
-                $domain->setEnvironment(null);
-=======
+
     public function removeComponent(Component $component): self
     {
         if ($this->components->contains($component)) {
@@ -284,13 +238,11 @@ class Environment
             // set the owning side to null (unless already changed)
             if ($component->getEnviroment() === $this) {
                 $component->setEnviroment(null);
->>>>>>> Stashed changes
             }
         }
 
         return $this;
     }
-<<<<<<< Updated upstream
 
     public function getDateCreated(): ?\DateTimeInterface
     {
@@ -315,6 +267,16 @@ class Environment
 
         return $this;
     }
-=======
->>>>>>> Stashed changes
+
+    public function getDomain(): ?Domain
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(?Domain $domain): self
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
 }
