@@ -69,7 +69,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
  * @ApiFilter(SearchFilter::class)
  */
-class Component
+class Installation
 {
     /**
      * @var UuidInterface The UUID identifier of this resource
@@ -88,7 +88,7 @@ class Component
     /**
      * @var string The name of this component
      *
-     * @example environment component
+     * @example evc
      *
      * @Gedmo\Versioned
      * @Assert\NotNull
@@ -101,9 +101,9 @@ class Component
     private $name;
 
     /**
-     * @var string The unique commonground short code for this component
+     * @var string The full name of this component
      *
-     * @example evc
+     * @example environment component
      *
      * @Gedmo\Versioned
      * @Assert\NotNull
@@ -113,7 +113,7 @@ class Component
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $code;
+    private $title;
 
     /**
      * @var string the description of this component
@@ -125,6 +125,65 @@ class Component
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var string The username that is needed to log into the cluster database
+     *
+     * @example evc-dev
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $dbUsername;
+
+    /**
+     * @var string The password that is needed to log into the cluster database
+     *
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $dbPassword;
+
+    /**
+     * @var string The name of the database this component uses
+     *
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\Column(type="string", length=255)
+     */
+    private $dbName;
+
+    /**
+     * @var string The authentication token that is needed to access this token
+     *
+     * @example evc-dev
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $authorization;
 
     /**
      * @var string the Github Repository that contains this component
@@ -154,25 +213,32 @@ class Component
     private $githubToken;
 
     /**
-     * @var string the Helm Repository that contains this component
-     *
-     * @example https://github.com/ConductionNL/environment-component/api/helm
-     * @Gedmo\Versioned
-     * @Assert\NotNull
-     * @Assert\Length(
-     *      max = 255
-     * )
      * @Groups({"read","write"})
-     * @ORM\Column(type="string", length=255)
+     * @MaxDepth(1)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Component", inversedBy="installations")
      */
-    private $helmRepository;
+    private $component;
 
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="component")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="installations")
      */
-    private $installations;
+    private $domain;
+
+    /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="installations")
+     */
+    private $environment;
+
+    /**
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installations")
+     */
+    private $healthLogs;
 
     /**
      * @var Datetime The moment this entity was created
@@ -192,6 +258,11 @@ class Component
      */
     private $dateModified;
 
+    public function __construct()
+    {
+        $this->healthLogs = new ArrayCollection();
+    }
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -209,18 +280,6 @@ class Component
         return $this;
     }
 
-    public function getCode(): ?string
-    {
-        return $this->code;
-    }
-
-    public function setCode(string $code): self
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -233,33 +292,128 @@ class Component
         return $this;
     }
 
-    /**
-     * @return Collection|Installation[]
-     */
-    public function getInstallations(): Collection
+    public function getEnvironment(): ?Environment
     {
-        return $this->installations;
+        return $this->environment;
     }
 
-    public function addInstallation(Installation $installation): self
+    public function setEnvironment(Environment $environment): self
     {
-        if (!$this->installations->contains($installation)) {
-            $this->installations[] = $installation;
-            $installation->setComponent($this);
+        $this->environment = $environment;
+
+        return $this;
+    }
+
+    public function getDbUsername(): ?string
+    {
+        return $this->dbUsername;
+    }
+
+    public function setDbUsername(string $dbUsername): self
+    {
+        $this->dbUsername = $dbUsername;
+
+        return $this;
+    }
+
+    public function getDbPassword(): ?string
+    {
+        return $this->dbPassword;
+    }
+
+    public function setDbPassword(string $dbPassword): self
+    {
+        $this->dbPassword = $dbPassword;
+
+        return $this;
+    }
+
+    public function getAuthorization(): ?string
+    {
+        return $this->authorization;
+    }
+
+    public function setAuthorization(string $authorization): self
+    {
+        $this->authorization = $authorization;
+
+        return $this;
+    }
+    public function getDateCreated(): ?\DateTimeInterface
+    {
+        return $this->dateCreated;
+    }
+
+    public function setDateCreated(\DateTimeInterface $dateCreated): self
+    {
+        $this->dateCreated = $dateCreated;
+
+        return $this;
+    }
+
+    public function getDateModified(): ?\DateTimeInterface
+    {
+        return $this->dateModified;
+    }
+
+    public function setDateModified(?\DateTimeInterface $dateModified): self
+    {
+        $this->dateModified = $dateModified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|HealthLog[]
+     */
+    public function getHealthLogs(): Collection
+    {
+        return $this->healthLogs;
+    }
+
+    public function addHealthLog(HealthLog $healthLog): self
+    {
+        if (!$this->healthLogs->contains($healthLog)) {
+            $this->healthLogs[] = $healthLog;
+            $healthLog->setComponent($this);
         }
 
         return $this;
     }
 
-    public function removeInstallation(Installation $installation): self
+    public function removeHealthLog(HealthLog $healthLog): self
     {
-        if ($this->installations->contains($installation)) {
-            $this->installations->removeElement($installation);
+        if ($this->healthLogs->contains($healthLog)) {
+            $this->healthLogs->removeElement($healthLog);
             // set the owning side to null (unless already changed)
-            if ($installation->getComponent() === $this) {
-                $installation->setComponent(null);
+            if ($healthLog->getComponent() === $this) {
+                $healthLog->setComponent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDbName(): ?string
+    {
+        return $this->dbName;
+    }
+
+    public function setDbName(string $dbName): self
+    {
+        $this->dbName = $dbName;
 
         return $this;
     }
@@ -288,39 +442,15 @@ class Component
         return $this;
     }
 
-    public function getHelmRepository(): ?string
+    public function getDomain(): ?Domain
     {
-        return $this->helmRepository;
+        return $this->domain;
     }
 
-    public function setHelmRepository(string $helmRepository): self
+    public function setDomain(?Domain $domain): self
     {
-        $this->helmRepository = $helmRepository;
-
-        return $this;
-    }
-
-    public function getDateCreated(): ?\DateTimeInterface
-    {
-        return $this->dateCreated;
-    }
-
-    public function setDateCreated(\DateTimeInterface $dateCreated): self
-    {
-        $this->dateCreated = $dateCreated;
-
-        return $this;
-    }
-
-    public function getDateModified(): ?\DateTimeInterface
-    {
-        return $this->dateModified;
-    }
-
-    public function setDateModified(?\DateTimeInterface $dateModified): self
-    {
-        $this->dateModified = $dateModified;
-
+        $this->domain = $domain;
+        $domain->addComponent($this);
         return $this;
     }
 }

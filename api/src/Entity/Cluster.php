@@ -103,7 +103,7 @@ class Cluster
      * @Gedmo\Versioned
      * @Groups({"write"})
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $kubeconfig;
 
