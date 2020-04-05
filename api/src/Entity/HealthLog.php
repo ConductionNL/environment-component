@@ -176,12 +176,12 @@ class HealthLog
         return $this;
     }
 
-    public function getComponent(): ?Installation
+    public function getInstallation(): ?Installation
     {
         return $this->installation;
     }
 
-    public function setComponent(?Installation $installation): self
+    public function setInstallation(?Installation $installation): self
     {
         $this->installation = $installation;
 

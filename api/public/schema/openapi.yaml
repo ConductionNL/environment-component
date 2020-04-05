@@ -9346,10 +9346,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-read'
-        environments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Environment-read'
       required:
         - name
         - location
@@ -9387,10 +9383,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-write'
-        environments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Environment-write'
     'Domain:jsonld-read':
       type: object
       description: ''
@@ -9447,10 +9439,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-read'
-        environments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Environment:jsonld-read'
       required:
         - name
         - location
@@ -9497,10 +9485,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-write'
-        environments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Environment:jsonld-write'
     Environment-read:
       type: object
       description: ''
@@ -9522,11 +9506,11 @@ components:
           type: integer
         cluster:
           $ref: '#/components/schemas/Cluster-read'
-        components:
-          description: 'The components in this environment'
+        installations:
+          description: 'The installations in this environment'
           type: array
           items:
-            $ref: '#/components/schemas/Component-read'
+            $ref: '#/components/schemas/Installation-read'
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -9558,11 +9542,11 @@ components:
           type: integer
         cluster:
           $ref: '#/components/schemas/Cluster-write'
-        components:
-          description: 'The components in this environment'
+        installations:
+          description: 'The installations in this environment'
           type: array
           items:
-            $ref: '#/components/schemas/Component-write'
+            $ref: '#/components/schemas/Installation-write'
     'Environment:jsonld-read':
       type: object
       description: ''
@@ -9593,11 +9577,11 @@ components:
           type: integer
         cluster:
           $ref: '#/components/schemas/Cluster:jsonld-read'
-        components:
-          description: 'The components in this environment'
+        installations:
+          description: 'The installations in this environment'
           type: array
           items:
-            $ref: '#/components/schemas/Component:jsonld-read'
+            $ref: '#/components/schemas/Installation:jsonld-read'
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -9638,11 +9622,11 @@ components:
           type: integer
         cluster:
           $ref: '#/components/schemas/Cluster:jsonld-write'
-        components:
-          description: 'The components in this environment'
+        installations:
+          description: 'The installations in this environment'
           type: array
           items:
-            $ref: '#/components/schemas/Component:jsonld-write'
+            $ref: '#/components/schemas/Installation:jsonld-write'
     HealthLog-read:
       type: object
       description: ''
@@ -9655,6 +9639,8 @@ components:
           type: string
         domain:
           $ref: '#/components/schemas/Domain-read'
+        installation:
+          $ref: '#/components/schemas/Installation-read'
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -9677,6 +9663,8 @@ components:
           type: string
         domain:
           $ref: '#/components/schemas/Domain-write'
+        installation:
+          $ref: '#/components/schemas/Installation-write'
     'HealthLog:jsonld-read':
       type: object
       description: ''
@@ -9698,6 +9686,8 @@ components:
           type: string
         domain:
           $ref: '#/components/schemas/Domain:jsonld-read'
+        installation:
+          $ref: '#/components/schemas/Installation:jsonld-read'
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -9729,6 +9719,8 @@ components:
           type: string
         domain:
           $ref: '#/components/schemas/Domain:jsonld-write'
+        installation:
+          $ref: '#/components/schemas/Installation:jsonld-write'
     Installation-read:
       type: object
       description: ''
@@ -10058,12 +10050,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-05 18:45:11'
+        example: '2020-04-05 19:12:16'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-05 18:45:11'
+        example: '2020-04-05 19:12:16'
     required: []
   AuditTrail-write:
     properties:
@@ -10111,12 +10103,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-05 18:45:11'
+        example: '2020-04-05 19:12:16'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-05 18:45:11'
+        example: '2020-04-05 19:12:16'
     required: []
   ChangeLog-write:
     properties:
@@ -10301,7 +10293,6 @@ definitions:
       cluster: []
       installations: []
       healthLogs: []
-      environments: []
     required:
       - name
       - location
@@ -10333,7 +10324,6 @@ definitions:
       cluster: []
       installations: []
       healthLogs: []
-      environments: []
     required:
       - name
       - location
@@ -10364,8 +10354,8 @@ definitions:
         description: 'The moment this entity last Modified'
         type: \Datetime
       cluster: []
-      components:
-        description: 'The components in this environment'
+      installations:
+        description: 'The installations in this environment'
         type: \ArrayCollection
     required:
       - name
@@ -10386,8 +10376,8 @@ definitions:
         type: string
         example: '1'
       cluster: []
-      components:
-        description: 'The components in this environment'
+      installations:
+        description: 'The installations in this environment'
         type: \ArrayCollection
     required:
       - name

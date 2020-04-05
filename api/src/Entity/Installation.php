@@ -223,7 +223,7 @@ class Installation
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installations")
+     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installation")
      */
     private $healthLogs;
 

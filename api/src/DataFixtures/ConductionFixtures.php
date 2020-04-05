@@ -31,10 +31,9 @@ class ConductionFixtures extends Fixture
             //return false;
         }
 
-
         $cluster = new Cluster();
         $cluster->setName('conduction.nl');
-        $cluster->setDescription('The core conduction cluter');
+        $cluster->setDescription('The core conduction cluster');
         $manager->persist($cluster);
 
         $domain = new Domain();
