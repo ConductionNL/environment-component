@@ -12,7 +12,7 @@ use App\Entity\Cluster;
 use App\Entity\Enviroment;
 use App\Entity\Domain;
 
-class AppFixtures extends Fixture
+class ConductionFixtures extends Fixture
 {
     private $params;
     private $encoder;
@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
     {
         // Lets make sure we only run these fixtures on larping enviroment
         if (strpos($this->params->get('app_domain'), "conduction.nl") == false) {
-            return false;
+            //return false;
         }
 
         $domain = new Domain();
