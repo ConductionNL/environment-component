@@ -194,23 +194,10 @@ class Installation
      * @Assert\Length(
      *      max = 255
      * )
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $githubRepository;
-
-    /**
-     * @var string A personal access token for github that can be used to trigger actions on this component
-     *
-     * @Gedmo\Versioned
-     * @Assert\NotNull
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"write"})
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $githubToken;
+    private $dbUrl;
 
     /**
      * @Groups({"read","write"})
@@ -418,26 +405,14 @@ class Installation
         return $this;
     }
 
-    public function getGithubRepository(): ?string
+    public function getDbUrl(): ?string
     {
-        return $this->githubRepository;
+        return $this->dbUrl;
     }
 
-    public function setGithubRepository(string $githubRepository): self
+    public function setDbUrl(string $dbUrl): self
     {
-        $this->githubRepository = $githubRepository;
-
-        return $this;
-    }
-
-    public function getGithubToken(): ?string
-    {
-        return $this->githubToken;
-    }
-
-    public function setGithubToken(?string $githubToken): self
-    {
-        $this->githubToken = $githubToken;
+        $this->dbUrl = $dbUrl;
 
         return $this;
     }
