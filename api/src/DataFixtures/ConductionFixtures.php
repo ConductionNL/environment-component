@@ -9,8 +9,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 // The Entities
 use App\Entity\Cluster;
-use App\Entity\Enviroment;
+use App\Entity\Environment;
 use App\Entity\Domain;
+use App\Entity\Component;
 
 class ConductionFixtures extends Fixture
 {
@@ -30,40 +31,259 @@ class ConductionFixtures extends Fixture
             //return false;
         }
 
-        $domain = new Domain();
-        $domain->setName('conduction.nl');
-        $domain->setDescription('The core conduction domain');
-        $domain->setLocation('conduction.nl');
-        $manager->persist($domain);
 
         $cluster = new Cluster();
         $cluster->setName('conduction.nl');
         $cluster->setDescription('The core conduction cluter');
         $manager->persist($cluster);
 
-        $enviroment = new Enviroment();
-        $enviroment->setName('prod');
-        $enviroment->setDescription('The production enviroment');
-        $enviroment->setDebug('false');
-        $enviroment->setCluster($cluster);
-        $enviroment->setDomain($domain);
-        $manager->persist($enviroment);
+        $domain = new Domain();
+        $domain->setName('conduction.nl');
+        $domain->setDescription('The core conduction domain');
+        $domain->setLocation('conduction.nl');
+        $domain->setCluster($cluster);
+        $manager->persist($domain);
 
-        $enviroment = new Enviroment();
-        $enviroment->setName('stag');
-        $enviroment->setDescription('The staging enviroment');
-        $enviroment->setDebug('false');
-        $enviroment->setCluster($cluster);
-        $enviroment->setDomain($domain);
-        $manager->persist($enviroment);
+        $environment = new Environment();
+        $environment->setName('prod');
+        $environment->setDescription('The production enviroment');
+        $environment->setDebug(0);
+        $environment->setCluster($cluster);
+        $manager->persist($environment);
 
-        $enviroment = new Enviroment();
-        $enviroment->setName('dev');
-        $enviroment->setDescription('The development enviroment');
-        $enviroment->setDebug('false');
-        $enviroment->setCluster($cluster);
-        $enviroment->setDomain($domain);
+        $environment = new Environment();
+        $environment->setName('stag');
+        $environment->setDescription('The staging enviroment');
+        $environment->setDebug(0);
+        $environment->setCluster($cluster);
+        $manager->persist($environment);
+
+        $environment = new Environment();
+        $environment->setName('dev');
+        $environment->setDescription('The development enviroment');
+        $environment->setDebug(1);
+        $environment->setCluster($cluster);
+        $manager->persist($environment);
+
+        // Component Lists
+        $component = new Component();
+        $component->setCode('evc');
+        $component->setName('Environment component');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/environment-component/');
+        $component->setHelmRepository('https://github.com/ConductionNL/environment-component/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('uc');
+        $component->setName('User Component');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/user-component/');
+        $component->setHelmRepository('https://github.com/ConductionNL/user-component/api/helm/');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('db');
+        $component->setName('Dashboard');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/commonground-dashboard/');
+        $component->setHelmRepository('https://github.com/ConductionNL/commonground-dashboard/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('cgrc');
+        $component->setName('Comonground Registratiecomponent');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/Commongroundregistratiecomponent/');
+        $component->setHelmRepository('https://github.com/ConductionNL/Commongroundregistratiecomponent/api/helm');
+        $manager->persist($component);
+
+
+        $component = new Component();
+        $component->setCode('con-web');
+        $component->setName('Conduction Website');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/conductionwebsite/');
+        $component->setHelmRepository('https://github.com/ConductionNL/conductionwebsite/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('prc');
+        $component->setName('Procesregsitatie Component');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/procesregistratiecomponent/');
+        $component->setHelmRepository('https://github.com/ConductionNL/procesregistratiecomponent/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('ts');
+        $component->setName('Trouwservice');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/trouwservice/');
+        $component->setHelmRepository('https://github.com/ConductionNL/trouwservice/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('mrc');
+        $component->setName('dashboard');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/medewerkercatalogus/');
+        $component->setHelmRepository('https://github.com/ConductionNL/medewerkercatalogus/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('wrc');
+        $component->setName('Webresource Catalogus');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/webresourcecatalogus/');
+        $component->setHelmRepository('https://github.com/ConductionNL/webresourcecatalogus/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('vrc');
+        $component->setName('Verzoektype Catalogus');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/verzoekregistratiecomponent/');
+        $component->setHelmRepository('https://github.com/ConductionNL/verzoekregistratiecomponent/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('vtc');
+        $component->setName('Verzoektype Catalogus');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/verzoektypecatalogus/');
+        $component->setHelmRepository('https://github.com/ConductionNL/verzoektypecatalogus/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('pc');
+        $component->setName('Protocomponent');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/Proto-component-commonground/');
+        $component->setHelmRepository('https://github.com/ConductionNL/Proto-component-commonground/api/helm');
+        $manager->persist($component);
+
+        /*
+        $component = new Component();
+        $component->setCode('db');
+        $component->setName('dashboard');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/proto-application-commonground/');
+        $component->setHelmRepository('https://github.com/ConductionNL/proto-application-commonground/api/helm');
         $manager->persist($enviroment);
+        */
+
+        $component = new Component();
+        $component->setCode('hp-ui');
+        $component->setName('Huwelijksplanner User Interface');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/huwelijksplanner-ui/');
+        $component->setHelmRepository('https://github.com/ConductionNL/huwelijksplanner-ui/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('ORC');
+        $component->setName('Order Registratie Component');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/orderregistratiecomponent/');
+        $component->setHelmRepository('https://github.com/ConductionNL/orderregistratiecomponent/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('pdc');
+        $component->setName('Producten en Diensten Catalogus');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/productenendienstencatalogus/');
+        $component->setHelmRepository('https://github.com/ConductionNL/productenendienstencatalogus/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('cc');
+        $component->setName('Contacten Catalogus');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/contactcatalogus/');
+        $component->setHelmRepository('hhttps://github.com/ConductionNL/contactcatalogus/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('bs');
+        $component->setName('Berichten Service');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/betaalservice/');
+        $component->setHelmRepository('https://github.com/ConductionNL/betaalservice/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('irc-ui');
+        $component->setName('Instemmingen Registatie Service User Interface');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/instemmingen-interface/');
+        $component->setHelmRepository('hhttps://github.com/ConductionNL/instemmingen-interface/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('irc');
+        $component->setName('Instemmingen Registatie Service');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/instemmingservice/');
+        $component->setHelmRepository('https://github.com/ConductionNL/instemmingservice/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('stuf');
+        $component->setName('Stuf Service');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/stufservice/');
+        $component->setHelmRepository('https://github.com/ConductionNL/stufservice/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('pc-ui');
+        $component->setName('Protocomponent UI');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/Proto-application-NLDesign/');
+        $component->setHelmRepository('https://github.com/ConductionNL/Proto-application-NLDesign/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('bbz-ui');
+        $component->setName('BBZ User Interfase');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/corona-interface/');
+        $component->setHelmRepository('https://github.com/ConductionNL/corona-interface/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('ds-ui');
+        $component->setName('Digispoof UI');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/digispoof-interface/');
+        $component->setHelmRepository('https://github.com/ConductionNL/digispoof-interface/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('dp');
+        $component->setName('Doc Parcer');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/docparser/');
+        $component->setHelmRepository('https://github.com/ConductionNL/docparser/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('rc');
+        $component->setName('Review Componen');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/review-component/');
+        $component->setHelmRepository('https://github.com/ConductionNL/review-component/api/helm');
+        $manager->persist($component);
+
+        $component = new Component();
+        $component->setCode('brp');
+        $component->setName('BRP Service');
+        $component->setDescription('This common ground component describes common ground components');
+        $component->setGithubRepository('https://github.com/ConductionNL/brpservice/');
+        $component->setHelmRepository('https://github.com/ConductionNL/brpservice/api/helm');
+        $manager->persist($component);
 
         $manager->flush();
     }

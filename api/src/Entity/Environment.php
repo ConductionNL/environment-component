@@ -116,8 +116,6 @@ class Environment
      */
     private $cluster;
 
-
-
     /**
      * @var ArrayCollection The components in this environment
      *
@@ -144,15 +142,6 @@ class Environment
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
-
-    /**
-     * @var Domain the domain linked to this environment
-     *
-     * @Groups({"read","write"})
-     * @MaxDepth(1)
-     * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="environments")
-     */
-    private $domain;
 
     public function __construct()
     {
@@ -267,15 +256,4 @@ class Environment
         return $this;
     }
 
-    public function getDomain(): ?Domain
-    {
-        return $this->domain;
-    }
-
-    public function setDomain(?Domain $domain): self
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
 }
