@@ -170,12 +170,6 @@ class Domain
      */
     private $healthLogs;
 
-    /**
-     * @Groups({"read","write"})
-     * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="domain")
-     */
-    private $environments;
 
     public function __construct()
     {
@@ -341,37 +335,6 @@ class Domain
             // set the owning side to null (unless already changed)
             if ($healthLog->getDomain() === $this) {
                 $healthLog->setDomain(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Environment[]
-     */
-    public function getEnvironments(): Collection
-    {
-        return $this->environments;
-    }
-
-    public function addEnvironment(Environment $environment): self
-    {
-        if (!$this->environments->contains($environment)) {
-            $this->environments[] = $environment;
-            $environment->setDomain($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEnvironment(Environment $environment): self
-    {
-        if ($this->environments->contains($environment)) {
-            $this->environments->removeElement($environment);
-            // set the owning side to null (unless already changed)
-            if ($environment->getDomain() === $this) {
-                $environment->setDomain(null);
             }
         }
 

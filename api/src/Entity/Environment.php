@@ -117,13 +117,13 @@ class Environment
     private $cluster;
 
     /**
-     * @var ArrayCollection The components in this environment
+     * @var ArrayCollection The installations in this environment
      *
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="environment")
+     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="environment")
      */
-    private $components;
+    private $installations;
 
     /**
      * @var Datetime The moment this entity was created
@@ -201,31 +201,31 @@ class Environment
     }
 
     /**
-     * @return Collection|Component[]
+     * @return Collection|Installation[]
      */
-    public function getComponents(): Collection
+    public function getInstallations(): Collection
     {
-        return $this->components;
+        return $this->installations;
     }
 
-    public function addComponent(Component $component): self
+    public function addInstallation(Installation $installation): self
     {
-        if (!$this->components->contains($component)) {
-            $this->components[] = $component;
-            $component->setEnviroment($this);
+        if (!$this->installations->contains($installation)) {
+            $this->installations[] = $installation;
+            $installation->setEnviroment($this);
         }
 
         return $this;
     }
 
 
-    public function removeComponent(Component $component): self
+    public function removeInstallation(Installation $installation): self
     {
-        if ($this->components->contains($component)) {
-            $this->components->removeElement($component);
+        if ($this->installations->contains($installation)) {
+            $this->installations->removeElement($installation);
             // set the owning side to null (unless already changed)
-            if ($component->getEnviroment() === $this) {
-                $component->setEnviroment(null);
+            if ($installation->getEnviroment() === $this) {
+                $installation->setEnviroment(null);
             }
         }
 
