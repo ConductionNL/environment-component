@@ -33,6 +33,7 @@ class AppFixtures extends Fixture
         $domain = new Domain();
         $domain->setName('conduction.nl');
         $domain->setDescription('The core conduction domain');
+        $domain->setLocation('conduction.nl');
         $manager->persist($domain);
 
         $cluster = new Cluster();
