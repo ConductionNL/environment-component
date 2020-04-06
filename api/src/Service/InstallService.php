@@ -73,6 +73,7 @@ class InstallService
         $data['domain'] = $installation->getDomain()->getName();
         $data['dburl'] = $installation->getDbUrl();
         //$data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
+        $data['helmVersion'] = $installation->getHelmVersion();
         $data['authorization'] = $installation->getComponent()->getAuthorization();
         $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
         $request['event_type'] = "start-install-workflow";

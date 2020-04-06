@@ -101,21 +101,6 @@ class Installation
     private $name;
 
     /**
-     * @var string The full name of this component
-     *
-     * @example environment component
-     *
-     * @Gedmo\Versioned
-     * @Assert\NotNull
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"read","write"})
-     * @ORM\Column(type="string", length=255)
-     */
-    private $title;
-
-    /**
      * @var string the description of this component
      *
      * @example This common ground component describes common ground components
@@ -137,7 +122,7 @@ class Installation
      *      max = 255
      * )
      * @Groups({"read","write"})
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $dbUsername;
 
@@ -151,7 +136,7 @@ class Installation
      *      max = 255
      * )
      * @Groups({"write"})
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $dbPassword;
 
@@ -166,7 +151,7 @@ class Installation
      * )
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $dbName;
 
@@ -181,7 +166,7 @@ class Installation
      *      max = 255
      * )
      * @Groups({"write"})
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $authorization;
 
@@ -195,9 +180,23 @@ class Installation
      *      max = 255
      * )
      * @Groups({"write"})
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $dbUrl;
+
+    /**
+     * @var string the Github Repository that contains this component
+     *
+     * @example https://github.com/ConductionNL/environment-component
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $helmVersion;
 
     /**
      * @Groups({"read","write"})
@@ -417,6 +416,30 @@ class Installation
         return $this;
     }
 
+    public function getHelmVersion(): ?string
+    {
+        return $this->helmVersion;
+    }
+
+    public function setHelmVersion(string $helmVersion): self
+    {
+        $this->helmVersion = $helmVersion;
+
+        return $this;
+    }
+
+    public function getComponent(): ?Component
+    {
+        return $this->component;
+    }
+
+    public function setComponent(?Component $component): self
+    {
+        $this->component = $component;
+        $component->addInstallation($this);
+        return $this;
+    }
+
     public function getDomain(): ?Domain
     {
         return $this->domain;
@@ -425,7 +448,7 @@ class Installation
     public function setDomain(?Domain $domain): self
     {
         $this->domain = $domain;
-        $domain->addComponent($this);
+        $domain->addInstallation($this);
         return $this;
     }
 }

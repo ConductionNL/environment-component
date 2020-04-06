@@ -12,6 +12,7 @@ use App\Entity\Cluster;
 use App\Entity\Environment;
 use App\Entity\Domain;
 use App\Entity\Component;
+use App\Entity\Installation;
 
 class ConductionFixtures extends Fixture
 {
@@ -43,26 +44,26 @@ class ConductionFixtures extends Fixture
         $domain->setCluster($cluster);
         $manager->persist($domain);
 
-        $environment = new Environment();
-        $environment->setName('prod');
-        $environment->setDescription('The production enviroment');
-        $environment->setDebug(0);
-        $environment->setCluster($cluster);
-        $manager->persist($environment);
+        $prod = new Environment();
+        $prod->setName('prod');
+        $prod->setDescription('The production enviroment');
+        $prod->setDebug(0);
+        $prod->setCluster($cluster);
+        $manager->persist($prod);
 
-        $environment = new Environment();
-        $environment->setName('stag');
-        $environment->setDescription('The staging enviroment');
-        $environment->setDebug(0);
-        $environment->setCluster($cluster);
-        $manager->persist($environment);
+        $stag = new Environment();
+        $stag->setName('stag');
+        $stag->setDescription('The staging enviroment');
+        $stag->setDebug(0);
+        $stag->setCluster($cluster);
+        $manager->persist($stag);
 
-        $environment = new Environment();
-        $environment->setName('dev');
-        $environment->setDescription('The development enviroment');
-        $environment->setDebug(1);
-        $environment->setCluster($cluster);
-        $manager->persist($environment);
+        $dev = new Environment();
+        $dev->setName('dev');
+        $dev->setDescription('The development enviroment');
+        $dev->setDebug(1);
+        $dev->setCluster($cluster);
+        $manager->persist($dev);
 
         // Component Lists
         $component = new Component();
@@ -72,6 +73,26 @@ class ConductionFixtures extends Fixture
         $component->setGithubRepository('https://github.com/ConductionNL/environment-component/');
         $component->setHelmRepository('https://github.com/ConductionNL/environment-component/api/helm');
         $manager->persist($component);
+
+        // Setup an installation for above component
+        $installation = new Installation();
+        $installation->setComponent($component);
+        $installation->setDomain($domain);
+        $installation->setEnvironment($dev);
+        $installation->setName($component->getName());
+        $installation->setDescription($component->getDescription());
+        $installation->setHelmVersion('v2.12.3');
+        $manager->persist($installation);
+
+        // Installation staging enviroment
+        $installation = clone $installation;
+        $installation->setEnvironment($stag);
+        $manager->persist($installation);
+
+        // Installation production enviroment
+        $installation = clone $installation;
+        $installation->setEnvironment($prod);
+        $manager->persist($installation);
 
         $component = new Component();
         $component->setCode('uc');
