@@ -12,10 +12,10 @@ class DigitalOceanService
     private $headers;
     private $guzzleConfig;
 
-    public function __construct()
+    public function __construct($token)
     {
         $this->headers = [
-            'Authorization'=>'Bearer %ChangeMe%',
+            'Authorization'=>'Bearer '.$token,
             'Content-Type'=>'application/json',
             'Accept'=>'application/json',
         ];
