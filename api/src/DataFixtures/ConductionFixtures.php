@@ -48,21 +48,21 @@ class ConductionFixtures extends Fixture
         $prod->setName('prod');
         $prod->setDescription('The production enviroment');
         $prod->setDebug(0);
-        $prod->setCluster($prod);
+        $prod->setCluster($cluster);
         $manager->persist($prod);
 
         $stag = new Environment();
         $stag->setName('stag');
         $stag->setDescription('The staging enviroment');
         $stag->setDebug(0);
-        $stag->setCluster($stag);
+        $stag->setCluster($cluster);
         $manager->persist($stag);
 
         $dev = new Environment();
         $dev->setName('dev');
         $dev->setDescription('The development enviroment');
         $dev->setDebug(1);
-        $dev->setCluster($dev);
+        $dev->setCluster($cluster);
         $manager->persist($dev);
 
         // Component Lists

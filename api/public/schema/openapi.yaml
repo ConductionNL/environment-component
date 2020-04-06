@@ -7746,15 +7746,6 @@ paths:
               - asc
               - desc
         -
-          name: 'order[title]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
           name: 'order[description]'
           in: query
           required: false
@@ -7801,6 +7792,15 @@ paths:
               - desc
         -
           name: 'order[dbUrl]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[helmVersion]'
           in: query
           required: false
           schema:
@@ -7907,22 +7907,6 @@ paths:
           style: form
           explode: true
         -
-          name: title
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'title[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
           name: description
           in: query
           required: false
@@ -8010,6 +7994,22 @@ paths:
             type: string
         -
           name: 'dbUrl[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        -
+          name: helmVersion
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'helmVersion[]'
           in: query
           required: false
           schema:
@@ -9709,9 +9709,6 @@ components:
         name:
           description: 'The name of this component'
           type: string
-        title:
-          description: 'The full name of this component'
-          type: string
         description:
           description: 'the description of this component'
           type: string
@@ -9721,6 +9718,11 @@ components:
         dbName:
           description: 'The name of the database this component uses'
           type: string
+        helmVersion:
+          description: 'the Github Repository that contains this component'
+          type: string
+        component:
+          $ref: '#/components/schemas/Component-read'
         domain:
           $ref: '#/components/schemas/Domain-read'
         environment:
@@ -9741,26 +9743,23 @@ components:
           format: date-time
       required:
         - name
-        - title
         - dbUsername
         - dbName
+        - helmVersion
     Installation-write:
       type: object
       description: ''
       required:
         - name
-        - title
         - dbUsername
         - dbPassword
         - dbName
         - authorization
         - dbUrl
+        - helmVersion
       properties:
         name:
           description: 'The name of this component'
-          type: string
-        title:
-          description: 'The full name of this component'
           type: string
         description:
           description: 'the description of this component'
@@ -9783,6 +9782,11 @@ components:
           writeOnly: true
           description: 'the Github Repository that contains this component'
           type: string
+        helmVersion:
+          description: 'the Github Repository that contains this component'
+          type: string
+        component:
+          $ref: '#/components/schemas/Component-write'
         domain:
           $ref: '#/components/schemas/Domain-write'
         environment:
@@ -9813,9 +9817,6 @@ components:
         name:
           description: 'The name of this component'
           type: string
-        title:
-          description: 'The full name of this component'
-          type: string
         description:
           description: 'the description of this component'
           type: string
@@ -9825,6 +9826,11 @@ components:
         dbName:
           description: 'The name of the database this component uses'
           type: string
+        helmVersion:
+          description: 'the Github Repository that contains this component'
+          type: string
+        component:
+          $ref: '#/components/schemas/Component:jsonld-read'
         domain:
           $ref: '#/components/schemas/Domain:jsonld-read'
         environment:
@@ -9845,20 +9851,20 @@ components:
           format: date-time
       required:
         - name
-        - title
         - dbUsername
         - dbName
+        - helmVersion
     'Installation:jsonld-write':
       type: object
       description: ''
       required:
         - name
-        - title
         - dbUsername
         - dbPassword
         - dbName
         - authorization
         - dbUrl
+        - helmVersion
       properties:
         '@context':
           readOnly: true
@@ -9871,9 +9877,6 @@ components:
           type: string
         name:
           description: 'The name of this component'
-          type: string
-        title:
-          description: 'The full name of this component'
           type: string
         description:
           description: 'the description of this component'
@@ -9896,6 +9899,11 @@ components:
           writeOnly: true
           description: 'the Github Repository that contains this component'
           type: string
+        helmVersion:
+          description: 'the Github Repository that contains this component'
+          type: string
+        component:
+          $ref: '#/components/schemas/Component:jsonld-write'
         domain:
           $ref: '#/components/schemas/Domain:jsonld-write'
         environment:
@@ -10009,12 +10017,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-05 19:19:52'
+        example: '2020-04-06 06:21:53'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-05 19:19:52'
+        example: '2020-04-06 06:21:53'
     required: []
   AuditTrail-write:
     properties:
@@ -10062,12 +10070,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-05 19:19:52'
+        example: '2020-04-06 06:21:53'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-05 19:19:52'
+        example: '2020-04-06 06:21:53'
     required: []
   ChangeLog-write:
     properties:
@@ -10385,11 +10393,6 @@ definitions:
         type: string
         example: evc
         maxLength: 255
-      title:
-        description: 'The full name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
       description:
         description: 'the description of this component'
         type: string
@@ -10403,6 +10406,11 @@ definitions:
         description: 'The name of the database this component uses'
         type: string
         maxLength: 255
+      helmVersion:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
@@ -10415,23 +10423,18 @@ definitions:
       healthLogs: []
     required:
       - name
-      - title
       - dbUsername
       - dbPassword
       - dbName
       - authorization
       - dbUrl
+      - helmVersion
   Installation-write:
     properties:
       name:
         description: 'The name of this component'
         type: string
         example: evc
-        maxLength: 255
-      title:
-        description: 'The full name of this component'
-        type: string
-        example: 'environment component'
         maxLength: 255
       description:
         description: 'the description of this component'
@@ -10460,18 +10463,23 @@ definitions:
         type: string
         example: 'https://github.com/ConductionNL/environment-component'
         maxLength: 255
+      helmVersion:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
       component: []
       domain: []
       environment: []
       healthLogs: []
     required:
       - name
-      - title
       - dbUsername
       - dbPassword
       - dbName
       - authorization
       - dbUrl
+      - helmVersion
 tags:
   -
     name: AuditTrail

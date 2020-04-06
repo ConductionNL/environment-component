@@ -122,7 +122,7 @@ class Installation
      *      max = 255
      * )
      * @Groups({"read","write"})
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $dbUsername;
 
@@ -136,7 +136,7 @@ class Installation
      *      max = 255
      * )
      * @Groups({"write"})
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $dbPassword;
 
@@ -151,7 +151,7 @@ class Installation
      * )
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $dbName;
 
@@ -166,7 +166,7 @@ class Installation
      *      max = 255
      * )
      * @Groups({"write"})
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $authorization;
 
@@ -180,7 +180,7 @@ class Installation
      *      max = 255
      * )
      * @Groups({"write"})
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $dbUrl;
 
@@ -428,6 +428,18 @@ class Installation
         return $this;
     }
 
+    public function getComponent(): ?Component
+    {
+        return $this->component;
+    }
+
+    public function setComponent(?Component $component): self
+    {
+        $this->component = $component;
+        $component->addInstallation($this);
+        return $this;
+    }
+
     public function getDomain(): ?Domain
     {
         return $this->domain;
@@ -436,7 +448,7 @@ class Installation
     public function setDomain(?Domain $domain): self
     {
         $this->domain = $domain;
-        $domain->addComponent($this);
+        $domain->addInstallation($this);
         return $this;
     }
 }

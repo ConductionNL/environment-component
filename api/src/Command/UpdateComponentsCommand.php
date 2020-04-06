@@ -1,6 +1,6 @@
 <?php
 
-// src/Command/CreateUserCommand.php
+// src/Command/UpdateComponentsCommand.php
 
 namespace App\Command;
 
@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
 
 use App\Service\InstallService;
 
@@ -39,7 +38,7 @@ class UpdateComponentsCommand extends Command
         // the full command description shown when running the command with
         // the "--help" option
         ->setHelp('This command wil loop trough the components provided by excel and create any that do not yet exisit')
-        ->setDescription('Update component list in DB')
+        ->setDescription('Update component list in DB');
         //->addOption('component', null, InputOption::VALUE_OPTIONAL, 'the component that you want to health check');
     }
 
@@ -49,7 +48,6 @@ class UpdateComponentsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        /** @var string $version */
 
         $this->installService->updateComponents(false);
 

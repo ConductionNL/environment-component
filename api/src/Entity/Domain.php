@@ -173,9 +173,8 @@ class Domain
 
     public function __construct()
     {
-        $this->components = new ArrayCollection();
+        $this->installations = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
-        $this->environments = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
