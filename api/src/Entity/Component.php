@@ -192,6 +192,11 @@ class Component
      */
     private $dateModified;
 
+    public function __construct()
+    {
+        $this->installations = new ArrayCollection();
+    }
+
     public function getId(): ?Uuid
     {
         return $this->id;
