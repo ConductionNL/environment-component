@@ -109,6 +109,21 @@ class Environment
     private $debug;
 
     /**
+     * @var string The authentication token that is needed to access this token
+     *
+     * @example evc-dev
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"write"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $authorization;
+
+    /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="environments")
@@ -252,6 +267,18 @@ class Environment
     public function setDateModified(?\DateTimeInterface $dateModified): self
     {
         $this->dateModified = $dateModified;
+
+        return $this;
+    }
+
+    public function getAuthorization(): ?string
+    {
+        return $this->authorization;
+    }
+
+    public function setAuthorization(?string $authorization): self
+    {
+        $this->authorization = $authorization;
 
         return $this;
     }

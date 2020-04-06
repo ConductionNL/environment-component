@@ -5652,6 +5652,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[authorization]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'order[dateCreated]'
           in: query
           required: false
@@ -5779,6 +5788,22 @@ paths:
             type: array
             items:
               type: integer
+          style: form
+          explode: true
+        -
+          name: authorization
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'authorization[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
           style: form
           explode: true
         -
@@ -9505,6 +9530,7 @@ components:
       required:
         - name
         - debug
+        - authorization
       properties:
         name:
           description: 'The name of this component'
@@ -9515,6 +9541,10 @@ components:
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
+        authorization:
+          writeOnly: true
+          description: 'The authentication token that is needed to access this token'
+          type: string
         cluster:
           $ref: '#/components/schemas/Cluster-write'
         installations:
@@ -9576,6 +9606,7 @@ components:
       required:
         - name
         - debug
+        - authorization
       properties:
         '@context':
           readOnly: true
@@ -9595,6 +9626,10 @@ components:
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
+        authorization:
+          writeOnly: true
+          description: 'The authentication token that is needed to access this token'
+          type: string
         cluster:
           $ref: '#/components/schemas/Cluster:jsonld-write'
         installations:
@@ -10017,12 +10052,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-06 06:21:53'
+        example: '2020-04-06 11:49:19'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-06 06:21:53'
+        example: '2020-04-06 11:49:19'
     required: []
   AuditTrail-write:
     properties:
@@ -10070,12 +10105,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-06 06:21:53'
+        example: '2020-04-06 11:49:19'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-06 06:21:53'
+        example: '2020-04-06 11:49:19'
     required: []
   ChangeLog-write:
     properties:
@@ -10140,87 +10175,6 @@ definitions:
       environments: []
     required:
       - name
-  Component-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - githubToken
-      - helmRepository
-  Component-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      githubToken:
-        description: 'A personal access token for github that can be used to trigger actions on this component'
-        type: string
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - githubToken
-      - helmRepository
   Domain-read:
     properties:
       id:
@@ -10294,93 +10248,6 @@ definitions:
     required:
       - name
       - location
-  Environment-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      debug:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      cluster: []
-      installations:
-        description: 'The installations in this environment'
-        type: \ArrayCollection
-    required:
-      - name
-      - debug
-  Environment-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      debug:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
-      cluster: []
-      installations:
-        description: 'The installations in this environment'
-        type: \ArrayCollection
-    required:
-      - name
-      - debug
-  HealthLog-read:
-    properties:
-      description:
-        description: 'the description of this health log'
-        type: string
-        example: 'This health logs contains the health logs for x'
-      status:
-        description: 'The status of the checked resource'
-        type: string
-        example: OK
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      domain: []
-      installation: []
-    required: []
-  HealthLog-write:
-    properties:
-      description:
-        description: 'the description of this health log'
-        type: string
-        example: 'This health logs contains the health logs for x'
-      status:
-        description: 'The status of the checked resource'
-        type: string
-        example: OK
-      domain: []
-      installation: []
-    required: []
   Installation-read:
     properties:
       id:
@@ -10480,6 +10347,181 @@ definitions:
       - authorization
       - dbUrl
       - helmVersion
+  Component-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - githubToken
+      - helmRepository
+  Component-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      githubToken:
+        description: 'A personal access token for github that can be used to trigger actions on this component'
+        type: string
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - githubToken
+      - helmRepository
+  Environment-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - authorization
+  Environment-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
+      authorization:
+        description: 'The authentication token that is needed to access this token'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - authorization
+  HealthLog-read:
+    properties:
+      description:
+        description: 'the description of this health log'
+        type: string
+        example: 'This health logs contains the health logs for x'
+      status:
+        description: 'The status of the checked resource'
+        type: string
+        example: OK
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      domain: []
+      installation: []
+    required: []
+  HealthLog-write:
+    properties:
+      description:
+        description: 'the description of this health log'
+        type: string
+        example: 'This health logs contains the health logs for x'
+      status:
+        description: 'The status of the checked resource'
+        type: string
+        example: OK
+      domain: []
+      installation: []
+    required: []
 tags:
   -
     name: AuditTrail
@@ -10500,13 +10542,19 @@ tags:
       
       
   -
-    name: Component
+    name: Domain
     description: |
       
       
       
   -
-    name: Domain
+    name: Installation
+    description: |
+      
+      
+      
+  -
+    name: Component
     description: |
       
       
@@ -10523,27 +10571,21 @@ tags:
       
       
       
-  -
-    name: Installation
-    description: |
-      
-      
-      
 securityDefinitions:
   JWT-Oauth:
     type: oauth2
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the Installation resource'
-      write: 'write right to the Installation resource'
+      read: 'read right to the HealthLog resource'
+      write: 'write right to the HealthLog resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the Installation resource'
-      write: 'write right to the Installation resource'
+      read: 'read right to the HealthLog resource'
+      write: 'write right to the HealthLog resource'
 host: irc.zaakonline.nl
 servers:
   -
