@@ -5,23 +5,27 @@ namespace App\Service;
 
 use App\Entity\Installation;
 use GuzzleHttp\Client;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class DigitalOceanService
 {
     private $client;
     private $headers;
     private $guzzleConfig;
+    private $params;
 
-    public function __construct($token)
+    public function __construct(ParameterBagInterface $params)
     {
+        $this->params = $params;
         $this->headers = [
-            'Authorization'=>'Bearer '.$token,
+            'Authorization'=>'Bearer '.$this->params->get('app_digitalocean_key'),
             'Content-Type'=>'application/json',
             'Accept'=>'application/json',
         ];
         $this->guzzleConfig = [
             'http_errors' => false,
-            'base_uri' => 'https://api.digitalocean.com/v2',
+            'base_uri' => 'https://api.digitalocean.com/v2/',
             'timeout' => 4000.0,
             'headers' => $this->headers
         ];
@@ -32,28 +36,32 @@ class DigitalOceanService
 
     public function getDatabaseClusters() : array
     {
-        $response = $this->client->get('/databases');
+        $response = $this->client->get('databases');
+//        var_dump($this->guzzleConfig);
+//        var_dump($this->params->get('app_digitalocean_key'));
+//        var_dump($response);
+//        die;
 
         if($response->getStatusCode() == 200){
             return json_decode($response->getBody(), true);
         }
-        throw new Symfony\Component\HttpKernel\Exception\HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.json_encode($response));
+        throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.json_encode($response->getBody()));
     }
     public function getDatabases($clusterId):array
     {
-        $response = $this->client->get("/databases/$clusterId/dbs");
+        $response = $this->client->get("databases/$clusterId/dbs");
         if($response->getStatusCode() == 200){
             return json_decode($response->getBody(), true);
         }
-        throw new Symfony\Component\HttpKernel\Exception\HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/dbs".' returned: '.json_encode($response));
+        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/dbs".' returned: '.json_encode($response->getBody()));
     }
     public function getDatabaseUsers($clusterId):array
     {
-        $response = $this->client->get("/databases/$clusterId/users");
+        $response = $this->client->get("databases/$clusterId/users");
         if($response->getStatusCode() == 200){
             return json_decode($response->getBody(), true);
         }
-        throw new Symfony\Component\HttpKernel\Exception\HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/users".' returned: '.json_encode($response));
+        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/users".' returned: '.json_encode($response->getBody()));
     }
     public function createDatabaseCluster(string $name):array
     {
@@ -67,12 +75,12 @@ class DigitalOceanService
             'tags' => [$name]
         ];
         $resource = json_encode($databaseCluster);
-        $response = $this->client->post('/databases', ['body'=>$resource]);
+        $response = $this->client->post('databases', ['body'=>$resource]);
 
         if($response->getStatusCode() == 201){
-            return $response->getBody();
+            return json_decode($response->getBody(),true);
         }
-        throw new Symfony\Component\HttpKernel\Exception\HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.json_encode($response));
+        throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.$response->getBody());
     }
     public function createDatabase($name, $clusterId):array
     {
@@ -80,12 +88,12 @@ class DigitalOceanService
             'name'=>$name
         ];
         $resource = json_encode($database);
-        $response = $this->client->post("/databases/$clusterId/dbs", ['body'=>$resource]);
+        $response = $this->client->post("databases/$clusterId/dbs", ['body'=>$resource]);
 
         if($response->getStatusCode() == 201){
-            return $response->getBody();
+            return json_decode($response->getBody(),true);
         }
-        throw new Symfony\Component\HttpKernel\Exception\HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/dbs".' returned: '.json_encode($response));
+        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/dbs".' returned: '.json_encode($response->getBody()));
     }
     public function createDatabaseUser($name, $clusterId):array
     {
@@ -93,12 +101,12 @@ class DigitalOceanService
             'name'=>$name
         ];
         $resource = json_encode($user);
-        $response = $this->client->post('/databases', ['body'=>$resource]);
+        $response = $this->client->post("databases/$clusterId/users", ['body'=>$resource]);
 
         if($response->getStatusCode() == 201){
-            return $response->getBody();
+            return json_decode($response->getBody(), true);
         }
-        throw new Symfony\Component\HttpKernel\Exception\HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/users".' returned: '.json_encode($response));
+        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/users".' returned: '.json_encode($response->getBody()));
     }
     public function getDatabaseClusterByName($name){
         $dbCluster = [];
@@ -121,7 +129,7 @@ class DigitalOceanService
         $dbs = $this->getDatabases($dbCluster['id']);
         foreach($dbs['dbs'] as $db){
             if($db['name'] == $name){
-                $database['id'] = $db['id'];
+                $database['name'] = $db['name'];
             }
         }
         if(empty($database)){
@@ -133,14 +141,15 @@ class DigitalOceanService
     public function getDatabaseUserByName($name, $dbCluster){
         $user = [];
         $users = $this->getDatabaseUsers($dbCluster['id']);
-        foreach($users as $u){
+//        var_dump($users['users']);
+        foreach($users['users'] as $u){
             if($u['name'] == $name){
                 $user['username'] = $u['name'];
                 $user['password'] = $u['password'];
             }
         }
         if(empty($database)){
-            $u = $this->createDatabaseUser($name, $dbCluster['id']);
+            $u = $this->createDatabaseUser($name, $dbCluster['id'])['user'];
             $user['username'] = $u['name'];
             $user['password'] = $u['password'];
         }
@@ -151,7 +160,7 @@ class DigitalOceanService
 
         //Check if there is a database cluster with the same name as the kubernetes cluster, else create
         $dbCluster = $this->getDatabaseClusterByName($cluster->getName());
-
+//        var_dump($dbCluster['id']);
         //Check if there is a database with the same name as the installation, else create
         $installationName = $installation->getName().'-'.$installation->getEnvironment()->getName();
 

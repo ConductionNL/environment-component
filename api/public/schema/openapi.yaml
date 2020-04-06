@@ -9778,19 +9778,12 @@ components:
           format: date-time
       required:
         - name
-        - dbUsername
-        - dbName
         - helmVersion
     Installation-write:
       type: object
       description: ''
       required:
         - name
-        - dbUsername
-        - dbPassword
-        - dbName
-        - authorization
-        - dbUrl
         - helmVersion
       properties:
         name:
@@ -9886,19 +9879,12 @@ components:
           format: date-time
       required:
         - name
-        - dbUsername
-        - dbName
         - helmVersion
     'Installation:jsonld-write':
       type: object
       description: ''
       required:
         - name
-        - dbUsername
-        - dbPassword
-        - dbName
-        - authorization
-        - dbUrl
         - helmVersion
       properties:
         '@context':
@@ -10052,12 +10038,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-06 11:49:19'
+        example: '2020-04-06 16:04:31'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-06 11:49:19'
+        example: '2020-04-06 16:04:31'
     required: []
   AuditTrail-write:
     properties:
@@ -10105,12 +10091,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-06 11:49:19'
+        example: '2020-04-06 16:04:31'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-06 11:49:19'
+        example: '2020-04-06 16:04:31'
     required: []
   ChangeLog-write:
     properties:
@@ -10290,11 +10276,6 @@ definitions:
       healthLogs: []
     required:
       - name
-      - dbUsername
-      - dbPassword
-      - dbName
-      - authorization
-      - dbUrl
       - helmVersion
   Installation-write:
     properties:
@@ -10341,11 +10322,6 @@ definitions:
       healthLogs: []
     required:
       - name
-      - dbUsername
-      - dbPassword
-      - dbName
-      - authorization
-      - dbUrl
       - helmVersion
   Component-read:
     properties:
