@@ -99,7 +99,7 @@ class Domain
     /**
      * @var string the base route of this domain
      *
-     * @example https://conduction.nl
+     * @example conduction.nl
      *
      * @Assert\Url
      * @Assert\Length(
@@ -159,9 +159,9 @@ class Domain
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="domain")
+     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="domain")
      */
-    private $components;
+    private $installations;
 
     /**
      * @Groups({"read","write"})
@@ -170,18 +170,11 @@ class Domain
      */
     private $healthLogs;
 
-    /**
-     * @Groups({"read","write"})
-     * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="domain")
-     */
-    private $environments;
 
     public function __construct()
     {
-        $this->components = new ArrayCollection();
+        $this->installations = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
-        $this->environments = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -286,30 +279,30 @@ class Domain
     }
 
     /**
-     * @return Collection|Component[]
+     * @return Collection|Installation[]
      */
-    public function getComponents(): Collection
+    public function getInstallations(): Collection
     {
-        return $this->components;
+        return $this->installations;
     }
 
-    public function addComponent(Component $component): self
+    public function addInstallation(Installation $installation): self
     {
-        if (!$this->components->contains($component)) {
-            $this->components[] = $component;
-            $component->setDomain($this);
+        if (!$this->installations->contains($installation)) {
+            $this->installations[] = $installation;
+            $installation->setDomain($this);
         }
 
         return $this;
     }
 
-    public function removeComponent(Component $component): self
+    public function removeInstallation(Installation $installation): self
     {
-        if ($this->components->contains($component)) {
-            $this->components->removeElement($component);
+        if ($this->components->contains($installation)) {
+            $this->components->removeElement($installation);
             // set the owning side to null (unless already changed)
-            if ($component->getDomain() === $this) {
-                $component->setDomain(null);
+            if ($installation->getDomain() === $this) {
+                $installation->setDomain(null);
             }
         }
 
@@ -341,37 +334,6 @@ class Domain
             // set the owning side to null (unless already changed)
             if ($healthLog->getDomain() === $this) {
                 $healthLog->setDomain(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Environment[]
-     */
-    public function getEnvironments(): Collection
-    {
-        return $this->environments;
-    }
-
-    public function addEnvironment(Environment $environment): self
-    {
-        if (!$this->environments->contains($environment)) {
-            $this->environments[] = $environment;
-            $environment->setDomain($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEnvironment(Environment $environment): self
-    {
-        if ($this->environments->contains($environment)) {
-            $this->environments->removeElement($environment);
-            // set the owning side to null (unless already changed)
-            if ($environment->getDomain() === $this) {
-                $environment->setDomain(null);
             }
         }
 

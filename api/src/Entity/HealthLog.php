@@ -101,9 +101,9 @@ class HealthLog
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\ManyToOne(targetEntity="App\Entity\Component", inversedBy="healthLogs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Installation", inversedBy="healthLogs")
      */
-    private $component;
+    private $installation;
 
     /**
      * @var Datetime The moment this entity was created
@@ -176,14 +176,14 @@ class HealthLog
         return $this;
     }
 
-    public function getComponent(): ?Component
+    public function getInstallation(): ?Installation
     {
-        return $this->component;
+        return $this->installation;
     }
 
-    public function setComponent(?Component $component): self
+    public function setInstallation(?Installation $installation): self
     {
-        $this->component = $component;
+        $this->installation = $installation;
 
         return $this;
     }

@@ -14,6 +14,8 @@ settings:
   demo: evc.zaakonline.nl
   container: https://hub.docker.com/repository/docker/conduction/evc-php
   domain: conduction.nl
+  evcGithAuth: NULL
+  evcDomains: [&quot;conduction.nl&quot;,&quot;zaakonline.nl&quot;,&quot;larping.eu&quot;,&quot;common-ground.dev&quot;,&quot;trouwplanner.online&quot;,&quot;huwelijksplanner.online&quot;]
   subdomain: evc
   domains:
     - conduction.nl
@@ -34,7 +36,7 @@ settings:
   cache: 1
   replicaCount: 1
   corsAllowOrigin: ['*']
-  trustedHosts: '127.0.0.1$|^(.+\.)?conduction\.nl$|^(.+\.)?huwelijksplanner\.online$|^(.+\.)?larping\.eu$|^(.+\.)?common-ground\.dev$|^(.+\.)?trouwplanner\.online$|^(.+\.)?zaakonline\.nl$|localhost'
+  trustedHosts: '^(.+\.)localhost$|^(.+\.)127.0.0.1$|^(.+\.)?conduction\.nl$'
   pullPolicy: Always
   # You will need these proxies on kubernetes
   trustedProxies:

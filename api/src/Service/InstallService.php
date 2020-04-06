@@ -8,6 +8,7 @@ use App\Entity\Cluster;
 use App\Entity\Component;
 use App\Entity\Domain;
 use App\Entity\Environment;
+use App\Entity\Installation;
 
 class InstallService
 {
@@ -32,14 +33,15 @@ class InstallService
 
     // Volgens mij heb je hier twee functies nodig install/update. En heeft de functie alleen een component nodig (rest zit daar immers al aan vast
 
-    public function update(Component $component)
+    public function update(Installation $installation)
     {
-        $url = $this->getGithubAPIUrl($component->getGithubRepository());
-        $data['environment'] = $component->getEnvironment()->getName();
-        $data['domain'] = $component->getDomain()->getName();
-        $data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
-        $data['authorization'] = $component->getAuthorization();
-        $data['kubeconfig'] = $component->getEnvironment()->getCluster()->getKubeconfig();
+        $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
+        $data['environment'] = $installation->getEnvironment()->getName();
+        $data['domain'] = $installation->getDomain()->getName();
+        $data['dburl'] = $installation->getDbUrl();
+        //$data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
+        $data['authorization'] = $installation->getComponent()->getAuthorization();
+        $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
         $request['event_type'] = "start-upgrade-workflow";
         $request['client_payload'] = $data;
 //        var_dump(json_encode($request));
@@ -49,14 +51,14 @@ class InstallService
                 'body' => json_encode($request),
                 'headers'=>
                     [
-                        "Authorization"=> "Bearer ".$component->getGithubToken(),
+                        "Authorization"=> "Bearer ".$installation->getComponent()->getGithubToken(),
                         'Content-Type'=>'application/json',
                         'Accept'=>'application/vnd.github.everest-preview+json'
                     ]
             ]
         );
         if($result->getStatusCode() == 204){
-            return "Action triggered, check {$component->getGithubRepository()}/actions for the status";
+            return "Action triggered, check {$installation->getComponent()->getGithubRepository()}/actions for the status";
         }
         else{
             throw new Symfony\Component\HttpKernel\Exception\HttpException($result->getStatusCode(), $url.' returned: '.json_encode($result->getBody()));
@@ -64,14 +66,16 @@ class InstallService
 
     }
 
-    public function install(Component $component)
+    public function install(Installation $installation)
     {
-        $url = $this->getGithubAPIUrl($component->getGithubRepository());
-        $data['environment'] = $component->getEnvironment()->getName();
-        $data['domain'] = $component->getDomain()->getName();
-        $data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
-        $data['authorization'] = $component->getAuthorization();
-        $data['kubeconfig'] = $component->getEnvironment()->getCluster()->getKubeconfig();
+        $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
+        $data['environment'] = $installation->getEnvironment()->getName();
+        $data['domain'] = $installation->getDomain()->getName();
+        $data['dburl'] = $installation->getDbUrl();
+        //$data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
+        $data['helmVersion'] = $installation->getHelmVersion();
+        $data['authorization'] = $installation->getComponent()->getAuthorization();
+        $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
         $request['event_type'] = "start-install-workflow";
         $request['client_payload'] = $data;
 
@@ -80,14 +84,14 @@ class InstallService
                 'body' => json_encode($request),
                 'headers'=>
                     [
-                        "Authorization"=> "Bearer ".$component->getGithubToken(),
+                        "Authorization"=> "Bearer ".$installation->getComponent()->getGithubToken(),
                         'Content-Type'=>'application/json',
                         'Accept'=>'application/vnd.github.everest-preview+json'
                     ]
             ]
         );
         if($result->getStatusCode() == 204){
-            return "Action triggered, check {$component->getGithubRepository()}/actions for the status";
+            return "Action triggered, check {$installation->getComponent()->getGithubRepository()}/actions for the status";
         }
         else{
             throw new Symfony\Component\HttpKernel\Exception\HttpException($result->getStatusCode(), $url.' returned: '.json_encode($result->getBody()));
