@@ -7800,16 +7800,7 @@ paths:
               - asc
               - desc
         -
-          name: 'order[githubRepository]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[githubToken]'
+          name: 'order[dbUrl]'
           in: query
           required: false
           schema:
@@ -8012,29 +8003,13 @@ paths:
           style: form
           explode: true
         -
-          name: githubRepository
+          name: dbUrl
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'githubRepository[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: githubToken
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'githubToken[]'
+          name: 'dbUrl[]'
           in: query
           required: false
           schema:
@@ -9746,9 +9721,6 @@ components:
         dbName:
           description: 'The name of the database this component uses'
           type: string
-        githubRepository:
-          description: 'the Github Repository that contains this component'
-          type: string
         domain:
           $ref: '#/components/schemas/Domain-read'
         environment:
@@ -9772,7 +9744,6 @@ components:
         - title
         - dbUsername
         - dbName
-        - githubRepository
     Installation-write:
       type: object
       description: ''
@@ -9783,8 +9754,7 @@ components:
         - dbPassword
         - dbName
         - authorization
-        - githubRepository
-        - githubToken
+        - dbUrl
       properties:
         name:
           description: 'The name of this component'
@@ -9809,12 +9779,9 @@ components:
           writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
-        githubRepository:
-          description: 'the Github Repository that contains this component'
-          type: string
-        githubToken:
+        dbUrl:
           writeOnly: true
-          description: 'A personal access token for github that can be used to trigger actions on this component'
+          description: 'the Github Repository that contains this component'
           type: string
         domain:
           $ref: '#/components/schemas/Domain-write'
@@ -9858,9 +9825,6 @@ components:
         dbName:
           description: 'The name of the database this component uses'
           type: string
-        githubRepository:
-          description: 'the Github Repository that contains this component'
-          type: string
         domain:
           $ref: '#/components/schemas/Domain:jsonld-read'
         environment:
@@ -9884,7 +9848,6 @@ components:
         - title
         - dbUsername
         - dbName
-        - githubRepository
     'Installation:jsonld-write':
       type: object
       description: ''
@@ -9895,8 +9858,7 @@ components:
         - dbPassword
         - dbName
         - authorization
-        - githubRepository
-        - githubToken
+        - dbUrl
       properties:
         '@context':
           readOnly: true
@@ -9930,12 +9892,9 @@ components:
           writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
-        githubRepository:
-          description: 'the Github Repository that contains this component'
-          type: string
-        githubToken:
+        dbUrl:
           writeOnly: true
-          description: 'A personal access token for github that can be used to trigger actions on this component'
+          description: 'the Github Repository that contains this component'
           type: string
         domain:
           $ref: '#/components/schemas/Domain:jsonld-write'
@@ -10050,12 +10009,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-05 19:12:16'
+        example: '2020-04-05 19:19:52'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-05 19:12:16'
+        example: '2020-04-05 19:19:52'
     required: []
   AuditTrail-write:
     properties:
@@ -10103,12 +10062,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-05 19:12:16'
+        example: '2020-04-05 19:19:52'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-05 19:12:16'
+        example: '2020-04-05 19:19:52'
     required: []
   ChangeLog-write:
     properties:
@@ -10444,11 +10403,6 @@ definitions:
         description: 'The name of the database this component uses'
         type: string
         maxLength: 255
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
@@ -10466,8 +10420,7 @@ definitions:
       - dbPassword
       - dbName
       - authorization
-      - githubRepository
-      - githubToken
+      - dbUrl
   Installation-write:
     properties:
       name:
@@ -10502,14 +10455,10 @@ definitions:
         type: string
         example: evc-dev
         maxLength: 255
-      githubRepository:
+      dbUrl:
         description: 'the Github Repository that contains this component'
         type: string
         example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      githubToken:
-        description: 'A personal access token for github that can be used to trigger actions on this component'
-        type: string
         maxLength: 255
       component: []
       domain: []
@@ -10522,8 +10471,7 @@ definitions:
       - dbPassword
       - dbName
       - authorization
-      - githubRepository
-      - githubToken
+      - dbUrl
 tags:
   -
     name: AuditTrail

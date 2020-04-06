@@ -101,21 +101,6 @@ class Installation
     private $name;
 
     /**
-     * @var string The full name of this component
-     *
-     * @example environment component
-     *
-     * @Gedmo\Versioned
-     * @Assert\NotNull
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"read","write"})
-     * @ORM\Column(type="string", length=255)
-     */
-    private $title;
-
-    /**
      * @var string the description of this component
      *
      * @example This common ground component describes common ground components
@@ -198,6 +183,20 @@ class Installation
      * @ORM\Column(type="string", length=255)
      */
     private $dbUrl;
+
+    /**
+     * @var string the Github Repository that contains this component
+     *
+     * @example https://github.com/ConductionNL/environment-component
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $helmVersion;
 
     /**
      * @Groups({"read","write"})
@@ -413,6 +412,18 @@ class Installation
     public function setDbUrl(string $dbUrl): self
     {
         $this->dbUrl = $dbUrl;
+
+        return $this;
+    }
+
+    public function getHelmVersion(): ?string
+    {
+        return $this->helmVersion;
+    }
+
+    public function setHelmVersion(string $helmVersion): self
+    {
+        $this->helmVersion = $helmVersion;
 
         return $this;
     }

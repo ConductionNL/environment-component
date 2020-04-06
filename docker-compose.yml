@@ -26,17 +26,23 @@ services:
       # If you develop on Linux, uncomment the following line to use a bind-mounted host directory instead
       # - ./api/var:/srv/api/var:rw
     environment:
+      # Component or application settings
+      - APP_NAME=${APP_NAME}
+      - APP_TITLE=${APP_TITLE}
+      - APP_VERSION=${APP_VERSION}
+      - APP_DEBUG=${APP_DEBUG}
+      - APP_ENV=${APP_ENV}
+      - APP_CASH=${APP_CASH}
+      - APP_BUILD=${APP_BUILD}
+      # Component or application specific settings
+      - APP_EVC_GITAUTH=${APP_EVC_GITAUTH}
+      - APP_EVC_DOMAINS=${APP_EVC_DOMAINS}
+      # Other
       - CONTAINER_REGISTRY_BASE=${CONTAINER_REGISTRY_BASE}
       - CONTAINER_PROJECT_NAME=${CONTAINER_PROJECT_NAME}
       - CONTAINER_REPRO=${CONTAINER_REPRO}
       #- DATABASE_URL=postgres://api-platform:!ChangeMe!@db/api?serverVersion=10.1
       - DATABASE_URL=mysql://api-platform:!ChangeMe!@db/api?serverVersion=10.1
-      - APP_ENV=${APP_ENV}
-      - APP_DEBUG=${APP_DEBUG} 
-      - APP_CASH=${APP_CASH}
-      - APP_VERSION=${APP_VERSION}    
-      - APP_NAME=${APP_NAME} 
-      - APP_TITLE=${APP_TITLE}
       - APP_DOMAIN=${APP_DOMAIN}
       - APP_SUBDOMAIN=${APP_SUBDOMAIN}
       - APP_DOMAINS=${APP_DOMAINS}

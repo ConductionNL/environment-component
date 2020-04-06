@@ -68,6 +68,8 @@ twig:
         app_debug: '%env(APP_DEBUG)%'
         app_cache: '%env(APP_DEBUG)%'
         app_domain: '%env(APP_DOMAIN)%'
+        app_evc_githauth: '%env(APP_EVC_GITAUTH)%'
+        app_evc_domains: '%env(APP_EVC_DOMAINS)%'
         app_subdomain: '%env(APP_SUBDOMAIN)%'
         app_domains: '%env(json:APP_DOMAINS)%' 
         app_demo: '%env(APP_DEMO)%' 

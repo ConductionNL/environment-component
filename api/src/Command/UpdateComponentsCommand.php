@@ -11,8 +11,20 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class HealthCommand extends Command
+
+use App\Service\InstallService;
+
+class UpdateComponentsCommand extends Command
 {
+
+    private $installService;
+
+    public function __construct(InstallService  $installService)
+    {
+        $this->installService = $installService;
+
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}
@@ -20,15 +32,15 @@ class HealthCommand extends Command
     protected function configure()
     {
         $this
-        ->setName('app:health:check')
+        ->setName('app:components:update')
         // the short description shown while running "php bin/console list"
-        ->setDescription('Creates a new helm chart.')
+        ->setDescription('Updates components in the database from a given excel.')
 
         // the full command description shown when running the command with
         // the "--help" option
-        ->setHelp('This command will perform a health check on all or a single domain')
-        ->setDescription('Perform health check on domain')
-        ->addOption('domain', null, InputOption::VALUE_OPTIONAL, 'the component that you want to health check');
+        ->setHelp('This command wil loop trough the components provided by excel and create any that do not yet exisit')
+        ->setDescription('Update component list in DB')
+        //->addOption('component', null, InputOption::VALUE_OPTIONAL, 'the component that you want to health check');
     }
 
     /**
@@ -38,15 +50,8 @@ class HealthCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         /** @var string $version */
-        $componentId = $input->getOption('component');
 
-        // get component
-
-//        if (!$component) {
-//        	throw new InvalidOptionException(sprintf('A component with given id could not be found ("%s" given).', $componentId));
-//        }
-
-        // do some magic
+        $this->installService->updateComponents(false);
 
     }
 }
