@@ -24,6 +24,25 @@ class ConductionFixtures extends Fixture
         $this->params = $params;
         $this->encoder = $encoder;
     }
+    public function createReader(): PhpSpreadSheet\Spreadsheet
+    {
+        $reader = new PhpSpreadsheet\Reader\Xlsx();
+        $reader->setReadDataOnly(true);
+
+        return $reader;
+    }
+
+    public function loadXlsx(string $filename): PhpSpreadsheet\Spreadsheet
+    {
+        $reader = $this->createReader();
+
+        try {
+            return $reader->load($filename);
+        } catch (PhpSpreadsheet\Reader\Exception $e) {
+        }
+
+        return null;
+    }
 
     public function load(ObjectManager $manager)
     {
@@ -31,6 +50,8 @@ class ConductionFixtures extends Fixture
         if (strpos($this->params->get('app_domain'), "conduction.nl") == false) {
             //return false;
         }
+
+
 
         $cluster = new Cluster();
         $cluster->setName('conduction.nl');
