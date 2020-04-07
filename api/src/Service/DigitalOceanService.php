@@ -174,6 +174,7 @@ class DigitalOceanService
         $parsedUrl = $dbCluster['url'];
 
         $installation->setDbUrl("{$parsedUrl['scheme']}://{$user['username']}:{$user['password']}@{$parsedUrl['host']}:{$parsedUrl['port']}/{$database['name']}?sslmode=require&serverVersion=11");
+
         $this->em->persist($installation);
         $this->em->flush();
 

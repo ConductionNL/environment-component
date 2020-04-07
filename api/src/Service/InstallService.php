@@ -48,9 +48,9 @@ class InstallService
             $installation =  $this->digitalOceanService->createConnectionUrl($installation);
         }
 
-        //
+        // Als we geen kubeconfig hebben deze aanmaken
         if(!$installation->getEnvironment()->getCluster()->getKubeconfig()){
-            $installation->getEnvironment()->getCluster()->setKubeconfig( $this->digitalOceanService->createConnectionUrl($installation));
+            $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
         }
 
         $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
