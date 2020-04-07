@@ -218,6 +218,16 @@ spec:
                 secretKeyRef:
                   name: {{ template "fullname" . }}
                   key: app_user_key
+            - name: APP_DIGITALOCEAN_KEY
+              valueFrom:
+                  secretKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: app_digitalocean_key
+            - name: APP_GITHUB_KEY
+              valueFrom:
+                  secretKeyRef:
+                      name: {{ template "fullname" . }}
+                      key: app_github_key
             - name: AUTH_PROVIDER_USER
               valueFrom:
                 secretKeyRef:

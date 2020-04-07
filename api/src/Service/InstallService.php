@@ -42,16 +42,23 @@ class InstallService
         //$data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
         $data['authorization'] = $installation->getComponent()->getAuthorization();
         $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
+
         $request['event_type'] = "start-upgrade-workflow";
         $request['client_payload'] = $data;
-//        var_dump(json_encode($request));
-//        die;
+
+        $token = $installation->getComponent()->getGithubToken();
+
+        // Default to general github key
+        if(!$token){
+            $token = $this->params->get('app_github_key');
+        }
+
         $result = $this->client->post($url,
             [
                 'body' => json_encode($request),
                 'headers'=>
                     [
-                        "Authorization"=> "Bearer ".$installation->getComponent()->getGithubToken(),
+                        "Authorization"=> "Bearer ".$token,
                         'Content-Type'=>'application/json',
                         'Accept'=>'application/vnd.github.everest-preview+json'
                     ]
