@@ -7,6 +7,7 @@ use App\Entity\Installation;
 use GuzzleHttp\Client;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DigitalOceanService
 {
@@ -14,8 +15,9 @@ class DigitalOceanService
     private $headers;
     private $guzzleConfig;
     private $params;
+    private $em;
 
-    public function __construct(ParameterBagInterface $params)
+    public function __construct(ParameterBagInterface $params,EntityManagerInterface $em)
     {
         $this->params = $params;
         $this->headers = [
@@ -32,6 +34,7 @@ class DigitalOceanService
         $this->client = new Client(
             $this->guzzleConfig
         );
+        $this->em = $em;
     }
 
     public function getDatabaseClusters() : array
@@ -155,6 +158,7 @@ class DigitalOceanService
         }
         return $user;
     }
+
     public function createConnectionUrl(Installation $installation){
         $cluster = $installation->getDomain()->getCluster();
 
@@ -168,6 +172,11 @@ class DigitalOceanService
         $user = $this->getDatabaseUserByName($installationName, $dbCluster);
 
         $parsedUrl = $dbCluster['url'];
-        return "{$parsedUrl['scheme']}://{$user['username']}:{$user['password']}@{$parsedUrl['host']}:{$parsedUrl['port']}/{$database['name']}?sslmode=require&serverVersion=11";
+
+        $installation->setDbUrl("{$parsedUrl['scheme']}://{$user['username']}:{$user['password']}@{$parsedUrl['host']}:{$parsedUrl['port']}/{$database['name']}?sslmode=require&serverVersion=11");
+        $this->em->persist($installation);
+        $this->em->flush();
+
+        return $installation;
     }
 }

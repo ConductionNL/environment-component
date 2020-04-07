@@ -61,7 +61,7 @@ class UpdateComponentsCommand extends Command
         foreach($results as $result){
             $io->progressAdvance();
 
-            $this->installService->updateInstallation($result);
+            $this->installService->update($result);
             //$io->warning('Lorem ipsum dolor sit amet');
             //$io->success('Lorem ipsum dolor sit amet');
 
