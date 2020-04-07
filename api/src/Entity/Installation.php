@@ -117,7 +117,6 @@ class Installation
      * @example evc-dev
      *
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
@@ -131,7 +130,6 @@ class Installation
      *
      *
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
@@ -145,7 +143,6 @@ class Installation
      *
      *
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
@@ -161,7 +158,6 @@ class Installation
      * @example evc-dev
      *
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
@@ -175,7 +171,6 @@ class Installation
      *
      * @example https://github.com/ConductionNL/environment-component
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
