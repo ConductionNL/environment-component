@@ -44,52 +44,53 @@ class InstallationSubscriber implements EventSubscriberInterface
 
     public function Installation(GetResponseForControllerResultEvent $event)
     {
-        $method = $event->getRequest()->getMethod();
-//        $route = $event->getRequest()->attributes->get('_route');
-        $result = $event->getControllerResult();
-
-        // Only do somthing if we are on te log route and the entity is logable
-        if ($method != 'POST' || !($result instanceof Installation)) {
-            return;
-        }
-
-        // Lets get the rest of the data
-        $contentType = $event->getRequest()->headers->get('accept');
-        if (!$contentType) {
-            $contentType = $event->getRequest()->headers->get('Accept');
-        }
-        switch ($contentType) {
-            case 'application/json':
-                $renderType = 'json';
-                break;
-            case 'application/ld+json':
-                $renderType = 'jsonld';
-                break;
-            case 'application/hal+json':
-                $renderType = 'jsonhal';
-                break;
-            default:
-                $contentType = 'application/json';
-                $renderType = 'json';
-        }
-
-
-        $result = $this->digitalOceanService->createConnectionUrl($result);
-        $this->em->persist($result);
-        $this->em->flush();
-        $response = $this->serializer->serialize(
-            $result,
-            $renderType,
-            ['enable_max_depth'=> true]
-        );
-
-        // Creating a response
-        $response = new Response(
-            $response,
-            Response::HTTP_CREATED,
-            ['content-type' => $contentType]
-        );
-
-        $event->setResponse($response);
+        return true;
+//        $method = $event->getRequest()->getMethod();
+////        $route = $event->getRequest()->attributes->get('_route');
+//        $result = $event->getControllerResult();
+//
+//        // Only do somthing if we are on te log route and the entity is logable
+//        if ($method != 'POST' || !($result instanceof Installation)) {
+//            return;
+//        }
+//
+//        // Lets get the rest of the data
+//        $contentType = $event->getRequest()->headers->get('accept');
+//        if (!$contentType) {
+//            $contentType = $event->getRequest()->headers->get('Accept');
+//        }
+//        switch ($contentType) {
+//            case 'application/json':
+//                $renderType = 'json';
+//                break;
+//            case 'application/ld+json':
+//                $renderType = 'jsonld';
+//                break;
+//            case 'application/hal+json':
+//                $renderType = 'jsonhal';
+//                break;
+//            default:
+//                $contentType = 'application/json';
+//                $renderType = 'json';
+//        }
+//
+//
+//        $result = $this->digitalOceanService->createConnectionUrl($result);
+//        $this->em->persist($result);
+//        $this->em->flush();
+//        $response = $this->serializer->serialize(
+//            $result,
+//            $renderType,
+//            ['enable_max_depth'=> true]
+//        );
+//
+//        // Creating a response
+//        $response = new Response(
+//            $response,
+//            Response::HTTP_CREATED,
+//            ['content-type' => $contentType]
+//        );
+//
+//        $event->setResponse($response);
     }
 }

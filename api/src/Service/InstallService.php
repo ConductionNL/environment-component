@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Service\DigitalOceanService;
 use App\Service\CommonGroundService;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class InstallService
 {
@@ -20,13 +21,15 @@ class InstallService
     private $commonGroundService;
     private $client;
     private $em;
+    private $params;
 
-    public function __construct(DigitalOceanService $digitalOceanService, CommonGroundService $commonGroundService,EntityManagerInterface $em)
+    public function __construct(ParameterBagInterface $params, DigitalOceanService $digitalOceanService, CommonGroundService $commonGroundService,EntityManagerInterface $em)
     {
         $this->digitalOceanService = $digitalOceanService;
         $this->commonGroundService = $commonGroundService;
         $this->client = new Client();
         $this->em = $em;
+        $this->params = $params;
     }
 
     public function formDbUrl($dbBaseUrl, $dbUsername, $dbPassword, $dbName){
@@ -58,7 +61,7 @@ class InstallService
         $data['domain'] = $installation->getDomain()->getName();
         $data['dburl'] = $installation->getDbUrl();
         //$data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
-        $data['authorization'] = $installation->getComponent()->getAuthorization();
+        $data['authorization'] = $installation->getAuthorization();
         $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
 
         $request['event_type'] = "start-upgrade-workflow";

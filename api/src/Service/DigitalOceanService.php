@@ -44,11 +44,12 @@ class DigitalOceanService
     }
     public function getKubernetesClusters() : array
     {
-        $response = $this->client->get('kubernets/clusters');
+        $response = $this->client->get('kubernetes/clusters');
 
         if($response->getStatusCode() == 200){
-            return json_decode($response->getBody());
+            return json_decode($response->getBody(),true);
         }
+        throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/kubernetes/clusters'.' returned: '.$response->getBody());
     }
     public function getDatabaseClusters() : array
     {
@@ -61,7 +62,7 @@ class DigitalOceanService
         if($response->getStatusCode() == 200){
             return json_decode($response->getBody(), true);
         }
-        throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.json_encode($response->getBody()));
+        throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.$response->getBody());
     }
     public function getDatabases($clusterId):array
     {
@@ -69,7 +70,7 @@ class DigitalOceanService
         if($response->getStatusCode() == 200){
             return json_decode($response->getBody(), true);
         }
-        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/dbs".' returned: '.json_encode($response->getBody()));
+        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/dbs".' returned: '.$response->getBody());
     }
     public function getDatabaseUsers($clusterId):array
     {
@@ -77,14 +78,14 @@ class DigitalOceanService
         if($response->getStatusCode() == 200){
             return json_decode($response->getBody(), true);
         }
-        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/users".' returned: '.json_encode($response->getBody()));
+        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/users".' returned: '.$response->getBody());
     }
     public function getKubernetesCredentials(string $id){
         $response = $this->client->get("kubernetes/clusters/$id/credentials");
         if($response->getStatusCode() == 200){
             return json_decode($response->getBody(), true);
         }
-        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/kubernetes/clusters/$id/credentials".' returned: '.json_encode($response->getBody()));
+        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/kubernetes/clusters/$id/credentials".' returned: '.$response->getBody());
     }
     public function enrichCredentials(array $k8sCluster, array $credentials){
         $kubeconfig = [
@@ -171,12 +172,12 @@ class DigitalOceanService
             $cluster = json_decode($response->getBody(),true);
             while($cluster['status'] != 'running'){
                 sleep(5);
-                $cluster = json_decode($this->client->get("databases/{$cluster['id']}"));
+                $cluster = json_decode($this->client->get("kubernetes/clusters/{$cluster['id']}"));
             }
             $this->configureCluster(json_decode($response->getBody(), true));
             return $cluster;
         }
-        throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.$response->getBody());
+        throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/kubernetes/clusters'.' returned: '.$response->getBody());
     }
     public function createDatabaseCluster(string $name):array
     {
@@ -196,7 +197,7 @@ class DigitalOceanService
             $cluster = json_decode($response->getBody(),true);
             while($cluster['status'] != 'online'){
                 sleep(5);
-                $cluster = json_decode($this->client->get("databases/{$cluster['id']}"));
+                $cluster = json_decode($this->client->get("databases/{$cluster['id']}"), true);
             }
             return $cluster;
         }
@@ -213,7 +214,7 @@ class DigitalOceanService
         if($response->getStatusCode() == 201){
             return json_decode($response->getBody(),true);
         }
-        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/dbs".' returned: '.json_encode($response->getBody()));
+        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/dbs".' returned: '.$response->getBody().'on request'.$resource);
     }
     public function createDatabaseUser($name, $clusterId):array
     {
@@ -226,7 +227,7 @@ class DigitalOceanService
         if($response->getStatusCode() == 201){
             return json_decode($response->getBody(), true);
         }
-        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/users".' returned: '.json_encode($response->getBody()));
+        throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/users".' returned: '.$response->getBody().'on request'.$resource);
     }
     public function getKubernetesClusterByName(string $name):array
     {
@@ -284,7 +285,7 @@ class DigitalOceanService
                 break;
             }
         }
-        if(empty($database)){
+        if(empty($user)){
             $u = $this->createDatabaseUser($name, $dbCluster['id'])['user'];
             $user['username'] = $u['name'];
             $user['password'] = $u['password'];
@@ -299,7 +300,7 @@ class DigitalOceanService
         $dbCluster = $this->getDatabaseClusterByName($cluster->getName());
 //        var_dump($dbCluster['id']);
         //Check if there is a database with the same name as the installation, else create
-        $installationName = $installation->getName().'-'.$installation->getEnvironment()->getName();
+        $installationName = $installation->getComponent()->getCode().'-'.$installation->getEnvironment()->getName();
 
         $database = $this->getDatabaseByName($installationName, $dbCluster);
         $user = $this->getDatabaseUserByName($installationName, $dbCluster);
