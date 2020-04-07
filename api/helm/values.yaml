@@ -4,27 +4,17 @@
 
 settings:
   registryBase: docker.io/conduction
-  projectName: evc
-  name: evc
-  title: Environment Component
+  projectName: pc
+  name: pc
+  title: Proto component commonground
   version: V.0.1
   description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.&#039;'
   type: component
   repro: https://github.com/ConductionNL/proto-component
-  demo: evc.zaakonline.nl
-  container: https://hub.docker.com/repository/docker/conduction/evc-php
+  demo: pc.zaakonline.nl
+  container: https://hub.docker.com/repository/docker/conduction/pc-php
   domain: conduction.nl
-  evcGithAuth: NULL
-  evcDomains: [&quot;conduction.nl&quot;,&quot;zaakonline.nl&quot;,&quot;larping.eu&quot;,&quot;common-ground.dev&quot;,&quot;trouwplanner.online&quot;,&quot;huwelijksplanner.online&quot;]
-  subdomain: evc
-  domains:
-    - conduction.nl
-    - zaakonline.nl
-    - larping.eu
-    - common-ground.dev
-    - trouwplanner.online
-    - huwelijksplanner.online
-  domainsJson: ["conduction.nl","zaakonline.nl","larping.eu","common-ground.dev","trouwplanner.online","huwelijksplanner.online"]
+  subdomain: pc
   organisationName: Conduction
   email: info@conduction.nl
   country: Netherlands
@@ -36,7 +26,7 @@ settings:
   cache: 1
   replicaCount: 1
   corsAllowOrigin: ['*']
-  trustedHosts: '^(.+\.)localhost$|^(.+\.)127.0.0.1$|^(.+\.)?conduction\.nl$'
+  trustedHosts: '127.0.0.1$|^(.+\.)?conduction\.nl$|^(.+\.)?huwelijksplanner\.online$|^(.+\.)?larping\.eu$|^(.+\.)?common-ground\.dev$|^(.+\.)?trouwplanner\.online$|^(.+\.)?zaakonline\.nl$|localhost'
   pullPolicy: Always
   # You will need these proxies on kubernetes
   trustedProxies:

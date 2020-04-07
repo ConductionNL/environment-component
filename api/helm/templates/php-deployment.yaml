@@ -107,16 +107,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "fullname" . }}
                   key: app-domains-json
-            - name: APP_EVC_GITAUTH
-              valueFrom:
-                  configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: app-evc-githauth
-            - name: APP_EVC_DOMAINS
-              valueFrom:
-                  configMapKeyRef:
-                      name: {{ template "fullname" . }}
-                      key: app-evc-domains
             # organization
             - name: ORGANIZATION_NAME
               valueFrom:
