@@ -39,6 +39,7 @@ parameters:
     env(APP_COMMONGROUND_KEY): '' 
     env(APP_APPLICATION_KEY): ''
     env(APP_DIGITALOCEAN_KEY): ''
+    env(APP_GITHUB_KEY): ''
     env(APP_USER_KEY): '' 
 
 twig:
@@ -83,7 +84,8 @@ twig:
         app_health: '%env(HEALTH_ENABLED)%'   
         
         app_commonground_id: '%env(APP_COMMONGROUND_ID)%'   
-        app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)%'   
+        app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)%'
+        app_github_key: '%env(APP_GITHUB_KEY)%'
         app_commonground_key: '%env(APP_COMMONGROUND_KEY)%'   
         app_application_key: '%env(APP_APPLICATION_KEY)%'   
         app_user_key: '%env(APP_USER_KEY)%'               
