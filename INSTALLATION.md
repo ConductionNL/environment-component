@@ -104,23 +104,23 @@ $ helm dependency update ./api/helm
 ```
 If you want to create a new instance
 ```CLI
-$ helm install --name evc-dev ./api/helm  --kubeconfig="api/helm/kubeconfig.yaml" --namespace=dev  --set settings.env=dev,settings.debug=1
-$ helm install --name evc-stag ./api/helm --kubeconfig="api/helm/kubeconfig.yaml" --namespace=stag --set settings.env=stag,settings.debug=0
-$ helm install --name evc-prod ./api/helm --kubeconfig="api/helm/kubeconfig.yaml" --namespace=prod --set settings.env=prod,settings.debug=0
+$ helm install --name evc-dev ./api/helm  --kubeconfig="api/helm/conduction-kubeconfig.yaml" --namespace=dev  --set settings.env=dev,settings.debug=1
+$ helm install --name evc-stag ./api/helm --kubeconfig="api/helm/conduction-kubeconfig.yaml" --namespace=stag --set settings.env=stag,settings.debug=0
+$ helm install --name evc-prod ./api/helm --kubeconfig="api/helm/conduction-kubeconfig.yaml" --namespace=prod --set settings.env=prod,settings.debug=0
 ```
 
 Or update if you want to update an existing one
 ```CLI
-$ helm upgrade evc-dev ./api/helm  --kubeconfig="api/helm/kubeconfig.yaml" --namespace=dev  --set settings.env=dev,settings.debug=1
-$ helm upgrade evc-stag ./api/helm --kubeconfig="api/helm/kubeconfig.yaml" --namespace=stag --set settings.env=stag,settings.debug=0
-$ helm upgrade evc-prod ./api/helm --kubeconfig="api/helm/kubeconfig.yaml" --namespace=prod --set settings.env=prod,settings.debug=0
+$ helm upgrade evc-dev ./api/helm  --kubeconfig="api/helm/conduction-kubeconfig.yaml" --namespace=dev  --set settings.env=dev,settings.debug=1
+$ helm upgrade evc-stag ./api/helm --kubeconfig="api/helm/conduction-kubeconfig.yaml" --namespace=stag --set settings.env=stag,settings.debug=0
+$ helm upgrade evc-prod ./api/helm --kubeconfig="api/helm/conduction-kubeconfig.yaml" --namespace=prod --set settings.env=prod,settings.debug=0
 ```
 
 Or del if you want to delete an existing  one
 ```CLI
-$ helm del evc-dev  --purge --kubeconfig="api/helm/kubeconfig.yaml" 
-$ helm del evc-stag --purge --kubeconfig="api/helm/kubeconfig.yaml" 
-$ helm del evc-prod --purge --kubeconfig="api/helm/kubeconfig.yaml" 
+$ helm del evc-dev  --purge --kubeconfig="api/helm/conduction-kubeconfig.yaml" 
+$ helm del evc-stag --purge --kubeconfig="api/helm/conduction-kubeconfig.yaml" 
+$ helm del evc-prod --purge --kubeconfig="api/helm/conduction-kubeconfig.yaml" 
 ```
 
 Note that you can replace common ground with the namespace that you want to use (normally the name of your component).
