@@ -60,7 +60,7 @@ class DigitalOceanService
 //        die;
 
         if($response->getStatusCode() == 200){
-            return json_decode($response->getBody(), true);
+            return json_decode($response->getBody(), true)['databases'];
         }
         throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.$response->getBody());
     }
@@ -81,68 +81,32 @@ class DigitalOceanService
         throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/databases/$clusterId/users".' returned: '.$response->getBody());
     }
     public function getKubernetesCredentials(string $id){
-        $response = $this->client->get("kubernetes/clusters/$id/credentials");
+        $response = $this->client->get("kubernetes/clusters/$id/kubeconfig");
         if($response->getStatusCode() == 200){
-            return json_decode($response->getBody(), true);
+            file_put_contents(dirname(__FILE__).'/kubeconfig.yaml',$response->getBody());
+            return dirname(__FILE__).'/kubeconfig.yaml';
         }
         throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/kubernetes/clusters/$id/credentials".' returned: '.$response->getBody());
     }
-    public function enrichCredentials(array $k8sCluster, array $credentials){
-        $kubeconfig = [
-            'apiVersion'=>'v1',
-            'clusters' => [
-                [
-                    'cluster'=>[
-                        'certificate-authority-data'=> $credentials['certificate_authority_data'],
-                        'server'=>$credentials['server'],
-                    ],
-                    'name'=>$k8sCluster['name'],
-                ],
-            ],
-            'contexts'=>[
-                [
-                    'context' => [
-                        'cluster'=> $k8sCluster['name'],
-                        'user'=> "{$k8sCluster['name']}-admin",
-                    ],
-                    'name'=>$k8sCluster['name'],
-                ],
-            ],
-            'current-context' => $k8sCluster['name'],
-            'kind' => 'config',
-            'preferences' => [],
-            'users' => [
-                [
-                    'name'=>"{$k8sCluster['name']}-admin",
-                    'user'=>[
-                        'token'=>$credentials['token']
-                    ]
-                ]
-            ]
-        ];
-
-        return Yaml::dump($kubeconfig);
-    }
     public function configureCluster(array $cluster){
-        $credentials = $this->getKubernetesCredentials($cluster['id']);
-        $kubeconfig = $this->enrichCredentials($cluster, $credentials);
+        $kubeconfig = $this->getKubernetesCredentials($cluster['id']);
 
         $process1 = new Process(["kubectl","-n","kube-system","create","serviceaccount","tiller","--kubeconfig={$kubeconfig}"]);
         $process1->run();
         if(!$process1->isSuccessful()){
             throw new ProcessFailedException($process1);
         }
-        $process2 = new Process(["kubectl","create","clusterrolcebinding","tiller","--clusterrole","cluster-admin","--serviceaccount:kube-system:tiller","--kubeconfig={$kubeconfig}"]);
+        $process2 = new Process(["kubectl","create","clusterrolcebinding","tiller","--clusterrole cluster-admin","--serviceaccount:kube-system:tiller","--kubeconfig={$kubeconfig}"]);
         $process2->run();
         if(!$process2->isSuccessful()){
             throw new ProcessFailedException($process2);
         }
-        $process3 = new Process(["helm","init","--service-account","tiller","--kubeconfig={$kubeconfig}"]);
+        $process3 = new Process(["helm","init","--service-account tiller","--kubeconfig={$kubeconfig}"]);
         $process3->run();
         if(!$process3->isSuccessful()){
             throw new ProcessFailedException($process3);
         }
-        $process4 = new Process(["helm", "install", "stable/kubernetes-dashboard", "--name", "dashboard", "--kubeconfig={$kubeconfig}", '--namespace="kube-system"']);
+        $process4 = new Process(["helm", "install stable/kubernetes-dashboard", "--name dashboard", "--kubeconfig={$kubeconfig}", '--namespace="kube-system"']);
         $process4->run();
         if(!$process4->isSuccessful()){
             throw new ProcessFailedException($process4);
@@ -155,11 +119,11 @@ class DigitalOceanService
             'name' => $name,
             'region' => 'ams3',
             'version' => 'latest',
-            'node_pools' => [
-                'size' => 's-4cpu-8gb',
+            'node_pools' => [[
+                'size' => 's-4vcpu-8gb',
                 'count' => 3,
                 'name' => "pool-$name-heavy",
-            ],
+            ]],
             'auto_upgrade' => true,
             'maintenance_policy' => [
                 'start_time'=> "00:00",
@@ -169,12 +133,13 @@ class DigitalOceanService
         $resource = json_encode($kubernetesCluster);
         $response = $this->client->post('kubernetes/clusters', ['body'=>$resource]);
         if($response->getStatusCode() == 201){
-            $cluster = json_decode($response->getBody(),true);
-            while($cluster['status'] != 'running'){
+            $cluster = json_decode($response->getBody(),true)['kubernetes_cluster'];
+            while($cluster['status']['state'] != 'running'){
                 sleep(5);
-                $cluster = json_decode($this->client->get("kubernetes/clusters/{$cluster['id']}"));
+                $cluster = json_decode($this->client->get("kubernetes/clusters/{$cluster['id']}")->getBody(),true)['kubernetes_cluster'];
+                echo $cluster['status']['state'];
             }
-            $this->configureCluster(json_decode($response->getBody(), true));
+            $this->configureCluster(json_decode($response->getBody(), true)['kubernetes_cluster']);
             return $cluster;
         }
         throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/kubernetes/clusters'.' returned: '.$response->getBody());
@@ -194,10 +159,10 @@ class DigitalOceanService
         $response = $this->client->post('databases', ['body'=>$resource]);
 
         if($response->getStatusCode() == 201){
-            $cluster = json_decode($response->getBody(),true);
+            $cluster = json_decode($response->getBody(),true)['database'];
             while($cluster['status'] != 'online'){
                 sleep(5);
-                $cluster = json_decode($this->client->get("databases/{$cluster['id']}"), true);
+                $cluster = json_decode($this->client->get("databases/{$cluster['id']}")->getBody(), true)['database'];
             }
             return $cluster;
         }
@@ -237,15 +202,15 @@ class DigitalOceanService
                 return $k8cluster;
             }
         }
-        $k8cluster = $this->createKubernetesCluster($name);
-        $k8cluster['new'] = true;
+        $k8cluster = $this->createKubernetesCluster($name)['kubernetes_cluster'];
+//        $k8cluster['new'] = true;
         return $k8cluster;
     }
 
     public function getDatabaseClusterByName($name){
         $dbCluster = [];
         $dbClusters = $this->getDatabaseClusters();
-        foreach($dbClusters['databases'] as $dbCl){
+        foreach($dbClusters as $dbCl){
             if($dbCl['name'] == $name){
                 $dbCluster['id'] = $dbCl['id'];
                 $dbCluster['url'] = parse_url($dbCl['connection']['uri']);
@@ -253,7 +218,7 @@ class DigitalOceanService
             }
         }
         if(empty($dbCluster)){
-            $dbCl = $this->createDatabaseCluster($name)['database'];
+            $dbCl = $this->createDatabaseCluster($name);
             $dbCluster['id'] = $dbCl['id'];
             $dbCluster['url'] = parse_url($dbCl['connection']['uri']);
         }
@@ -316,10 +281,10 @@ class DigitalOceanService
     }
     public function createKubeConfig(Cluster $cluster){
         $k8cluster = $this->getKubernetesClusterByName($cluster->getName());
-        $credentials = $this->getKubernetesCredentials($k8cluster['id']);
+        $kubeconfig = $this->getKubernetesCredentials($k8cluster['id']);
 
-
-        $cluster->setKubeconfig($this->enrichCredentials($k8cluster, $credentials));
+        $cluster->setKubeconfig(file_get_contents($kubeconfig));
+        unlink($kubeconfig);
         return $cluster;
 
     }
