@@ -96,21 +96,57 @@ class DigitalOceanService
         if(!$process1->isSuccessful()){
             throw new ProcessFailedException($process1);
         }
-        $process2 = new Process(["kubectl","create","clusterrolcebinding","tiller","--clusterrole cluster-admin","--serviceaccount:kube-system:tiller","--kubeconfig={$kubeconfig}"]);
+        $process2 = new Process(["kubectl","create","clusterrolebinding","tiller","--clusterrole='cluster-admin'","--serviceaccount=kube-system:tiller","--kubeconfig={$kubeconfig}"]);
         $process2->run();
         if(!$process2->isSuccessful()){
             throw new ProcessFailedException($process2);
         }
-        $process3 = new Process(["helm","init","--service-account tiller","--kubeconfig={$kubeconfig}"]);
+        $process3 = new Process(["helm","init","--service-account=tiller","--kubeconfig={$kubeconfig}"]);
         $process3->run();
         if(!$process3->isSuccessful()){
             throw new ProcessFailedException($process3);
         }
-        $process4 = new Process(["helm", "install stable/kubernetes-dashboard", "--name dashboard", "--kubeconfig={$kubeconfig}", '--namespace="kube-system"']);
+        $process4 = new Process(["helm", "install","stable/kubernetes-dashboard", "--name=dashboard", "--kubeconfig={$kubeconfig}", '--namespace="kube-system"']);
         $process4->run();
-        if(!$process4->isSuccessful()){
+        if(!$process4->isSuccessful()) {
             throw new ProcessFailedException($process4);
         }
+        $process5 = new Process(["helm", "install","stable/nginx-ingress","--name=loadbalancer","--kubeconfig=$kubeconfig"]);
+        $process5->run();
+        if(!$process5->isSuccessful()){
+            throw new ProcessFailedException($process5);
+        }
+
+        $process6 = new Process(["helm", "upgrade","loadbalancer","stable/nginx-ingress","--kubeconfig=$kubeconfig"]);
+        $process6->run();
+        if(!$process6->isSuccessful()){
+            throw new ProcessFailedException($process6);
+        }
+
+        $process7 = new Process(["kubectl","apply","validage=false","-f","https://raw.githubusercontent.com/jetstack/cert-manager/release-0.12/deploy/manifests/00-crds.yaml","--kubeconfig=$kubeconfig"]);
+        $process7->run();
+        if(!$process7->isSuccessful()){
+            throw new ProcessFailedException($process7);
+        }
+
+        $process8 = new Process(["kubectl","create","namespace=cert-manager","--kubeconfig=$kubeconfig"]);
+        $process8->run();
+        if(!$process8->isSuccessful()){
+            throw new ProcessFailedException($process8);
+        }
+
+        $process9 = new Process(["helm","repo","add","jetstack","https://charts.jetstack.io"]);
+        $process9->run();
+        if(!$process9->isSuccessful()){
+            throw new ProcessFailedException($process9);
+        }
+        $process10 = new Process(["helm","install","--name=cert-manager","--namespace=cert-managere","--kubeconfig=$kubeconfig"]);
+        $process10->run();
+        if(!$process10->isSuccessful()){
+            throw new ProcessFailedException($process10);
+        }
+
+
 
     }
     public function createKubernetesCluster(string $name):array
