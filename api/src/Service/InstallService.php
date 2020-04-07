@@ -9,16 +9,24 @@ use App\Entity\Component;
 use App\Entity\Domain;
 use App\Entity\Environment;
 use App\Entity\Installation;
+use Doctrine\ORM\EntityManagerInterface;
+
+use App\Service\DigitalOceanService;
+use App\Service\CommonGroundService;
 
 class InstallService
 {
+    private $digitalOceanService;
     private $commonGroundService;
     private $client;
+    private $em;
 
-    public function __construct(CommonGroundService $commonGroundService)
+    public function __construct(DigitalOceanService $digitalOceanService, CommonGroundService $commonGroundService,EntityManagerInterface $em)
     {
+        $this->digitalOceanService = $digitalOceanService;
         $this->commonGroundService = $commonGroundService;
         $this->client = new Client();
+        $this->em = $em;
     }
 
     public function formDbUrl($dbBaseUrl, $dbUsername, $dbPassword, $dbName){
@@ -35,6 +43,16 @@ class InstallService
 
     public function update(Installation $installation)
     {
+        // Als we geen db url hebben url maken
+        if(!$installation->getDbUrl()){
+            $installation =  $this->digitalOceanService->createConnectionUrl($installation);
+        }
+
+        // Als we geen kubeconfig hebben deze aanmaken
+        if(!$installation->getEnvironment()->getCluster()->getKubeconfig()){
+            $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        }
+
         $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
         $data['environment'] = $installation->getEnvironment()->getName();
         $data['domain'] = $installation->getDomain()->getName();
@@ -64,6 +82,7 @@ class InstallService
                     ]
             ]
         );
+
         if($result->getStatusCode() == 204){
             return "Action triggered, check {$installation->getComponent()->getGithubRepository()}/actions for the status";
         }

@@ -74,7 +74,7 @@ class InstallationSubscriber implements EventSubscriberInterface
         }
 
 
-        $result->setDbUrl($this->digitalOceanService->createConnectionUrl($result));
+        $result = $this->digitalOceanService->createConnectionUrl($result);
         $this->em->persist($result);
         $this->em->flush();
         $response = $this->serializer->serialize(
