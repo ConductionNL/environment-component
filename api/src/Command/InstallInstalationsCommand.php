@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Service\InstallService;
 
-class UpdateComponentsCommand extends Command
+class InstallInstalationsCommand extends Command
 {
 
     private $installService;
