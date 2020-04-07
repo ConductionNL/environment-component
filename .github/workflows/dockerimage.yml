@@ -66,9 +66,8 @@ jobs:
             #  run: sleep 20
             #- name: Database Check
             #  run: docker-compose exec -T php bin/console doctrine:schema:validate
-            - name: Security Checks
-              run: docker-compose exec -T php composer req sensiolabs/security-checker
-
+            #- name: Security Checks
+            #  run: docker-compose exec -T php composer req sensiolabs/security-checkers
             - name: Chores
               run: docker-compose down
             - name: Login to DockerHub Registry

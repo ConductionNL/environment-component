@@ -17,9 +17,7 @@ data:
   app-repro: {{ .Values.settings.repro | quote }}
   app-demo: {{ .Values.settings.demo | quote }}
   app-container: {{ .Values.settings.container | quote }}
-  app-domain: {{ .Values.settings.domain | quote }}
-  app-evc-githauth: {{ .Values.settings.evcGithAuth | quote }}
-  app-evc-domains: {{ .Values.settings.evcDomains | quote }}
+  app-domain: {{ .Values.settings.domain | quote }} 
   app-domains: {{ .Values.settings.domains | quote }} 
   app-domains-json: {{ .Values.settings.domainsJson | toJson | quote }}
   app-description: {{ .Values.settings.description | quote }}

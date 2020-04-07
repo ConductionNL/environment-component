@@ -14,14 +14,7 @@ settings:
   demo: {{ app_demo }}
   container: {{ app_container }}
   domain: {{ app_domain }}
-  evcGithAuth: {{ app_evc_githauth }}
-  evcDomains: {{ app_evc_domains }}
   subdomain: {{ app_subdomain }}
-  domains:
-{% for domain in app_domains %}
-    - {{ domain }}
-{% endfor %}
-  domainsJson: {{ app_domains | json_encode()|raw }}
   organisationName: {{ organization_name }}
   email: {{ organization_email }}
   country: {{ organization_country }}
@@ -56,6 +49,8 @@ security:
   commongroundKey: "{{ app_commonground_key }}"
   applicationKey: "{{  app_application_key }}"
   userKey: "{{ app_user_key }}"
+  digitaloceanKey: "{{ app_digitalocean_key }}"
+  githubKey: "{{ app_github_key }}"
   authorisationProviderUser: {{ auth_provider_user }}
   authorisationProviderApplication: {{ auth_provider_application }}
 
