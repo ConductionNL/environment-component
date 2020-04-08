@@ -10093,12 +10093,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-07 14:22:39'
+        example: '2020-04-08 08:43:36'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-07 14:22:39'
+        example: '2020-04-08 08:43:36'
     required: []
   AuditTrail-write:
     properties:
@@ -10146,12 +10146,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-07 14:22:39'
+        example: '2020-04-08 08:43:36'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-07 14:22:39'
+        example: '2020-04-08 08:43:36'
     required: []
   ChangeLog-write:
     properties:
@@ -10216,171 +10216,6 @@ definitions:
       environments: []
     required:
       - name
-  Domain-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this domain'
-        type: string
-        example: conduction.nl
-        maxLength: 255
-      description:
-        description: 'the description of this domain'
-        type: string
-        example: 'This domain contains the conduction website'
-      location:
-        description: 'the base route of this domain'
-        type: string
-        example: conduction.nl
-        format: url
-        maxLength: 255
-      ip:
-        description: 'the IP Address of this domain'
-        type: string
-        example: 255.255.255.0
-      databaseUrl:
-        description: 'the base url for the managed database that this domain uses'
-        type: string
-        example: 'pgsql://db-cluster.vuga.com:25060/'
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      cluster: []
-      installations: []
-      healthLogs: []
-    required:
-      - name
-      - location
-  Domain-write:
-    properties:
-      name:
-        description: 'The name of this domain'
-        type: string
-        example: conduction.nl
-        maxLength: 255
-      description:
-        description: 'the description of this domain'
-        type: string
-        example: 'This domain contains the conduction website'
-      location:
-        description: 'the base route of this domain'
-        type: string
-        example: conduction.nl
-        format: url
-        maxLength: 255
-      ip:
-        description: 'the IP Address of this domain'
-        type: string
-        example: 255.255.255.0
-      databaseUrl:
-        description: 'the base url for the managed database that this domain uses'
-        type: string
-        example: 'pgsql://db-cluster.vuga.com:25060/'
-      cluster: []
-      installations: []
-      healthLogs: []
-    required:
-      - name
-      - location
-  Installation-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      dbUsername:
-        description: 'The username that is needed to log into the cluster database'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      dbName:
-        description: 'The name of the database this component uses'
-        type: string
-        maxLength: 255
-      helmVersion:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      dateInstalled:
-        description: 'The moment this entity was last installed'
-        type: \Datetime
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      component: []
-      domain: []
-      environment: []
-      healthLogs: []
-    required:
-      - name
-      - helmVersion
-  Installation-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      dbUsername:
-        description: 'The username that is needed to log into the cluster database'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      dbPassword:
-        description: 'The password that is needed to log into the cluster database'
-        type: string
-        maxLength: 255
-      dbName:
-        description: 'The name of the database this component uses'
-        type: string
-        maxLength: 255
-      authorization:
-        description: 'The authentication token that is needed to access this token'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      dbUrl:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmVersion:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      component: []
-      domain: []
-      environment: []
-      healthLogs: []
-    required:
-      - name
-      - helmVersion
   Component-read:
     properties:
       id:
@@ -10462,6 +10297,79 @@ definitions:
       - githubRepository
       - githubToken
       - helmRepository
+  Domain-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this domain'
+        type: string
+        example: conduction.nl
+        maxLength: 255
+      description:
+        description: 'the description of this domain'
+        type: string
+        example: 'This domain contains the conduction website'
+      location:
+        description: 'the base route of this domain'
+        type: string
+        example: conduction.nl
+        format: url
+        maxLength: 255
+      ip:
+        description: 'the IP Address of this domain'
+        type: string
+        example: 255.255.255.0
+      databaseUrl:
+        description: 'the base url for the managed database that this domain uses'
+        type: string
+        example: 'pgsql://db-cluster.vuga.com:25060/'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      cluster: []
+      installations: []
+      healthLogs: []
+    required:
+      - name
+      - location
+  Domain-write:
+    properties:
+      name:
+        description: 'The name of this domain'
+        type: string
+        example: conduction.nl
+        maxLength: 255
+      description:
+        description: 'the description of this domain'
+        type: string
+        example: 'This domain contains the conduction website'
+      location:
+        description: 'the base route of this domain'
+        type: string
+        example: conduction.nl
+        format: url
+        maxLength: 255
+      ip:
+        description: 'the IP Address of this domain'
+        type: string
+        example: 255.255.255.0
+      databaseUrl:
+        description: 'the base url for the managed database that this domain uses'
+        type: string
+        example: 'pgsql://db-cluster.vuga.com:25060/'
+      cluster: []
+      installations: []
+      healthLogs: []
+    required:
+      - name
+      - location
   Environment-read:
     properties:
       id:
@@ -10556,6 +10464,98 @@ definitions:
       domain: []
       installation: []
     required: []
+  Installation-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      dbUsername:
+        description: 'The username that is needed to log into the cluster database'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      dbName:
+        description: 'The name of the database this component uses'
+        type: string
+        maxLength: 255
+      helmVersion:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      dateInstalled:
+        description: 'The moment this entity was last installed'
+        type: \Datetime
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      component: []
+      domain: []
+      environment: []
+      healthLogs: []
+    required:
+      - name
+      - helmVersion
+  Installation-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      dbUsername:
+        description: 'The username that is needed to log into the cluster database'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      dbPassword:
+        description: 'The password that is needed to log into the cluster database'
+        type: string
+        maxLength: 255
+      dbName:
+        description: 'The name of the database this component uses'
+        type: string
+        maxLength: 255
+      authorization:
+        description: 'The authentication token that is needed to access this token'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      dbUrl:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmVersion:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      component: []
+      domain: []
+      environment: []
+      healthLogs: []
+    required:
+      - name
+      - helmVersion
 tags:
   -
     name: AuditTrail
@@ -10576,19 +10576,13 @@ tags:
       
       
   -
-    name: Domain
-    description: |
-      
-      
-      
-  -
-    name: Installation
-    description: |
-      
-      
-      
-  -
     name: Component
+    description: |
+      
+      
+      
+  -
+    name: Domain
     description: |
       
       
@@ -10605,21 +10599,27 @@ tags:
       
       
       
+  -
+    name: Installation
+    description: |
+      
+      
+      
 securityDefinitions:
   JWT-Oauth:
     type: oauth2
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the HealthLog resource'
-      write: 'write right to the HealthLog resource'
+      read: 'read right to the Installation resource'
+      write: 'write right to the Installation resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the HealthLog resource'
-      write: 'write right to the HealthLog resource'
+      read: 'read right to the Installation resource'
+      write: 'write right to the Installation resource'
 host: irc.zaakonline.nl
 servers:
   -
