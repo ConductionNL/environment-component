@@ -60,6 +60,7 @@ class InstallInstalationsCommand extends Command
 
         foreach($results as $result){
             $io->progressAdvance();
+            $io->text("Installing {$result->getComponent()->getName()} on {$result->getDomain()->getCluster()->getName()}");
 
             $this->installService->update($result);
             //$io->warning('Lorem ipsum dolor sit amet');

@@ -44,7 +44,8 @@ class InstallationRepository extends ServiceEntityRepository
     public function findInstallable($maxResults = 100)
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.dateInstalled < i.dateModified')
+            ->where('i.dateInstalled IS NULL')
+            ->orWhere('i.dateInstalled < i.dateModified')
             ->orderBy('i.dateModified', 'ASC')
             ->setMaxResults($maxResults)
             ->getQuery()
