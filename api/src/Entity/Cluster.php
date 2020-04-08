@@ -162,7 +162,7 @@ class Cluster
     public function __construct()
     {
         $this->domains = new ArrayCollection();
-        $this->enviroments = new ArrayCollection();
+        $this->environments = new ArrayCollection();
     }
 
     public function getId(): ?Uuid

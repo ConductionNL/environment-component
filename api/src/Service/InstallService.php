@@ -88,6 +88,9 @@ class InstallService
         );
 
         if($result->getStatusCode() == 204){
+            $installation->setDateInstalled(new \DateTime("now"));
+            $this->em->persist($installation);
+            $this->em->flush();
             return "Action triggered, check {$installation->getComponent()->getGithubRepository()}/actions for the status";
         }
         else{
@@ -98,29 +101,46 @@ class InstallService
 
     public function install(Installation $installation)
     {
+        // Als we geen db url hebben url maken
+        if(!$installation->getDbUrl()){
+            $installation =  $this->digitalOceanService->createConnectionUrl($installation);
+        }
+
+        // Als we geen kubeconfig hebben deze aanmaken
+        if(!$installation->getEnvironment()->getCluster()->getKubeconfig()){
+            $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        }
         $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
         $data['environment'] = $installation->getEnvironment()->getName();
         $data['domain'] = $installation->getDomain()->getName();
         $data['dburl'] = $installation->getDbUrl();
         //$data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
-        $data['helmVersion'] = $installation->getHelmVersion();
-        $data['authorization'] = $installation->getComponent()->getAuthorization();
+        $data['authorization'] = $installation->getAuthorization();
         $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
+
         $request['event_type'] = "start-install-workflow";
         $request['client_payload'] = $data;
+
+        $token = $installation->getComponent()->getGithubToken();
+        if(!$token){
+            $token = $this->params->get('app_github_key');
+        }
 
         $result = $this->client->post($url,
             [
                 'body' => json_encode($request),
                 'headers'=>
                     [
-                        "Authorization"=> "Bearer ".$installation->getComponent()->getGithubToken(),
+                        "Authorization"=> "Bearer ".$token,
                         'Content-Type'=>'application/json',
                         'Accept'=>'application/vnd.github.everest-preview+json'
                     ]
             ]
         );
         if($result->getStatusCode() == 204){
+            $installation->setDateInstalled(new \DateTime("now"));
+            $this->em->persist($installation);
+            $this->em->flush();
             return "Action triggered, check {$installation->getComponent()->getGithubRepository()}/actions for the status";
         }
         else{

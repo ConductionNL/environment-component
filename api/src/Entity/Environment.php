@@ -160,7 +160,7 @@ class Environment
 
     public function __construct()
     {
-        $this->components = new ArrayCollection();
+        $this->installations = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
