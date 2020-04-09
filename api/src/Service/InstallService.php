@@ -93,7 +93,7 @@ class InstallService
         if(!$token){
             $token = $this->params->get('app_github_key');
         }
-        var_dump($token);
+//        var_dump($token);
 
         $result = $this->client->post($url,
             [
