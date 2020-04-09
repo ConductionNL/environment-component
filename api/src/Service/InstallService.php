@@ -53,12 +53,16 @@ class InstallService
 
         $process = new Process(['helm','delete','--purge',$name,"--kubeconfig={$kubeconfig}"]);
         $process->run();
-
+        $process1 = new Process(['kubectl','delete','secret',"{$installation->getComponent()->getCode()}-cert-{$installation->getComponent()->getCode()}", "--namespace={$installation->getEnvironment()->getName()}"]);
+        $process1->run();
         $this->em->persist($installation);
         $this->em->flush();
         unlink($kubeconfig);
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
+        }
+        if(!$process1->isSuccessful()){
+            throw new ProcessFailedException($process1);
         }
 
 
