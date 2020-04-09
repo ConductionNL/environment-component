@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class HelmInstallSubscriber implements EventSubscriberInterface
+class HelmDeleteSubscriber implements EventSubscriberInterface
 {
     private $params;
     private $em;
@@ -34,11 +34,11 @@ class HelmInstallSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['HelmInstall', EventPriorities::PRE_SERIALIZE],
+            KernelEvents::VIEW => ['HelmDelete', EventPriorities::PRE_SERIALIZE],
         ];
     }
 
-    public function HelmInstall(ViewEvent $event)
+    public function HelmDelete(ViewEvent $event)
     {
         $method = $event->getRequest()->getMethod();
         $contentType = $event->getRequest()->headers->get('accept');
@@ -50,7 +50,7 @@ class HelmInstallSubscriber implements EventSubscriberInterface
         }
 
         // We should also check on entity = component
-        if ($method != 'GET' || !strpos($route, '_helm_install')) {
+        if ($method != 'GET' || !strpos($route, '_helm_delete')) {
             return;
         }
 
@@ -70,7 +70,7 @@ class HelmInstallSubscriber implements EventSubscriberInterface
                 $renderType = 'json';
         }
 
-        $results = $this->installService->install($component);
+        $results = $this->installService->delete($component);
         $result['message'] = $results;
         $response = $this->serializer->serialize(
             $result,
