@@ -3117,6 +3117,12 @@ paths:
                   $ref: '#/components/schemas/Component-read'
       parameters:
         -
+          name: core
+          in: query
+          required: false
+          schema:
+            type: boolean
+        -
           name: 'order[id]'
           in: query
           required: false
@@ -3172,6 +3178,15 @@ paths:
               - desc
         -
           name: 'order[helmRepository]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[core]'
           in: query
           required: false
           schema:
@@ -3355,6 +3370,22 @@ paths:
             type: array
             items:
               type: string
+          style: form
+          explode: true
+        -
+          name: core
+          in: query
+          required: false
+          schema:
+            type: boolean
+        -
+          name: 'core[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: boolean
           style: form
           explode: true
         -
@@ -4161,7 +4192,7 @@ paths:
           description: 'Resource not found'
       produces:
         - application/health+json
-  '/components/{id}/install':
+  '/components/{id}/delete':
     get:
       tags:
         - Installation
@@ -4288,6 +4319,137 @@ paths:
             text/html:
               schema:
                 $ref: '#/components/schemas/Installation-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+  '/components/{id}/install':
+    get:
+      tags:
+        - Component
+      operationId: helm_installComponentItem
+      summary: 'Retrieves a Component resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Component resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Component:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Component-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Component-read'
         404:
           description: 'Resource not found'
       produces:
@@ -9197,6 +9359,9 @@ components:
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
+        core:
+          description: 'Is the component a core component'
+          type: boolean
         installations:
           type: array
           items:
@@ -9245,6 +9410,9 @@ components:
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
+        core:
+          description: 'Is the component a core component'
+          type: boolean
         installations:
           type: array
           items:
@@ -9283,6 +9451,9 @@ components:
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
+        core:
+          description: 'Is the component a core component'
+          type: boolean
         installations:
           type: array
           items:
@@ -9340,6 +9511,9 @@ components:
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
+        core:
+          description: 'Is the component a core component'
+          type: boolean
         installations:
           type: array
           items:
@@ -10093,12 +10267,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-08 14:44:25'
+        example: '2020-04-09 08:56:12'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-08 14:44:25'
+        example: '2020-04-09 08:56:12'
     required: []
   AuditTrail-write:
     properties:
@@ -10146,12 +10320,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-08 14:44:25'
+        example: '2020-04-09 08:56:12'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-08 14:44:25'
+        example: '2020-04-09 08:56:12'
     required: []
   ChangeLog-write:
     properties:
@@ -10216,6 +10390,93 @@ definitions:
       environments: []
     required:
       - name
+  Component-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - githubToken
+      - helmRepository
+  Component-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      githubToken:
+        description: 'A personal access token for github that can be used to trigger actions on this component'
+        type: string
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - githubToken
+      - helmRepository
   Domain-read:
     properties:
       id:
@@ -10289,179 +10550,6 @@ definitions:
     required:
       - name
       - location
-  Installation-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      dbUsername:
-        description: 'The username that is needed to log into the cluster database'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      dbName:
-        description: 'The name of the database this component uses'
-        type: string
-        maxLength: 255
-      helmVersion:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      dateInstalled:
-        description: 'The moment this entity was last installed'
-        type: \Datetime
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      component: []
-      domain: []
-      environment: []
-      healthLogs: []
-    required:
-      - name
-      - helmVersion
-  Installation-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      dbUsername:
-        description: 'The username that is needed to log into the cluster database'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      dbPassword:
-        description: 'The password that is needed to log into the cluster database'
-        type: string
-        maxLength: 255
-      dbName:
-        description: 'The name of the database this component uses'
-        type: string
-        maxLength: 255
-      authorization:
-        description: 'The authentication token that is needed to access this token'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      dbUrl:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmVersion:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      component: []
-      domain: []
-      environment: []
-      healthLogs: []
-    required:
-      - name
-      - helmVersion
-  Component-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - githubToken
-      - helmRepository
-  Component-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      githubToken:
-        description: 'A personal access token for github that can be used to trigger actions on this component'
-        type: string
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - githubToken
-      - helmRepository
   Environment-read:
     properties:
       id:
@@ -10556,6 +10644,98 @@ definitions:
       domain: []
       installation: []
     required: []
+  Installation-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      dbUsername:
+        description: 'The username that is needed to log into the cluster database'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      dbName:
+        description: 'The name of the database this component uses'
+        type: string
+        maxLength: 255
+      helmVersion:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      dateInstalled:
+        description: 'The moment this entity was last installed'
+        type: \Datetime
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      component: []
+      domain: []
+      environment: []
+      healthLogs: []
+    required:
+      - name
+      - helmVersion
+  Installation-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      dbUsername:
+        description: 'The username that is needed to log into the cluster database'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      dbPassword:
+        description: 'The password that is needed to log into the cluster database'
+        type: string
+        maxLength: 255
+      dbName:
+        description: 'The name of the database this component uses'
+        type: string
+        maxLength: 255
+      authorization:
+        description: 'The authentication token that is needed to access this token'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      dbUrl:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmVersion:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      component: []
+      domain: []
+      environment: []
+      healthLogs: []
+    required:
+      - name
+      - helmVersion
 tags:
   -
     name: AuditTrail
@@ -10576,19 +10756,13 @@ tags:
       
       
   -
-    name: Domain
-    description: |
-      
-      
-      
-  -
-    name: Installation
-    description: |
-      
-      
-      
-  -
     name: Component
+    description: |
+      
+      
+      
+  -
+    name: Domain
     description: |
       
       
@@ -10605,21 +10779,27 @@ tags:
       
       
       
+  -
+    name: Installation
+    description: |
+      
+      
+      
 securityDefinitions:
   JWT-Oauth:
     type: oauth2
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the HealthLog resource'
-      write: 'write right to the HealthLog resource'
+      read: 'read right to the Installation resource'
+      write: 'write right to the Installation resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the HealthLog resource'
-      write: 'write right to the HealthLog resource'
+      read: 'read right to the Installation resource'
+      write: 'write right to the Installation resource'
 host: irc.zaakonline.nl
 servers:
   -

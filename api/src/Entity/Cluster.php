@@ -11,8 +11,10 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use phpDocumentor\Reflection\Types\Boolean;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -316,5 +318,10 @@ class Cluster
         }
 
         return $this;
+    }
+    public function hasEnvironment(string $name){
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq('name', $name));
+        return count($this->getEnvironments()->matching($criteria))>0;
     }
 }
