@@ -35,12 +35,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "description"="Installs this component to a cluster"
  *              }
  *     },
+ *     "helm_install"={
+ *              "path"="/components/{id}/delete",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="delete",
+ *                  "description"="Deletes this component from a cluster"
+ *              }
+ *     },
  *     "helm_update"={
  *              "path"="/components/{id}/update",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="update",
- *                  "description"="Updates this component to a cluster"
+ *                  "description"="Updates this component on a cluster"
  *              }
  *     },
  *     "get_change_logs"={

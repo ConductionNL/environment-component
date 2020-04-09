@@ -14,6 +14,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Service\DigitalOceanService;
 use App\Service\CommonGroundService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class InstallService
 {
@@ -32,18 +34,36 @@ class InstallService
         $this->params = $params;
     }
 
-    public function formDbUrl($dbBaseUrl, $dbUsername, $dbPassword, $dbName){
-        $parsedUrl = parse_url($dbBaseUrl);
-        return "{$parsedUrl['scheme']}://$dbUsername:$dbPassword@{$parsedUrl['host']}:{$parsedUrl['port']}/$dbName?sslmode=require&serverVersion=11";
-    }
-
     public function getGithubAPIUrl($repository){
         $parsedUrl = parse_url($repository);
         return "https://api.github.com/repos{$parsedUrl['path']}/dispatches";
     }
 
     // Volgens mij heb je hier twee functies nodig install/update. En heeft de functie alleen een component nodig (rest zit daar immers al aan vast
+    public function delete(Installation $installation)
+    {
+        if(!$installation->getEnvironment()->getCluster()->getKubeconfig()){
+            $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        }
+        $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
+        file_put_contents(dirname(__FILE__).'/kubeconfig.yaml',$installation->getEnvironment()->getCluster()->getKubeconfig());
 
+        $kubeconfig = dirname(__FILE__).'/kubeconfig.yaml';
+
+        $process = new Process(['helm','delete','--purge',$name,"--kubeconfig={$kubeconfig}"]);
+        $process->run();
+
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+
+        $installation->setDateInstalled(null);
+        $this->em->persist($installation);
+        $this->em->flush();
+
+        return "Successfully removed installation $name";
+
+    }
     public function update(Installation $installation)
     {
         // Als we geen db url hebben url maken
@@ -60,7 +80,7 @@ class InstallService
         $data['environment'] = $installation->getEnvironment()->getName();
         $data['domain'] = $installation->getDomain()->getName();
         $data['dburl'] = $installation->getDbUrl();
-        //$data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
+        $data['debug'] = $installation->getEnvironment()->getDebug();
         $data['authorization'] = $installation->getAuthorization();
         $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
 
@@ -114,7 +134,7 @@ class InstallService
         $data['environment'] = $installation->getEnvironment()->getName();
         $data['domain'] = $installation->getDomain()->getName();
         $data['dburl'] = $installation->getDbUrl();
-        //$data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
+        $data['debug'] = $installation->getEnvironment()->getDebug();
         $data['authorization'] = $installation->getAuthorization();
         $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
 
