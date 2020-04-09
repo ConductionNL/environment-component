@@ -123,6 +123,7 @@ class Domain
 
     /**
      * @var string the base url for the managed database that this domain uses
+     * @TODO: Shouldn't this be removed?
      *
      * @Groups({"read","write"})
      * @example pgsql://db-cluster.vuga.com:25060/
