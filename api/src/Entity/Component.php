@@ -354,6 +354,6 @@ class Component
     {
         $criteria = Criteria::create()
             ->andWhere(Criteria::expr()->eq('environment', $environment));
-        return $this->getInstallations()->matching($criteria);
+        return count($this->getInstallations()->matching($criteria))>0;
     }
 }

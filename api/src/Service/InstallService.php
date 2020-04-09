@@ -49,17 +49,18 @@ class InstallService
         file_put_contents(dirname(__FILE__).'/kubeconfig.yaml',$installation->getEnvironment()->getCluster()->getKubeconfig());
 
         $kubeconfig = dirname(__FILE__).'/kubeconfig.yaml';
+        $installation->setDateInstalled(null);
 
         $process = new Process(['helm','delete','--purge',$name,"--kubeconfig={$kubeconfig}"]);
         $process->run();
 
+        $this->em->persist($installation);
+        $this->em->flush();
+        unlink($kubeconfig);
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
 
-        $installation->setDateInstalled(null);
-        $this->em->persist($installation);
-        $this->em->flush();
 
         return "Successfully removed installation $name";
 

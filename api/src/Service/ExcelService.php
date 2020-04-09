@@ -246,7 +246,7 @@ class ExcelService
 
     /**
      * Defines the filename and starts the loading procedure
-     * 
+     *
      * @param EntityManager $manager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
