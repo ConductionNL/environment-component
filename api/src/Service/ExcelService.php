@@ -204,7 +204,12 @@ class ExcelService
             if (!$clusterArray[0] || !$clusterArray[3]) {
                 continue;
             }
-            elseif (count($manager->getRepository('App:Cluster')->findBy(['name' => $clusterArray[0]]))>0){
+            elseif (count($existingClusters = $manager->getRepository('App:Cluster')->findBy(['name' => $clusterArray[0]]))>0){
+                $cluster = $existingClusters[0];
+                if($cluster instanceof Cluster){
+                    $envs = $this->loadEnvironmentsFromSpreadsheet($environments, $cluster, $manager);
+                    $this->loadComponentsFromSpreadsheet($components, $cluster->getDomains()[0], $envs, $manager);
+                }
                 continue;
             }
             $cluster = new Cluster();
@@ -219,8 +224,8 @@ class ExcelService
             $domain->setCluster($cluster);
             $manager->persist($domain);
 
-            $envs = $this->loadEnvironmentsFromSpreadsheet($environments, $cluster, $manager);
 
+            $envs = $this->loadEnvironmentsFromSpreadsheet($environments, $cluster, $manager);
             $this->loadComponentsFromSpreadsheet($components, $domain, $envs, $manager);
             $manager->flush();
         }
