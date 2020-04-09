@@ -78,8 +78,6 @@ class ExcelService
             elseif(count($manager->getRepository('App:Component')->findBy(['code' => $componentArray[0]]))>0){
                 continue;
             }
-            var_dump(count($manager->getRepository('App:Component')->findBy(['code' => $componentArray[0]])));
-            var_dump(gettype($manager->getRepository('App:Component')->findBy(['code' => $componentArray[0]])));
             // Component Lists
             $component = new Component();
             $component->setCode($componentArray[0]);
@@ -104,6 +102,9 @@ class ExcelService
                     $installation->setName($component->getName());
                     $installation->setDescription($component->getDescription());
                     $installation->setHelmVersion('v2.12.3');
+                    if($componentArray[6] != null){
+                        $installation->setDateInstalled($componentArray[6]);
+                    }
                     $manager->persist($installation);
                 }
             }
