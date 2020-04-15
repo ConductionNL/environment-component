@@ -7834,6 +7834,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[dateInstalled]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'order[dateCreated]'
           in: query
           required: false
@@ -7851,6 +7860,30 @@ paths:
             enum:
               - asc
               - desc
+        -
+          name: 'dateInstalled[before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateInstalled[strictly_before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateInstalled[after]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateInstalled[strictly_after]'
+          in: query
+          required: false
+          schema:
+            type: string
         -
           name: 'dateCreated[before]'
           in: query
@@ -8043,6 +8076,18 @@ paths:
               type: string
           style: form
           explode: true
+        -
+          name: dateInstalled
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateInstalled[]'
+          in: query
+          required: false
+          schema:
+            type: string
         -
           name: dateCreated
           in: query
@@ -9766,6 +9811,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-read'
+        dateInstalled:
+          readOnly: true
+          description: 'The moment this entity was last installed'
+          type: string
+          format: date-time
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -9867,6 +9917,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-read'
+        dateInstalled:
+          readOnly: true
+          description: 'The moment this entity was last installed'
+          type: string
+          format: date-time
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -10038,12 +10093,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-07 05:02:45'
+        example: '2020-04-08 08:43:36'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-07 05:02:45'
+        example: '2020-04-08 08:43:36'
     required: []
   AuditTrail-write:
     properties:
@@ -10091,12 +10146,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-07 05:02:45'
+        example: '2020-04-08 08:43:36'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-07 05:02:45'
+        example: '2020-04-08 08:43:36'
     required: []
   ChangeLog-write:
     properties:
@@ -10439,6 +10494,9 @@ definitions:
         type: string
         example: 'https://github.com/ConductionNL/environment-component'
         maxLength: 255
+      dateInstalled:
+        description: 'The moment this entity was last installed'
+        type: \Datetime
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime

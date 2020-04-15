@@ -9,16 +9,27 @@ use App\Entity\Component;
 use App\Entity\Domain;
 use App\Entity\Environment;
 use App\Entity\Installation;
+use Doctrine\ORM\EntityManagerInterface;
+
+use App\Service\DigitalOceanService;
+use App\Service\CommonGroundService;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class InstallService
 {
+    private $digitalOceanService;
     private $commonGroundService;
     private $client;
+    private $em;
+    private $params;
 
-    public function __construct(CommonGroundService $commonGroundService)
+    public function __construct(ParameterBagInterface $params, DigitalOceanService $digitalOceanService, CommonGroundService $commonGroundService,EntityManagerInterface $em)
     {
+        $this->digitalOceanService = $digitalOceanService;
         $this->commonGroundService = $commonGroundService;
         $this->client = new Client();
+        $this->em = $em;
+        $this->params = $params;
     }
 
     public function formDbUrl($dbBaseUrl, $dbUsername, $dbPassword, $dbName){
@@ -35,12 +46,22 @@ class InstallService
 
     public function update(Installation $installation)
     {
+        // Als we geen db url hebben url maken
+        if(!$installation->getDbUrl()){
+            $installation =  $this->digitalOceanService->createConnectionUrl($installation);
+        }
+
+        // Als we geen kubeconfig hebben deze aanmaken
+        if(!$installation->getEnvironment()->getCluster()->getKubeconfig()){
+            $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        }
+
         $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
         $data['environment'] = $installation->getEnvironment()->getName();
         $data['domain'] = $installation->getDomain()->getName();
         $data['dburl'] = $installation->getDbUrl();
         //$data['dburl'] = $this->formDbUrl($component->getDomain()->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
-        $data['authorization'] = $installation->getComponent()->getAuthorization();
+        $data['authorization'] = $installation->getAuthorization();
         $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
 
         $request['event_type'] = "start-upgrade-workflow";
@@ -52,6 +73,7 @@ class InstallService
         if(!$token){
             $token = $this->params->get('app_github_key');
         }
+        var_dump($token);
 
         $result = $this->client->post($url,
             [
@@ -64,6 +86,7 @@ class InstallService
                     ]
             ]
         );
+
         if($result->getStatusCode() == 204){
             return "Action triggered, check {$installation->getComponent()->getGithubRepository()}/actions for the status";
         }

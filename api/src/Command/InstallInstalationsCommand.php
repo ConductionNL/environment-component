@@ -10,17 +10,21 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 use App\Service\InstallService;
 
-class UpdateComponentsCommand extends Command
+class InstallInstalationsCommand extends Command
 {
 
     private $installService;
+    private $em;
 
-    public function __construct(InstallService  $installService)
+    public function __construct(InstallService  $installService, EntityManagerInterface $em)
     {
         $this->installService = $installService;
+        $this->em = $em;
 
         parent::__construct();
     }
@@ -31,7 +35,7 @@ class UpdateComponentsCommand extends Command
     protected function configure()
     {
         $this
-        ->setName('app:components:update')
+        ->setName('app:installations:install')
         // the short description shown while running "php bin/console list"
         ->setDescription('Updates components in the database from a given excel.')
 
@@ -49,7 +53,22 @@ class UpdateComponentsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->installService->updateComponents(false);
+        $results = $this->em->getRepository('App\Entity\Installation')->findInstallable();
+
+        $io->title('Installing or updating '.count($results).' installations');
+        $io->progressStart(count($results));
+
+        foreach($results as $result){
+            $io->progressAdvance();
+            $io->text("Installing {$result->getComponent()->getName()} on {$result->getDomain()->getCluster()->getName()}");
+
+            $this->installService->update($result);
+            //$io->warning('Lorem ipsum dolor sit amet');
+            //$io->success('Lorem ipsum dolor sit amet');
+
+        }
+
+        $io->progressFinish();
 
     }
 }

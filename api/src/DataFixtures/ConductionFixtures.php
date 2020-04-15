@@ -69,15 +69,17 @@ class ConductionFixtures extends Fixture
             // Setup an installation for above component
 
             foreach($environments as $environment){
-                $installation = new Installation();
-                $installation->setComponent($component);
-                $installation->setDomain($domain);
-                $installation->setEnvironment($environment);
-                $installation->setAuthorization($environment->getAuthorization());
-                $installation->setName($component->getName());
-                $installation->setDescription($component->getDescription());
-                $installation->setHelmVersion('v2.12.3');
-                $manager->persist($installation);
+                if($componentArray[5] == 1){
+                    $installation = new Installation();
+                    $installation->setComponent($component);
+                    $installation->setDomain($domain);
+                    $installation->setEnvironment($environment);
+                    $installation->setAuthorization($environment->getAuthorization());
+                    $installation->setName($component->getName());
+                    $installation->setDescription($component->getDescription());
+                    $installation->setHelmVersion('v2.12.3');
+                    $manager->persist($installation);
+                }
             }
 
             $j++;

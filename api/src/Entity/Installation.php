@@ -61,7 +61,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          }
  * 		},
  * )
- * @ORM\Entity(repositoryClass="App\Repository\ComponentRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\InstallationRepository")
  * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
@@ -222,6 +222,14 @@ class Installation
     private $healthLogs;
 
     /**
+     * @var Datetime The moment this entity was last installed
+     *
+     * @Groups({"read"})
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateInstalled;
+
+    /**
      * @var Datetime The moment this entity was created
      *
      * @Groups({"read"})
@@ -320,6 +328,19 @@ class Installation
 
         return $this;
     }
+
+    public function getDateInstalled(): ?\DateTimeInterface
+    {
+        return $this->dateInstalled;
+    }
+
+    public function setDateInstalled(\DateTimeInterface $dateInstalled): self
+    {
+        $this->dateInstalled = $dateInstalled;
+
+        return $this;
+    }
+
     public function getDateCreated(): ?\DateTimeInterface
     {
         return $this->dateCreated;
