@@ -28,23 +28,31 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 	    "put",
  * 	   "delete",
  *     "helm_install"={
- *              "path"="/components/{id}/install",
+ *              "path"="/installations/{id}/install",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="install",
  *                  "description"="Installs this component to a cluster"
  *              }
  *     },
+ *     "helm_delete"={
+ *              "path"="/installations/{id}/delete",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="delete",
+ *                  "description"="Deletes this component from a cluster"
+ *              }
+ *     },
  *     "helm_update"={
- *              "path"="/components/{id}/update",
+ *              "path"="/installations/{id}/update",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="update",
- *                  "description"="Updates this component to a cluster"
+ *                  "description"="Updates this component on a cluster"
  *              }
  *     },
  *     "get_change_logs"={
- *              "path"="/components/{id}/change_log",
+ *              "path"="/installations/{id}/change_log",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="Changelogs",
@@ -52,7 +60,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              }
  *          },
  *     "get_audit_trail"={
- *              "path"="/components/{id}/audit_trail",
+ *              "path"="/installations/{id}/audit_trail",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="Audittrail",
@@ -334,7 +342,7 @@ class Installation
         return $this->dateInstalled;
     }
 
-    public function setDateInstalled(\DateTimeInterface $dateInstalled): self
+    public function setDateInstalled(?\DateTimeInterface $dateInstalled): self
     {
         $this->dateInstalled = $dateInstalled;
 

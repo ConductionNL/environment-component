@@ -106,7 +106,7 @@ class Environment
      * @Assert\Choice({0, 1})
      * @ORM\Column(type="integer")
      */
-    private $debug;
+    private $debug = 0;
 
     /**
      * @var string The authentication token that is needed to access this token
@@ -160,7 +160,7 @@ class Environment
 
     public function __construct()
     {
-        $this->components = new ArrayCollection();
+        $this->installations = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
