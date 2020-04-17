@@ -71,9 +71,9 @@ class HelmDeleteSubscriber implements EventSubscriberInterface
         }
 
         $results = $this->installService->delete($component);
-        $result['message'] = $results;
+        $component['message'] = $results;
         $response = $this->serializer->serialize(
-            $result,
+            $component,
             'json',
             ['enable_max_depth'=> true]
         );
