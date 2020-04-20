@@ -71,7 +71,7 @@ class HelmInstallSubscriber implements EventSubscriberInterface
         }
 
         $results = $this->installService->install($component);
-        $component['message'] = $results;
+        //$component['message'] = $results;
         $response = $this->serializer->serialize(
             $component,
             'json',
