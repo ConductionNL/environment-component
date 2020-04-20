@@ -145,7 +145,6 @@ class Component
      * @var string A personal access token for github that can be used to trigger actions on this component
      *
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
