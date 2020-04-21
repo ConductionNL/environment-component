@@ -45,8 +45,8 @@ class DigitalOceanService
     public function getKubernetesCredentials(string $id){
         $response = $this->client->get("kubernetes/clusters/$id/kubeconfig");
         if($response->getStatusCode() == 200){
-            file_put_contents(dirname(__FILE__).'/kubeconfig.yaml',$response->getBody());
-            return dirname(__FILE__).'/kubeconfig.yaml';
+            file_put_contents(dirname(__FILE__, 3).'/var/kubeconfig.yaml',$response->getBody());
+            return dirname(__FILE__, 3).'/var/kubeconfig.yaml';
         }
         throw new HttpException($response->getStatusCode(), "https://api.digitalocean.com/v2/kubernetes/clusters/$id/credentials".' returned: '.$response->getBody());
     }
