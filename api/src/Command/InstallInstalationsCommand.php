@@ -64,10 +64,10 @@ class InstallInstalationsCommand extends Command
 
             if($result->getDateInstalled() != null){
 
-                $this->installService->update($result);
+                $this->installService->update($result, 'prod');
             }
             else{
-                $this->installService->install($result);
+                $this->installService->install($result, 'prod');
             }
             //$io->warning('Lorem ipsum dolor sit amet');
             //$io->success('Lorem ipsum dolor sit amet');
