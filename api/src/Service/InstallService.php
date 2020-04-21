@@ -46,9 +46,9 @@ class InstallService
             $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
         }
         $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
-        file_put_contents(dirname(__FILE__).'/kubeconfig.yaml',$installation->getEnvironment()->getCluster()->getKubeconfig());
+        file_put_contents(dirname(__FILE__, 3).'/var/kubeconfig.yaml',$installation->getEnvironment()->getCluster()->getKubeconfig());
 
-        $kubeconfig = dirname(__FILE__).'/kubeconfig.yaml';
+        $kubeconfig = dirname(__FILE__, 3).'/var/kubeconfig.yaml';
         $installation->setDateInstalled(null);
 
         $process = new Process(['helm','delete','--purge',$name,"--kubeconfig={$kubeconfig}"]);
