@@ -136,7 +136,7 @@ class Cluster
     private $domains;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")

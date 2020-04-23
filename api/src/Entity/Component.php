@@ -178,7 +178,7 @@ class Component
     private $core = false;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="component")
      */

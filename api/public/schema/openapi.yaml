@@ -7684,6 +7684,22 @@ paths:
           style: form
           explode: true
         -
+          name: component.id
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'component.id[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        -
           name: page
           in: query
           required: false
@@ -9263,10 +9279,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Domain-read'
-        environments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Environment-read'
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -9307,6 +9319,7 @@ components:
           items:
             $ref: '#/components/schemas/Domain-write'
         environments:
+          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Environment-write'
@@ -9342,10 +9355,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Domain:jsonld-read'
-        environments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Environment:jsonld-read'
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -9395,6 +9404,7 @@ components:
           items:
             $ref: '#/components/schemas/Domain:jsonld-write'
         environments:
+          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Environment:jsonld-write'
@@ -9426,10 +9436,6 @@ components:
         core:
           description: 'Is the component a core component'
           type: boolean
-        installations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Installation-read'
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -9452,7 +9458,6 @@ components:
         - name
         - code
         - githubRepository
-        - githubToken
         - helmRepository
       properties:
         name:
@@ -9478,6 +9483,7 @@ components:
           description: 'Is the component a core component'
           type: boolean
         installations:
+          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Installation-write'
@@ -9518,10 +9524,6 @@ components:
         core:
           description: 'Is the component a core component'
           type: boolean
-        installations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Installation:jsonld-read'
         dateCreated:
           readOnly: true
           description: 'The moment this entity was created'
@@ -9544,7 +9546,6 @@ components:
         - name
         - code
         - githubRepository
-        - githubToken
         - helmRepository
       properties:
         '@context':
@@ -9579,6 +9580,7 @@ components:
           description: 'Is the component a core component'
           type: boolean
         installations:
+          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-write'
@@ -9619,12 +9621,6 @@ components:
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
-        cluster:
-          $ref: '#/components/schemas/Cluster-read'
-        installations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Installation-read'
         healthLogs:
           type: array
           items:
@@ -9657,8 +9653,10 @@ components:
           description: 'the base url for the managed database that this domain uses'
           type: string
         cluster:
+          writeOnly: true
           $ref: '#/components/schemas/Cluster-write'
         installations:
+          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Installation-write'
@@ -9712,12 +9710,6 @@ components:
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
-        cluster:
-          $ref: '#/components/schemas/Cluster:jsonld-read'
-        installations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Installation:jsonld-read'
         healthLogs:
           type: array
           items:
@@ -9759,8 +9751,10 @@ components:
           description: 'the base url for the managed database that this domain uses'
           type: string
         cluster:
+          writeOnly: true
           $ref: '#/components/schemas/Cluster:jsonld-write'
         installations:
+          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-write'
@@ -10331,12 +10325,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-17 13:22:01'
+        example: '2020-04-23 07:49:36'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-17 13:22:01'
+        example: '2020-04-23 07:49:36'
     required: []
   AuditTrail-write:
     properties:
@@ -10384,12 +10378,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-04-17 13:22:01'
+        example: '2020-04-23 07:49:36'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-04-17 13:22:01'
+        example: '2020-04-23 07:49:36'
     required: []
   ChangeLog-write:
     properties:
@@ -10426,7 +10420,6 @@ definitions:
         description: 'The moment this entity last Modified'
         type: \Datetime
       domains: []
-      environments: []
     required:
       - name
   Cluster-write:
@@ -10494,12 +10487,10 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
-      installations: []
     required:
       - name
       - code
       - githubRepository
-      - githubToken
       - helmRepository
   Component-write:
     properties:
@@ -10539,7 +10530,6 @@ definitions:
       - name
       - code
       - githubRepository
-      - githubToken
       - helmRepository
   Domain-read:
     properties:
@@ -10577,8 +10567,6 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
-      cluster: []
-      installations: []
       healthLogs: []
     required:
       - name

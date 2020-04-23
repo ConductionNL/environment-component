@@ -150,7 +150,7 @@ class Domain
     private $dateModified;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="domains")
      * @ORM\JoinColumn(nullable=false)
@@ -158,7 +158,7 @@ class Domain
     private $cluster;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="domain")
      */
