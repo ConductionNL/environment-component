@@ -147,6 +147,9 @@ class InstallService
         $data['dburl'] = $installation->getDbUrl();
         $data['debug'] = $installation->getEnvironment()->getDebug();
         $data['authorization'] = $installation->getAuthorization();
+        if($data['authorization'] == null){
+            $data['authorization'] = $installation->getEnvironment()->getAuthorization();
+        }
         $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
 
         $request['event_type'] = "start-install-workflow";
