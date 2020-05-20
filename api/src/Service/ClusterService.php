@@ -111,7 +111,10 @@ class ClusterService
     }
     public function installComponent(Installation $installation):bool{
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
-
+        $additionalSettings = "";
+        foreach($installation->getProperties() as $property){
+            $additionalSettings .= ",{$property->getName()}={$property->getValue}";
+        }
         $this->addRepo($installation);
         //Install
         $process = new Process([
@@ -121,7 +124,7 @@ class ClusterService
             "{$installation->getComponent()->getCode()}-repository/{$installation->getComponent()->getCode()}",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
-            "--set","settings.env={$installation->getEnvironment()->getName()},settings.debug={$installation->getEnvironment()->getDebug()},settings.domain={$installation->getDomain()->getName()},settings.trustedHosts=^(.+\.)".addcslashes($installation->getDomain()->getName(),'.')."$,settings.cache={$installation->getEnvironment()->getDebug()},security.commongroundKey={$installation->getEnvironment()->getAuthorization()},security.applicationKey={$installation->getEnvironment()->getAuthorization()},security.authorisationProviderUser=https://uc.{$installation->getDomain()->getName()},security.authorisationProviderApplication=https://uc.{$installation->getDomain()->getName()},postgresql.enabled=false,postgresql.url={$installation->getDbUrl()}"
+            "--set","settings.env={$installation->getEnvironment()->getName()},settings.debug={$installation->getEnvironment()->getDebug()},settings.domain={$installation->getDomain()->getName()},settings.trustedHosts=^(.+\.)".addcslashes($installation->getDomain()->getName(),'.')."$,settings.cache={$installation->getEnvironment()->getCache()},security.commongroundKey={$installation->getEnvironment()->getAuthorization()},security.applicationKey={$installation->getEnvironment()->getAuthorization()},security.authorisationProviderUser=https://uc.{$installation->getDomain()->getName()},security.authorisationProviderApplication=https://uc.{$installation->getDomain()->getName()},postgresql.enabled=false,postgresql.url={$installation->getDbUrl()}$additionalSettings"
         ]);
         $process->run();
         if(!$process->isSuccessful()){
@@ -132,7 +135,10 @@ class ClusterService
         return $process->isSuccessful();
     }
     public function upgradeComponent(Installation $installation):bool{
-
+        $additionalSettings = "";
+        foreach($installation->getProperties() as $property){
+            $additionalSettings .= ",{$property->getName()}={$property->getValue}";
+        }
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
         $this->addRepo($installation);
         //Install
@@ -143,7 +149,7 @@ class ClusterService
             "{$installation->getComponent()->getCode()}-repository/{$installation->getComponent()->getCode()}",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
-            "--set","settings.env={$installation->getEnvironment()->getName()},settings.debug={$installation->getEnvironment()->getDebug()},settings.domain={$installation->getDomain()->getName()},settings.trustedHosts=^(.+\.)".addcslashes($installation->getDomain()->getName(),'.')."$,settings.cache={$installation->getEnvironment()->getDebug()},security.commongroundKey={$installation->getEnvironment()->getAuthorization()},security.applicationKey={$installation->getEnvironment()->getAuthorization()},security.authorisationProviderUser=https://uc.{$installation->getDomain()->getName()},security.authorisationProviderApplication=https://uc.{$installation->getDomain()->getName()},postgresql.enabled=false,postgresql.url={$installation->getDbUrl()}"
+            "--set","settings.env={$installation->getEnvironment()->getName()},settings.debug={$installation->getEnvironment()->getDebug()},settings.domain={$installation->getDomain()->getName()},settings.trustedHosts=^(.+\.)".addcslashes($installation->getDomain()->getName(),'.')."$,settings.cache={$installation->getEnvironment()->getCache()},security.commongroundKey={$installation->getEnvironment()->getAuthorization()},security.applicationKey={$installation->getEnvironment()->getAuthorization()},security.authorisationProviderUser=https://uc.{$installation->getDomain()->getName()},security.authorisationProviderApplication=https://uc.{$installation->getDomain()->getName()},postgresql.enabled=false,postgresql.url={$installation->getDbUrl()}$additionalSettings"
         ]);
         $process->run();
         if(!$process->isSuccessful()){

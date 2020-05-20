@@ -255,9 +255,18 @@ class Installation
      */
     private $dateModified;
 
+    /**
+     * @var Property additional properties that are required for this installation, i.e. external API keys
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade="persist")
+     */
+    private $properties;
+
     public function __construct()
     {
         $this->healthLogs = new ArrayCollection();
+        $this->properties = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -473,6 +482,37 @@ class Installation
     {
         $this->domain = $domain;
         $domain->addInstallation($this);
+        return $this;
+    }
+
+    /**
+     * @return Collection|Property[]
+     */
+    public function getProperties(): Collection
+    {
+        return $this->properties;
+    }
+
+    public function addProperty(Property $property): self
+    {
+        if (!$this->properties->contains($property)) {
+            $this->properties[] = $property;
+            $property->setInstallation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProperty(Property $property): self
+    {
+        if ($this->properties->contains($property)) {
+            $this->properties->removeElement($property);
+            // set the owning side to null (unless already changed)
+            if ($property->getInstallation() === $this) {
+                $property->setInstallation(null);
+            }
+        }
+
         return $this;
     }
 }

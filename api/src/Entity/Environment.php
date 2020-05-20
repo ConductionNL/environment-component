@@ -158,6 +158,11 @@ class Environment
      */
     private $dateModified;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $cache;
+
     public function __construct()
     {
         $this->installations = new ArrayCollection();
@@ -279,6 +284,18 @@ class Environment
     public function setAuthorization(?string $authorization): self
     {
         $this->authorization = $authorization;
+
+        return $this;
+    }
+
+    public function getCache(): ?int
+    {
+        return $this->cache;
+    }
+
+    public function setCache(int $cache): self
+    {
+        $this->cache = $cache;
 
         return $this;
     }
