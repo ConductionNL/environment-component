@@ -51,7 +51,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
- * @ApiFilter(SearchFilter::class)
+ * @ApiFilter(SearchFilter::class, properties={"cluster.id": "exact"})
 */
 class Environment
 {
@@ -106,7 +106,7 @@ class Environment
      * @Assert\Choice({0, 1})
      * @ORM\Column(type="integer")
      */
-    private $debug;
+    private $debug = 0;
 
     /**
      * @var string The authentication token that is needed to access this token
@@ -160,7 +160,7 @@ class Environment
 
     public function __construct()
     {
-        $this->components = new ArrayCollection();
+        $this->installations = new ArrayCollection();
     }
 
     public function getId(): ?Uuid

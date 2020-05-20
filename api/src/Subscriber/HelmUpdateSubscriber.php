@@ -71,9 +71,9 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
 
         $results = $this->installService->update($component);
 
-        $result['message'] = $results;
+        //$component['message'] = $results;
         $response = $this->serializer->serialize(
-            $result,
+            $component,
             'json',
             ['enable_max_depth'=> true]
         );
@@ -82,7 +82,7 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
 
         $response = new Response(
             $response,
-            Response::HTTP_CREATED,
+            Response::HTTP_OK,
             ['content-type' => $contentType]
         );
 

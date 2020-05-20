@@ -11,6 +11,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
@@ -144,7 +145,6 @@ class Component
      * @var string A personal access token for github that can be used to trigger actions on this component
      *
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
@@ -167,8 +167,18 @@ class Component
      */
     private $helmRepository;
 
+
     /**
+     * @var boolean Is the component a core component
+     *
      * @Groups({"read","write"})
+     * @Gedmo\Versioned
+     * @ORM\Column(type="boolean")
+     */
+    private $core = false;
+
+    /**
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="component")
      */
@@ -182,7 +192,6 @@ class Component
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateCreated;
-
     /**
      * @var Datetime The moment this entity last Modified
      *
@@ -327,5 +336,23 @@ class Component
         $this->dateModified = $dateModified;
 
         return $this;
+    }
+
+    public function getCore(): ?bool
+    {
+        return $this->core;
+    }
+
+    public function setCore(bool $core): self
+    {
+        $this->core = $core;
+
+        return $this;
+    }
+    public function hasInstallationInEnvironment(Environment $environment):bool
+    {
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq('environment', $environment));
+        return count($this->getInstallations()->matching($criteria))>0;
     }
 }
