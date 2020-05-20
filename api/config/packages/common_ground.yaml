@@ -12,6 +12,9 @@ parameters:
     app_commonground_id: '%env(APP_COMMONGROUND_ID)%'
     app_commonground_key: '%env(APP_COMMONGROUND_KEY)%'
     app_commonground_secret: '%env(APP_COMMONGROUND_SECRET)%'
+    
+    app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)%'
+    app_github_key: '%env(APP_GITHUB_KEY)%'
 
     # Application Parameters
     env(APP_ENV): 'prod'
@@ -443,6 +446,9 @@ twig:
         app_demo: '%env(APP_DEMO)%'
         app_container: '%env(APP_CONTAINER)%'
         app_repro: '%env(APP_REPRO)%'
+
+        app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)'
+        app_github_key: '%env(APP_GITHUB_KEY)'
             
         # Security Details
         app_commonground_id: '%env(APP_COMMONGROUND_ID)%'

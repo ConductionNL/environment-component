@@ -66,7 +66,7 @@ class DigitalOceanService
         if($response->getStatusCode() == 200){
             return json_decode($response->getBody(), true)['databases'];
         }
-        throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.$response->getBody());
+        throw new HttpException($response->getStatusCode(), 'https://api.digitalocean.com/v2/databases'.' returned: '.$response->getBody().' with header'.$this->headers["Authorization"]);
     }
     public function getDatabases($clusterId):array
     {

@@ -9262,29 +9262,32 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this cluster'
           type: string
         description:
           description: 'the description of this cluster'
           type: string
+          nullable: true
         ip:
           description: 'the IP Address of this cluster'
           type: string
+          nullable: true
         domains:
           type: array
           items:
             $ref: '#/components/schemas/Domain-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
     Cluster-write:
@@ -9299,23 +9302,24 @@ components:
         description:
           description: 'the description of this cluster'
           type: string
+          nullable: true
         kubeconfig:
-          writeOnly: true
           description: 'the kubernetes configuration file of this cluster'
           type: string
+          nullable: true
         ip:
           description: 'the IP Address of this cluster'
           type: string
+          nullable: true
         token:
-          writeOnly: true
           description: 'the Tiller token of this cluster'
           type: string
+          nullable: true
         domains:
           type: array
           items:
             $ref: '#/components/schemas/Domain-write'
         environments:
-          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Environment-write'
@@ -9338,29 +9342,32 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this cluster'
           type: string
         description:
           description: 'the description of this cluster'
           type: string
+          nullable: true
         ip:
           description: 'the IP Address of this cluster'
           type: string
+          nullable: true
         domains:
           type: array
           items:
             $ref: '#/components/schemas/Domain:jsonld-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
     'Cluster:jsonld-write':
@@ -9384,23 +9391,24 @@ components:
         description:
           description: 'the description of this cluster'
           type: string
+          nullable: true
         kubeconfig:
-          writeOnly: true
           description: 'the kubernetes configuration file of this cluster'
           type: string
+          nullable: true
         ip:
           description: 'the IP Address of this cluster'
           type: string
+          nullable: true
         token:
-          writeOnly: true
           description: 'the Tiller token of this cluster'
           type: string
+          nullable: true
         domains:
           type: array
           items:
             $ref: '#/components/schemas/Domain:jsonld-write'
         environments:
-          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Environment:jsonld-write'
@@ -9414,6 +9422,7 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
@@ -9423,6 +9432,7 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         githubRepository:
           description: 'the Github Repository that contains this component'
           type: string
@@ -9433,15 +9443,15 @@ components:
           description: 'Is the component a core component'
           type: boolean
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
         - code
@@ -9465,13 +9475,14 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         githubRepository:
           description: 'the Github Repository that contains this component'
           type: string
         githubToken:
-          writeOnly: true
           description: 'A personal access token for github that can be used to trigger actions on this component'
           type: string
+          nullable: true
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
@@ -9479,7 +9490,6 @@ components:
           description: 'Is the component a core component'
           type: boolean
         installations:
-          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Installation-write'
@@ -9502,6 +9512,7 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
@@ -9511,6 +9522,7 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         githubRepository:
           description: 'the Github Repository that contains this component'
           type: string
@@ -9521,15 +9533,15 @@ components:
           description: 'Is the component a core component'
           type: boolean
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
         - code
@@ -9562,13 +9574,14 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         githubRepository:
           description: 'the Github Repository that contains this component'
           type: string
         githubToken:
-          writeOnly: true
           description: 'A personal access token for github that can be used to trigger actions on this component'
           type: string
+          nullable: true
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
@@ -9576,7 +9589,6 @@ components:
           description: 'Is the component a core component'
           type: boolean
         installations:
-          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-write'
@@ -9590,12 +9602,14 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this domain'
           type: string
         description:
           description: 'the description of this domain'
           type: string
+          nullable: true
         location:
           description: 'the base route of this domain'
           externalDocs:
@@ -9604,19 +9618,21 @@ components:
         ip:
           description: 'the IP Address of this domain'
           type: string
+          nullable: true
         databaseUrl:
           description: 'the base url for the managed database that this domain uses'
           type: string
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
         healthLogs:
           type: array
           items:
@@ -9637,6 +9653,7 @@ components:
         description:
           description: 'the description of this domain'
           type: string
+          nullable: true
         location:
           description: 'the base route of this domain'
           externalDocs:
@@ -9645,14 +9662,14 @@ components:
         ip:
           description: 'the IP Address of this domain'
           type: string
+          nullable: true
         databaseUrl:
           description: 'the base url for the managed database that this domain uses'
           type: string
+          nullable: true
         cluster:
-          writeOnly: true
           $ref: '#/components/schemas/Cluster-write'
         installations:
-          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Installation-write'
@@ -9679,12 +9696,14 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this domain'
           type: string
         description:
           description: 'the description of this domain'
           type: string
+          nullable: true
         location:
           description: 'the base route of this domain'
           externalDocs:
@@ -9693,19 +9712,21 @@ components:
         ip:
           description: 'the IP Address of this domain'
           type: string
+          nullable: true
         databaseUrl:
           description: 'the base url for the managed database that this domain uses'
           type: string
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
         healthLogs:
           type: array
           items:
@@ -9735,6 +9756,7 @@ components:
         description:
           description: 'the description of this domain'
           type: string
+          nullable: true
         location:
           description: 'the base route of this domain'
           externalDocs:
@@ -9743,14 +9765,14 @@ components:
         ip:
           description: 'the IP Address of this domain'
           type: string
+          nullable: true
         databaseUrl:
           description: 'the base url for the managed database that this domain uses'
           type: string
+          nullable: true
         cluster:
-          writeOnly: true
           $ref: '#/components/schemas/Cluster:jsonld-write'
         installations:
-          writeOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-write'
@@ -9768,12 +9790,14 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
@@ -9785,15 +9809,15 @@ components:
           items:
             $ref: '#/components/schemas/Installation-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
         - debug
@@ -9811,13 +9835,14 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
         authorization:
-          writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
+          nullable: true
         cluster:
           $ref: '#/components/schemas/Cluster-write'
         installations:
@@ -9844,12 +9869,14 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
@@ -9861,15 +9888,15 @@ components:
           items:
             $ref: '#/components/schemas/Installation:jsonld-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
         - debug
@@ -9896,13 +9923,14 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
         authorization:
-          writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
+          nullable: true
         cluster:
           $ref: '#/components/schemas/Cluster:jsonld-write'
         installations:
@@ -9917,23 +9945,30 @@ components:
         description:
           description: 'the description of this health log'
           type: string
+          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
         domain:
-          $ref: '#/components/schemas/Domain-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain-read'
         installation:
-          $ref: '#/components/schemas/Installation-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Installation-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
     HealthLog-write:
       type: object
       description: ''
@@ -9941,13 +9976,20 @@ components:
         description:
           description: 'the description of this health log'
           type: string
+          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
         domain:
-          $ref: '#/components/schemas/Domain-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain-write'
         installation:
-          $ref: '#/components/schemas/Installation-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Installation-write'
     'HealthLog:jsonld-read':
       type: object
       description: ''
@@ -9964,23 +10006,30 @@ components:
         description:
           description: 'the description of this health log'
           type: string
+          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
         domain:
-          $ref: '#/components/schemas/Domain:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain:jsonld-read'
         installation:
-          $ref: '#/components/schemas/Installation:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Installation:jsonld-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
     'HealthLog:jsonld-write':
       type: object
       description: ''
@@ -9997,13 +10046,20 @@ components:
         description:
           description: 'the description of this health log'
           type: string
+          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
         domain:
-          $ref: '#/components/schemas/Domain:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain:jsonld-write'
         installation:
-          $ref: '#/components/schemas/Installation:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Installation:jsonld-write'
     Installation-read:
       type: object
       description: ''
@@ -10014,46 +10070,59 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbName:
           description: 'The name of the database this component uses'
           type: string
+          nullable: true
         helmVersion:
           description: 'the Github Repository that contains this component'
           type: string
         component:
-          $ref: '#/components/schemas/Component-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Component-read'
         domain:
-          $ref: '#/components/schemas/Domain-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain-read'
         environment:
-          $ref: '#/components/schemas/Environment-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Environment-read'
         healthLogs:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-read'
         dateInstalled:
-          readOnly: true
           description: 'The moment this entity was last installed'
           type: string
           format: date-time
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
         - helmVersion
@@ -10070,33 +10139,45 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbPassword:
-          writeOnly: true
           description: 'The password that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbName:
           description: 'The name of the database this component uses'
           type: string
+          nullable: true
         authorization:
-          writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
+          nullable: true
         dbUrl:
-          writeOnly: true
           description: 'the Github Repository that contains this component'
           type: string
+          nullable: true
         helmVersion:
           description: 'the Github Repository that contains this component'
           type: string
         component:
-          $ref: '#/components/schemas/Component-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Component-write'
         domain:
-          $ref: '#/components/schemas/Domain-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain-write'
         environment:
-          $ref: '#/components/schemas/Environment-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Environment-write'
         healthLogs:
           type: array
           items:
@@ -10120,46 +10201,59 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbName:
           description: 'The name of the database this component uses'
           type: string
+          nullable: true
         helmVersion:
           description: 'the Github Repository that contains this component'
           type: string
         component:
-          $ref: '#/components/schemas/Component:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Component:jsonld-read'
         domain:
-          $ref: '#/components/schemas/Domain:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain:jsonld-read'
         environment:
-          $ref: '#/components/schemas/Environment:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Environment:jsonld-read'
         healthLogs:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-read'
         dateInstalled:
-          readOnly: true
           description: 'The moment this entity was last installed'
           type: string
           format: date-time
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
         - helmVersion
@@ -10185,210 +10279,50 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbPassword:
-          writeOnly: true
           description: 'The password that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbName:
           description: 'The name of the database this component uses'
           type: string
+          nullable: true
         authorization:
-          writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
+          nullable: true
         dbUrl:
-          writeOnly: true
           description: 'the Github Repository that contains this component'
           type: string
+          nullable: true
         helmVersion:
           description: 'the Github Repository that contains this component'
           type: string
         component:
-          $ref: '#/components/schemas/Component:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Component:jsonld-write'
         domain:
-          $ref: '#/components/schemas/Domain:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain:jsonld-write'
         environment:
-          $ref: '#/components/schemas/Environment:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Environment:jsonld-write'
         healthLogs:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-write'
 definitions:
-  AuditTrail-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this object'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line looks suspicius'
-        maxLength: 2555
-      application:
-        description: 'The application that made the request'
-        type: string
-        format: url
-        maxLength: 255
-      request:
-        description: 'The id of the request within that application'
-        type: string
-        format: url
-        maxLength: 255
-      user:
-        description: 'The user on behalf of wich the request was made'
-        type: string
-        format: url
-        maxLength: 255
-      subject:
-        description: '???'
-        type: string
-        maxLength: 255
-      process:
-        description: 'The procces on behalf of wich the request was made'
-        type: string
-        maxLength: 255
-      dataElements:
-        description: 'The moment this request was created'
-        type: array
-      dataSubjects:
-        description: 'The moment this request was created'
-        type: array
-      resource:
-        description: 'The resource that was requested'
-        type: string
-        maxLength: 255
-      resourceType:
-        description: 'The type of the resource that was requested'
-        type: string
-        maxLength: 255
-      route:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      endpoint:
-        description: 'The endpoint that the request was made to'
-        type: string
-        maxLength: 255
-      method:
-        description: 'The method that was used'
-        type: string
-        maxLength: 255
-      accept:
-        description: 'The contentType that was reqousted'
-        type: string
-        maxLength: 255
-      contentType:
-        description: 'The contentType that was suplieds'
-        type: string
-        maxLength: 255
-      content:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 2555
-      ip:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      session:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      headers:
-        description: 'The headers supplied by client'
-        type: array
-      statusCode:
-        description: 'The status code returned to client'
-        type: int
-        example: '200'
-      notFound:
-        description: 'Whether or not the reqousted endpoint was found'
-        type: bool
-        example: 'false'
-      forbidden:
-        description: 'Whether or not the client was allowed to the reqousted endpoint'
-        type: bool
-        example: 'false'
-      ok:
-        description: 'Whether or not there where any problems'
-        type: bool
-        example: 'true'
-      dateCreated:
-        description: 'The moment this request was created'
-        type: string
-        format: date-time
-        example: '2020-05-07 14:51:44'
-      dateModified:
-        description: 'The moment this request last Modified'
-        type: string
-        format: date-time
-        example: '2020-05-07 14:51:44'
-    required: []
-  AuditTrail-write:
-    properties:
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line looks suspicius'
-        maxLength: 2555
-    required: []
-  ChangeLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this object'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-      action:
-        description: ''
-        type: string
-      objectId:
-        description: ''
-        type: string
-      objectClass:
-        description: ''
-        type: string
-      version:
-        description: ''
-        type: int
-      data:
-        description: ''
-        type: array
-      username:
-        description: ''
-        type: string
-      session:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this request was created'
-        type: string
-        format: date-time
-        example: '2020-05-07 14:51:44'
-      dateModified:
-        description: 'The moment this request last Modified'
-        type: string
-        format: date-time
-        example: '2020-05-07 14:51:44'
-    required: []
-  ChangeLog-write:
-    properties:
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-    required: []
   Cluster-read:
     properties:
       id:
@@ -10784,19 +10718,179 @@ definitions:
     required:
       - name
       - helmVersion
+  AuditTrail-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line looks suspicius'
+        maxLength: 2555
+      application:
+        description: 'The application that made the request'
+        type: string
+        format: url
+        maxLength: 255
+      request:
+        description: 'The id of the request within that application'
+        type: string
+        format: url
+        maxLength: 255
+      user:
+        description: 'The user on behalf of wich the request was made'
+        type: string
+        format: url
+        maxLength: 255
+      subject:
+        description: '???'
+        type: string
+        maxLength: 255
+      process:
+        description: 'The procces on behalf of wich the request was made'
+        type: string
+        maxLength: 255
+      dataElements:
+        description: 'The moment this request was created'
+        type: array
+      dataSubjects:
+        description: 'The moment this request was created'
+        type: array
+      resource:
+        description: 'The resource that was requested'
+        type: string
+        maxLength: 255
+      resourceType:
+        description: 'The type of the resource that was requested'
+        type: string
+        maxLength: 255
+      route:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      endpoint:
+        description: 'The endpoint that the request was made to'
+        type: string
+        maxLength: 255
+      method:
+        description: 'The method that was used'
+        type: string
+        maxLength: 255
+      accept:
+        description: 'The contentType that was reqousted'
+        type: string
+        maxLength: 255
+      contentType:
+        description: 'The contentType that was suplieds'
+        type: string
+        maxLength: 255
+      content:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 2555
+      ip:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      headers:
+        description: 'The headers supplied by client'
+        type: array
+      statusCode:
+        description: 'The status code returned to client'
+        type: int
+        example: '200'
+      notFound:
+        description: 'Whether or not the reqousted endpoint was found'
+        type: bool
+        example: 'false'
+      forbidden:
+        description: 'Whether or not the client was allowed to the reqousted endpoint'
+        type: bool
+        example: 'false'
+      ok:
+        description: 'Whether or not there where any problems'
+        type: bool
+        example: 'true'
+      dateCreated:
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-05-20 12:23:00'
+      dateModified:
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-05-20 12:23:00'
+    required: []
+  AuditTrail-write:
+    properties:
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line looks suspicius'
+        maxLength: 2555
+    required: []
+  ChangeLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+      action:
+        description: ''
+        type: string
+      objectId:
+        description: ''
+        type: string
+      objectClass:
+        description: ''
+        type: string
+      version:
+        description: ''
+        type: int
+      data:
+        description: ''
+        type: array
+      username:
+        description: ''
+        type: string
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      dateCreated:
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-05-20 12:23:00'
+      dateModified:
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-05-20 12:23:00'
+    required: []
+  ChangeLog-write:
+    properties:
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+    required: []
 tags:
-  -
-    name: AuditTrail
-    description: |
-      An resource representing a log line.
-      
-      This entity represents a product that can be ordered via the OrderRegistratieComponent.
-  -
-    name: ChangeLog
-    description: |
-      An resource representing a log line.
-      
-      This entity represents a product that can be ordered via the OrderRegistratieComponent.
   -
     name: Cluster
     description: |
@@ -10833,26 +10927,38 @@ tags:
       
       
       
+  -
+    name: AuditTrail
+    description: |
+      An resource representing a log line.
+      
+      This entity represents a product that can be ordered via the OrderRegistratieComponent.
+  -
+    name: ChangeLog
+    description: |
+      An resource representing a log line.
+      
+      This entity represents a product that can be ordered via the OrderRegistratieComponent.
 securityDefinitions:
   JWT-Oauth:
     type: oauth2
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the Installation resource'
-      write: 'write right to the Installation resource'
+      read: 'read right to the ChangeLog resource'
+      write: 'write right to the ChangeLog resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the Installation resource'
-      write: 'write right to the Installation resource'
+      read: 'read right to the ChangeLog resource'
+      write: 'write right to the ChangeLog resource'
 host: irc.zaakonline.nl
 servers:
   -
     name: conduction.nl
-    url: pc.dev.conduction.nl
+    url: evc.dev.conduction.nl
 externalDocs:
   -
     description: 'OAS Documentatie'

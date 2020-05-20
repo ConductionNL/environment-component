@@ -6,6 +6,7 @@ namespace App\Service;
 use App\Entity\Cluster;
 use App\Entity\Environment;
 use App\Entity\Installation;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class ClusterService
@@ -72,7 +73,12 @@ class ClusterService
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
-        return $process->isSuccesful();
+        return $process->isSuccessful();
+    }
+    public function getHelmVersion(){
+        $process = new Process(["helm","version"]);
+        $process->run();
+        return $process->getOutput();
     }
     public function getNamespaces(Cluster $cluster){
         $kubeconfig = $this->writeKubeconfig($cluster);
@@ -84,8 +90,14 @@ class ClusterService
             throw new ProcessFailedException($process);
         }
         $this->removeKubeconfig($kubeconfig);
-        var_dump($process->getOutput());
-        die;
+        $namespaces = [];
+        $iterator = 0;
+        foreach(explode("\n",$process->getOutput()) as $namespace){
+            if($iterator > 0)
+                array_push($namespaces, explode(" ", $namespace)[0]);
+            $iterator++;
+        }
+        return $namespaces;
     }
     public function addRepo(Installation $installation){
 
@@ -101,26 +113,15 @@ class ClusterService
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
 
         $this->addRepo($installation);
-
         //Install
         $process = new Process([
             "helm",
             "install",
             "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}",
             "{$installation->getComponent()->getCode()}-repository/{$installation->getComponent()->getCode()}",
-            "--namespace {$installation->getEnvironment()->getName()}",
+            "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
-            "--set settings.env={$installation->getEnvironment()->getName()},
-            settings.debug={$installation->getEnvironment()->getDebug()},
-            settings.domain={$installation->getDomain()->getName()},
-            settings.trustedHosts='^(.+\.)".addcslashes($installation->getDomain()->getName(),'.')."$',
-            settings.cache={$installation->getEnvironment()->getDebug()},
-            security.commongroundKey={$installation->getEnvironment()->getAuthorization()},
-            security.applicationKey={$installation->getEnvironment()->getAuthorization()},
-            security.authorisationProviderUser='https://uc.{$installation->getDomain()->getName()}',
-            security.authorisationProviderApplication='https://uc.{$installation->getDomain()->getName()}',
-            postgresql.enabled=false,
-            postgresql.url='{$installation->getDbUrl()}'"
+            "--set","settings.env={$installation->getEnvironment()->getName()},settings.debug={$installation->getEnvironment()->getDebug()},settings.domain={$installation->getDomain()->getName()},settings.trustedHosts=^(.+\.)".addcslashes($installation->getDomain()->getName(),'.')."$,settings.cache={$installation->getEnvironment()->getDebug()},security.commongroundKey={$installation->getEnvironment()->getAuthorization()},security.applicationKey={$installation->getEnvironment()->getAuthorization()},security.authorisationProviderUser=https://uc.{$installation->getDomain()->getName()},security.authorisationProviderApplication=https://uc.{$installation->getDomain()->getName()},postgresql.enabled=false,postgresql.url={$installation->getDbUrl()}"
         ]);
         $process->run();
         if(!$process->isSuccessful()){
@@ -131,29 +132,18 @@ class ClusterService
         return $process->isSuccessful();
     }
     public function upgradeComponent(Installation $installation):bool{
+
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
-
         $this->addRepo($installation);
-
         //Install
         $process = new Process([
             "helm",
             "upgrade",
             "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}",
             "{$installation->getComponent()->getCode()}-repository/{$installation->getComponent()->getCode()}",
-            "--namespace {$installation->getEnvironment()->getName()}",
+            "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
-            "--set settings.env={$installation->getEnvironment()->getName()},
-            settings.debug={$installation->getEnvironment()->getDebug()},
-            settings.domain={$installation->getDomain()->getName()},
-            settings.trustedHosts='^(.+\.)".addcslashes($installation->getDomain()->getName(),'.')."$',
-            settings.cache={$installation->getEnvironment()->getDebug()},
-            security.commongroundKey={$installation->getEnvironment()->getAuthorization()},
-            security.applicationKey={$installation->getEnvironment()->getAuthorization()},
-            security.authorisationProviderUser='https://uc.{$installation->getDomain()->getName()}',
-            security.authorisationProviderApplication='https://uc.{$installation->getDomain()->getName()}',
-            postgresql.enabled=false,
-            postgresql.url='{$installation->getDbUrl()}'"
+            "--set","settings.env={$installation->getEnvironment()->getName()},settings.debug={$installation->getEnvironment()->getDebug()},settings.domain={$installation->getDomain()->getName()},settings.trustedHosts=^(.+\.)".addcslashes($installation->getDomain()->getName(),'.')."$,settings.cache={$installation->getEnvironment()->getDebug()},security.commongroundKey={$installation->getEnvironment()->getAuthorization()},security.applicationKey={$installation->getEnvironment()->getAuthorization()},security.authorisationProviderUser=https://uc.{$installation->getDomain()->getName()},security.authorisationProviderApplication=https://uc.{$installation->getDomain()->getName()},postgresql.enabled=false,postgresql.url={$installation->getDbUrl()}"
         ]);
         $process->run();
         if(!$process->isSuccessful()){
@@ -172,7 +162,7 @@ class ClusterService
             "helm",
             "delete",
             "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}",
-            "--namespace {$installation->getEnvironment()->getName()}",
+            "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}"
         ]);
         $process->run();
@@ -182,10 +172,10 @@ class ClusterService
         }
         $process = new Process([
             "kubectl",
-            "del",
+            "delete",
             "secret",
             "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}-cert",
-            "--namespace {$installation->getEnvironment()->getName()}",
+            "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}"
         ]);
         $process->run();
@@ -193,6 +183,7 @@ class ClusterService
             $this->removeKubeconfig($kubeconfig);
             throw new ProcessFailedException($process);
         }
+        $this->removeKubeconfig($kubeconfig);
         return $process->isSuccessful();
     }
     public function restartComponent(Installation $installation):bool{
@@ -206,7 +197,7 @@ class ClusterService
             "rollout",
             "restart",
             "deployment/{$installation->getComponent()->getCode()}-php",
-            "--namespace {$installation->getEnvironment()->getName()}",
+            "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}"
         ]);
         $process->run();
@@ -219,7 +210,7 @@ class ClusterService
             "rollout",
             "restart",
             "deployment/{$installation->getComponent()->getCode()}-nginx",
-            "--namespace {$installation->getEnvironment()->getName()}",
+            "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}"
         ]);
         $process->run();
@@ -232,7 +223,7 @@ class ClusterService
             "rollout",
             "restart",
             "deployment/{$installation->getComponent()->getCode()}-varnish",
-            "--namespace {$installation->getEnvironment()->getName()}",
+            "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}"
         ]);
         $process->run();
