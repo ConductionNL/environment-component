@@ -21,14 +21,16 @@ class InstallService
 {
     private $digitalOceanService;
     private $commonGroundService;
+    private $clusterService;
     private $client;
     private $em;
     private $params;
 
-    public function __construct(ParameterBagInterface $params, DigitalOceanService $digitalOceanService, CommonGroundService $commonGroundService,EntityManagerInterface $em)
+    public function __construct(ParameterBagInterface $params, DigitalOceanService $digitalOceanService, CommonGroundService $commonGroundService,EntityManagerInterface $em, ClusterService $clusterService)
     {
         $this->digitalOceanService = $digitalOceanService;
         $this->commonGroundService = $commonGroundService;
+        $this->clusterService = $clusterService;
         $this->client = new Client();
         $this->em = $em;
         $this->params = $params;
@@ -42,31 +44,8 @@ class InstallService
     // Volgens mij heb je hier twee functies nodig install/update. En heeft de functie alleen een component nodig (rest zit daar immers al aan vast
     public function delete(Installation $installation)
     {
-        if(!$installation->getEnvironment()->getCluster()->getKubeconfig()){
-            $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
-        }
-        $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
-        file_put_contents(dirname(__FILE__, 3).'/var/kubeconfig.yaml',$installation->getEnvironment()->getCluster()->getKubeconfig());
-
-        $kubeconfig = dirname(__FILE__, 3).'/var/kubeconfig.yaml';
-        $installation->setDateInstalled(null);
-
-        $process = new Process(['helm','delete','--purge',$name,"--kubeconfig={$kubeconfig}"]);
-        $process->run();
-//        $process1 = new Process(['kubectl','delete','secret',"{$installation->getComponent()->getCode()}-cert-{$installation->getComponent()->getCode()}", "--namespace={$installation->getEnvironment()->getName()}"]);
-//        $process1->run();
-        $this->em->persist($installation);
-        $this->em->flush();
-        unlink($kubeconfig);
-        if(!$process->isSuccessful()){
-            throw new ProcessFailedException($process);
-        }
-//        if(!$process1->isSuccessful()){
-//            throw new ProcessFailedException($process1);
-//        }
-
-
-        return "Successfully removed installation $name";
+        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        return $this->clusterService->deleteComponent($installation);
 
     }
     public function update(Installation $installation, string $environment = null)
@@ -79,53 +58,52 @@ class InstallService
             return 'Installation not in environment';
         }
 
-        // Als we geen kubeconfig hebben deze aanmaken
-        if(!$installation->getEnvironment()->getCluster()->getKubeconfig()){
-            $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
-        }
+        // Altijd een nieuwe kubeconfig ophalen
+        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
 
-        $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
-        $data['environment'] = $installation->getEnvironment()->getName();
-        $data['domain'] = $installation->getDomain()->getName();
-        $data['dburl'] = $installation->getDbUrl();
-        $data['debug'] = $installation->getEnvironment()->getDebug();
-        $data['authorization'] = $installation->getAuthorization();
-        if($data['authorization'] == null){
-            $data['authorization'] = $installation->getEnvironment()->getAuthorization();
-        }
-        $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
+//        $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
+//        $data['environment'] = $installation->getEnvironment()->getName();
+//        $data['domain'] = $installation->getDomain()->getName();
+//        $data['dburl'] = $installation->getDbUrl();
+//        $data['debug'] = $installation->getEnvironment()->getDebug();
+//        $data['authorization'] = $installation->getAuthorization();
+//        if($data['authorization'] == null){
+//            $data['authorization'] = $installation->getEnvironment()->getAuthorization();
+//        }
+//        $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
+//
+//        $request['event_type'] = "start-upgrade-workflow";
+//        $request['client_payload'] = $data;
+//
+//        $token = $installation->getComponent()->getGithubToken();
+//
+//        // Default to general github key
+//        if(!$token){
+//            $token = $this->params->get('app_github_key');
+//        }
+////        var_dump($token);
+//
+//        $result = $this->client->post($url,
+//            [
+//                'body' => json_encode($request),
+//                'headers'=>
+//                    [
+//                        "Authorization"=> "Bearer ".$token,
+//                        'Content-Type'=>'application/json',
+//                        'Accept'=>'application/vnd.github.everest-preview+json'
+//                    ]
+//            ]
+//        );
+        $result = $this->clusterService->upgradeComponent($installation);
 
-        $request['event_type'] = "start-upgrade-workflow";
-        $request['client_payload'] = $data;
-
-        $token = $installation->getComponent()->getGithubToken();
-
-        // Default to general github key
-        if(!$token){
-            $token = $this->params->get('app_github_key');
-        }
-//        var_dump($token);
-
-        $result = $this->client->post($url,
-            [
-                'body' => json_encode($request),
-                'headers'=>
-                    [
-                        "Authorization"=> "Bearer ".$token,
-                        'Content-Type'=>'application/json',
-                        'Accept'=>'application/vnd.github.everest-preview+json'
-                    ]
-            ]
-        );
-
-        if($result->getStatusCode() == 204){
+        if($result){
             $installation->setDateInstalled(new \DateTime("now"));
             $this->em->persist($installation);
             $this->em->flush();
-            return "Action triggered, check {$installation->getComponent()->getGithubRepository()}/actions for the status";
+            return $result;
         }
         else{
-            throw new Symfony\Component\HttpKernel\Exception\HttpException($result->getStatusCode(), $url.' returned: '.json_encode($result->getBody()));
+            throw new Symfony\Component\HttpKernel\Exception\HttpException(500);
         }
 
     }
@@ -140,48 +118,50 @@ class InstallService
             return 'Installation not in environment';
         }
 
-        // Als we geen kubeconfig hebben deze aanmaken
-        if(!$installation->getEnvironment()->getCluster()->getKubeconfig()){
-            $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
-        }
-        $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
-        $data['environment'] = $installation->getEnvironment()->getName();
-        $data['domain'] = $installation->getDomain()->getName();
-        $data['dburl'] = $installation->getDbUrl();
-        $data['debug'] = $installation->getEnvironment()->getDebug();
-        $data['authorization'] = $installation->getAuthorization();
-        if($data['authorization'] == null){
-            $data['authorization'] = $installation->getEnvironment()->getAuthorization();
-        }
-        $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
+        // Altijd een nieuwe kubeconfig ophalen
+        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+//        $url = $this->getGithubAPIUrl($installation->getComponent()->getGithubRepository());
+//        $data['environment'] = $installation->getEnvironment()->getName();
+//        $data['domain'] = $installation->getDomain()->getName();
+//        $data['dburl'] = $installation->getDbUrl();
+//        $data['debug'] = $installation->getEnvironment()->getDebug();
+//        $data['authorization'] = $installation->getAuthorization();
+//        if($data['authorization'] == null){
+//            $data['authorization'] = $installation->getEnvironment()->getAuthorization();
+//        }
+//        $data['kubeconfig'] = $installation->getEnvironment()->getCluster()->getKubeconfig();
+//
+//        $request['event_type'] = "start-install-workflow";
+//        $request['client_payload'] = $data;
+//
+//        $token = $installation->getComponent()->getGithubToken();
+//        if(!$token){
+//            $token = $this->params->get('app_github_key');
+//        }
+//
+//        $result = $this->client->post($url,
+//            [
+//                'body' => json_encode($request),
+//                'headers'=>
+//                    [
+//                        "Authorization"=> "Bearer ".$token,
+//                        'Content-Type'=>'application/json',
+//                        'Accept'=>'application/vnd.github.everest-preview+json'
+//                    ]
+//            ]
+//        );
+        $this->clusterService->getNamespaces($installation->getEnvironment()->getCluster());
 
-        $request['event_type'] = "start-install-workflow";
-        $request['client_payload'] = $data;
 
-        $token = $installation->getComponent()->getGithubToken();
-        if(!$token){
-            $token = $this->params->get('app_github_key');
-        }
-
-        $result = $this->client->post($url,
-            [
-                'body' => json_encode($request),
-                'headers'=>
-                    [
-                        "Authorization"=> "Bearer ".$token,
-                        'Content-Type'=>'application/json',
-                        'Accept'=>'application/vnd.github.everest-preview+json'
-                    ]
-            ]
-        );
-        if($result->getStatusCode() == 204){
+        $result = $this->clusterService->installComponent($installation);
+        if($result){    //TODO: try-catch instead of if/else
             $installation->setDateInstalled(new \DateTime("now"));
             $this->em->persist($installation);
             $this->em->flush();
-            return "Action triggered, check {$installation->getComponent()->getGithubRepository()}/actions for the status";
+            return $result;
         }
         else{
-            throw new Symfony\Component\HttpKernel\Exception\HttpException($result->getStatusCode(), $url.' returned: '.json_encode($result->getBody()));
+            throw new Symfony\Component\HttpKernel\Exception\HttpException(500);
         }
     }
 }
