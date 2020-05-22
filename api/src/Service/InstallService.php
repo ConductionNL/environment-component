@@ -54,9 +54,9 @@ class InstallService
     public function update(Installation $installation, string $environment = null)
     {
         // Als we geen db url hebben url maken
-        if(!$installation->getDbUrl()){
+//        if(!$installation->getDbUrl()){
             $installation =  $this->digitalOceanService->createConnectionUrl($installation);
-        }
+//        }
         if($environment && $installation->getEnvironment()->getName() != $environment){
             return 'Installation not in environment';
         }

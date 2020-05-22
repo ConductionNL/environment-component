@@ -240,7 +240,15 @@ class DigitalOceanService
         $dbCluster = $this->getDatabaseClusterByName($cluster->getName());
 //        var_dump($dbCluster['id']);
         //Check if there is a database with the same name as the installation, else create
-        $installationName = $installation->getComponent()->getCode().'-'.$installation->getEnvironment()->getName();
+
+        if($installation->hasDeploymentName())
+        {
+            $installationName = $installation->getDeploymentName().'-'.$installation->getEnvironment()->getName();
+        }
+        else
+            {
+            $installationName = $installation->getComponent()->getCode().'-'.$installation->getEnvironment()->getName();
+        }
 
         $database = $this->getDatabaseByName($installationName, $dbCluster);
         $user = $this->getDatabaseUserByName($installationName, $dbCluster);
