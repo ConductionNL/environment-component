@@ -50,7 +50,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ClusterRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
@@ -160,6 +160,14 @@ class Cluster
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
+
+    /**
+     * @var array Installed releases on this cluster
+     *
+     * @Groups({"read","write"})
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $releases = [];
 
     public function __construct()
     {
@@ -323,5 +331,17 @@ class Cluster
         $criteria = Criteria::create()
             ->andWhere(Criteria::expr()->eq('name', $name));
         return count($this->getEnvironments()->matching($criteria))>0;
+    }
+
+    public function getReleases(): ?array
+    {
+        return $this->releases;
+    }
+
+    public function setReleases(?array $releases): self
+    {
+        $this->releases = $releases;
+
+        return $this;
     }
 }
