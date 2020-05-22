@@ -109,14 +109,14 @@ class ClusterService
             throw new ProcessFailedException($process);
         }
         $this->removeKubeconfig($kubeconfig);
-        $namespaces = [];
+        $releases = [];
         $iterator = 0;
-        foreach(explode("\n",$process->getOutput()) as $namespace){
+        foreach(explode("\n",$process->getOutput()) as $release){
             if($iterator > 0)
-                array_push($namespaces, explode(" ", $namespace)[0]);
+                array_push($releases, explode(" ", $release)[0]);
             $iterator++;
         }
-        return $namespaces;
+        return $releases;
     }
     public function addRepo(Installation $installation){
 
@@ -128,6 +128,7 @@ class ClusterService
         }
 
     }
+
     public function installComponent(Installation $installation):bool{
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
         $additionalSettings = "";
@@ -135,11 +136,13 @@ class ClusterService
             $additionalSettings .= ",{$property->getName()}={$property->getValue}";
         }
         $this->addRepo($installation);
+
+
         //Install
         $process = new Process([
             "helm",
             "install",
-            "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}",
+            "{$installation->getDeploymentName()}",
             "{$installation->getComponent()->getCode()}-repository/{$installation->getComponent()->getCode()}",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
@@ -160,11 +163,13 @@ class ClusterService
         }
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
         $this->addRepo($installation);
+
+
         //Install
         $process = new Process([
             "helm",
             "upgrade",
-            "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}",
+            "{$installation->getDeploymentName()}",
             "{$installation->getComponent()->getCode()}-repository/{$installation->getComponent()->getCode()}",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
@@ -186,7 +191,7 @@ class ClusterService
         $process = new Process([
             "helm",
             "delete",
-            "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}",
+            "{$installation->getDeploymentName()}",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}"
         ]);

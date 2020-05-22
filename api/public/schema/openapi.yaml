@@ -2083,6 +2083,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[releases]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'dateCreated[before]'
           in: query
           required: false
@@ -5502,6 +5511,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[cache]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'dateCreated[before]'
           in: query
           required: false
@@ -7596,6 +7614,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[deploymentName]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'dateInstalled[before]'
           in: query
           required: false
@@ -8872,6 +8899,137 @@ paths:
           description: 'Resource not found'
       produces:
         - application/health+json
+  '/installations/{id}/upgrade':
+    get:
+      tags:
+        - Installation
+      operationId: helm_upgradeInstallationItem
+      summary: 'Retrieves a Installation resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Installation resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
 components:
   schemas:
     AuditTrail-read:
@@ -9288,6 +9446,12 @@ components:
           type: string
           format: date-time
           nullable: true
+        releases:
+          description: 'Installed releases on this cluster'
+          type: array
+          items:
+            type: string
+          nullable: true
       required:
         - name
     Cluster-write:
@@ -9323,6 +9487,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Environment-write'
+        releases:
+          description: 'Installed releases on this cluster'
+          type: array
+          items:
+            type: string
+          nullable: true
     'Cluster:jsonld-read':
       type: object
       description: 'This entity holds the information about a kubernetes cluster'
@@ -9368,6 +9538,12 @@ components:
           type: string
           format: date-time
           nullable: true
+        releases:
+          description: 'Installed releases on this cluster'
+          type: array
+          items:
+            type: string
+          nullable: true
       required:
         - name
     'Cluster:jsonld-write':
@@ -9412,6 +9588,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Environment:jsonld-write'
+        releases:
+          description: 'Installed releases on this cluster'
+          type: array
+          items:
+            type: string
+          nullable: true
     Component-read:
       type: object
       description: ''
@@ -9818,9 +10000,13 @@ components:
           type: string
           format: date-time
           nullable: true
+        cache:
+          description: 'Should components be deployed to this environment with caching on or off?'
+          type: integer
       required:
         - name
         - debug
+        - cache
     Environment-write:
       type: object
       description: ''
@@ -9828,6 +10014,7 @@ components:
         - name
         - debug
         - authorization
+        - cache
       properties:
         name:
           description: 'The name of this component'
@@ -9850,6 +10037,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation-write'
+        cache:
+          description: 'Should components be deployed to this environment with caching on or off?'
+          type: integer
     'Environment:jsonld-read':
       type: object
       description: ''
@@ -9897,9 +10087,13 @@ components:
           type: string
           format: date-time
           nullable: true
+        cache:
+          description: 'Should components be deployed to this environment with caching on or off?'
+          type: integer
       required:
         - name
         - debug
+        - cache
     'Environment:jsonld-write':
       type: object
       description: ''
@@ -9907,6 +10101,7 @@ components:
         - name
         - debug
         - authorization
+        - cache
       properties:
         '@context':
           readOnly: true
@@ -9938,6 +10133,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-write'
+        cache:
+          description: 'Should components be deployed to this environment with caching on or off?'
+          type: integer
     HealthLog-read:
       type: object
       description: ''
@@ -10123,6 +10321,15 @@ components:
           type: string
           format: date-time
           nullable: true
+        properties:
+          description: 'additional properties that are required for this installation, i.e. external API keys'
+          type: array
+          items:
+            $ref: '#/components/schemas/Property-read'
+        deploymentName:
+          description: 'The name of the deployment on the kubernetes cluster'
+          type: string
+          nullable: true
       required:
         - name
         - helmVersion
@@ -10182,6 +10389,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-write'
+        properties:
+          description: 'additional properties that are required for this installation, i.e. external API keys'
+          type: array
+          items:
+            $ref: '#/components/schemas/Property-write'
+        deploymentName:
+          description: 'The name of the deployment on the kubernetes cluster'
+          type: string
+          nullable: true
     'Installation:jsonld-read':
       type: object
       description: ''
@@ -10254,6 +10470,15 @@ components:
           type: string
           format: date-time
           nullable: true
+        properties:
+          description: 'additional properties that are required for this installation, i.e. external API keys'
+          type: array
+          items:
+            $ref: '#/components/schemas/Property:jsonld-read'
+        deploymentName:
+          description: 'The name of the deployment on the kubernetes cluster'
+          type: string
+          nullable: true
       required:
         - name
         - helmVersion
@@ -10322,6 +10547,77 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-write'
+        properties:
+          description: 'additional properties that are required for this installation, i.e. external API keys'
+          type: array
+          items:
+            $ref: '#/components/schemas/Property:jsonld-write'
+        deploymentName:
+          description: 'The name of the deployment on the kubernetes cluster'
+          type: string
+          nullable: true
+    Property-read:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        name:
+          description: 'the name of the property'
+          type: string
+    Property-write:
+      type: object
+      properties:
+        name:
+          description: 'the name of the property'
+          type: string
+        value:
+          description: 'the value of the property'
+          type: string
+    'Property:jsonld-read':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        name:
+          description: 'the name of the property'
+          type: string
+    'Property:jsonld-write':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        name:
+          description: 'the name of the property'
+          type: string
+        value:
+          description: 'the value of the property'
+          type: string
 definitions:
   Cluster-read:
     properties:
@@ -10349,6 +10645,9 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
+      releases:
+        description: 'Installed releases on this cluster'
+        type: array
       domains: []
     required:
       - name
@@ -10373,6 +10672,9 @@ definitions:
       token:
         description: 'the Tiller token of this cluster'
         type: string
+      releases:
+        description: 'Installed releases on this cluster'
+        type: array
       domains: []
       environments: []
     required:
@@ -10558,6 +10860,10 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
+      cache:
+        description: 'Should components be deployed to this environment with caching on or off?'
+        type: int
+        example: '1'
       cluster: []
       installations:
         description: 'The installations in this environment'
@@ -10566,6 +10872,7 @@ definitions:
       - name
       - debug
       - authorization
+      - cache
   Environment-write:
     properties:
       name:
@@ -10586,6 +10893,10 @@ definitions:
         type: string
         example: evc-dev
         maxLength: 255
+      cache:
+        description: 'Should components be deployed to this environment with caching on or off?'
+        type: int
+        example: '1'
       cluster: []
       installations:
         description: 'The installations in this environment'
@@ -10594,6 +10905,7 @@ definitions:
       - name
       - debug
       - authorization
+      - cache
   HealthLog-read:
     properties:
       description:
@@ -10665,10 +10977,17 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
+      deploymentName:
+        description: 'The name of the deployment on the kubernetes cluster'
+        type: string
+        example: pc-dev
       component: []
       domain: []
       environment: []
       healthLogs: []
+      properties:
+        description: 'additional properties that are required for this installation, i.e. external API keys'
+        type: \Property
     required:
       - name
       - helmVersion
@@ -10711,10 +11030,17 @@ definitions:
         type: string
         example: 'https://github.com/ConductionNL/environment-component'
         maxLength: 255
+      deploymentName:
+        description: 'The name of the deployment on the kubernetes cluster'
+        type: string
+        example: pc-dev
       component: []
       domain: []
       environment: []
       healthLogs: []
+      properties:
+        description: 'additional properties that are required for this installation, i.e. external API keys'
+        type: \Property
     required:
       - name
       - helmVersion
@@ -10822,12 +11148,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-05-20 12:23:00'
+        example: '2020-05-22 09:46:52'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-05-20 12:23:00'
+        example: '2020-05-22 09:46:52'
     required: []
   AuditTrail-write:
     properties:
@@ -10875,12 +11201,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-05-20 12:23:00'
+        example: '2020-05-22 09:46:52'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-05-20 12:23:00'
+        example: '2020-05-22 09:46:52'
     required: []
   ChangeLog-write:
     properties:

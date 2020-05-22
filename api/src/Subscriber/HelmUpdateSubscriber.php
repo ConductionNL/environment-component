@@ -50,7 +50,6 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
         if (!$contentType) {
             $contentType = $event->getRequest()->headers->get('Accept');
         }
-
         // We should also check on entity = component
         if ($method != 'GET' || (!strpos($route, '_helm_update') && !strpos($route, 'helm_upgrade'))) {
             return;
@@ -80,7 +79,9 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
             }
             elseif($component instanceof Environment){
                 foreach($component->getInstallations() as $installation){
-                    $results = $this->installService->rollingUpdate($installation);
+                    if($installation->getDateInstalled() != null){
+                        $results = $this->installService->rollingUpdate($installation);
+                    }
                 }
             }
         }

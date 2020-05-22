@@ -2,55 +2,57 @@
 
 namespace App\Subscriber;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\EventListener\EventPriorities;
-use App\Entity\Component;
+use App\Entity\Cluster;
+use App\Service\ClusterService;
+use App\Service\DigitalOceanService;
 use App\Service\InstallService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class HelmDeleteSubscriber implements EventSubscriberInterface
+class ClusterSubscriber implements EventSubscriberInterface
 {
+
     private $params;
     private $em;
     private $serializer;
     private $nlxLogService;
-    private $installService;
+    private $clusterService;
+    private $digitalOceanService;
 
-    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SerializerInterface $serializer, InstallService $installService)
+    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SerializerInterface $serializer, ClusterService $clusterService, DigitalOceanService $digitalOceanService)
     {
         $this->params = $params;
         $this->em = $em;
         $this->serializer = $serializer;
-        $this->installService = $installService;
+        $this->clusterService = $clusterService;
+        $this->digitalOceanService = $digitalOceanService;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['HelmDelete', EventPriorities::PRE_SERIALIZE],
+            KernelEvents::VIEW => ['Cluster', EventPriorities::PRE_SERIALIZE],
         ];
     }
 
-    public function HelmDelete(ViewEvent $event)
+    public function Cluster(ViewEvent $event)
     {
         $method = $event->getRequest()->getMethod();
         $contentType = $event->getRequest()->headers->get('accept');
         $route = $event->getRequest()->attributes->get('_route');
-        $component = $event->getControllerResult();
+        $result = $event->getControllerResult();
 
         if (!$contentType) {
             $contentType = $event->getRequest()->headers->get('Accept');
         }
-
-        // We should also check on entity = component
-        if ($method != 'GET' || !strpos($route, '_helm_delete')) {
+        // We should also check on entity = result
+        if ($method != 'GET' || !($result instanceof Cluster)) {
             return;
         }
 
@@ -70,10 +72,13 @@ class HelmDeleteSubscriber implements EventSubscriberInterface
                 $renderType = 'json';
         }
 
-        $results = $this->installService->delete($component);
-        //$component['message'] = $results;
+        $result = $this->digitalOceanService->createKubeConfig($result);
+
+        $releases = $this->clusterService->getReleases($result);
+        $result->setReleases($releases);
+
         $response = $this->serializer->serialize(
-            $component,
+            $result,
             $renderType,
             ['enable_max_depth'=> true]
         );

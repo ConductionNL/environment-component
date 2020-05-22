@@ -42,16 +42,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "summary"="Audittrail",
  *                  "description"="Gets the audit trail for this resource"
  *              }
- *          }
- * 		},
+ *          },
  *     "helm_update"={
- *              "path"="/installations/{id}/update",
+ *              "path"="/environments/{id}/update",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="update",
  *                  "description"="Performs a rolling update on all installations in this environment"
  *              }
- *     },
+ *          }
+ * 		},
+
  * )
  * @ORM\Entity(repositoryClass="App\Repository\EnvironmentRepository")
  * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
@@ -167,6 +168,13 @@ class Environment
     private $dateModified;
 
     /**
+     * @var int Should components be deployed to this environment with caching on or off?
+     *
+     * @example 1
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
+     * @Assert\NotNull
      * @ORM\Column(type="integer")
      */
     private $cache;

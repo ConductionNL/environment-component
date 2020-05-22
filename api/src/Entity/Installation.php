@@ -43,20 +43,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "description"="Deletes this component from a cluster"
  *              }
  *     },
- *     "helm_update"={
- *              "path"="/installations/{id}/update",
- *              "method"="get",
- *              "swagger_context" = {
- *                  "summary"="update",
- *                  "description"="Performs a rolling update on a cluster"
- *              }
- *     },
  *     "helm_upgrade"={
  *              "path"="/installations/{id}/upgrade",
  *              "method"="get",
  *              "swagger_context" = {
- *                  "summary"="update",
+ *                  "summary"="upgrade",
  *                  "description"="Updates this component on a cluster"
+ *              }
+ *     },
+ *     "helm_update"={
+ *              "path"="/installations/{id}/rollingupdate",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="update",
+ *                  "description"="Performs a rolling update on a cluster"
  *              }
  *     },
  *     "get_change_logs"={
@@ -270,6 +270,16 @@ class Installation
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade="persist")
      */
     private $properties;
+
+    /**
+     * @var string The name of the deployment on the kubernetes cluster
+     *
+     * @example pc-dev
+     *
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $deploymentName;
 
     public function __construct()
     {
@@ -520,6 +530,23 @@ class Installation
                 $property->setInstallation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDeploymentName(): ?string
+    {
+        if($this->deploymentName){
+            return $this->deploymentName;
+        }
+        else{
+            return "{$this->getComponent()->getCode()}-{$this->getEnvironment()->getName()}";
+        }
+    }
+
+    public function setDeploymentName(?string $deploymentName): self
+    {
+        $this->deploymentName = $deploymentName;
 
         return $this;
     }
