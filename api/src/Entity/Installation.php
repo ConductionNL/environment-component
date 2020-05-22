@@ -48,6 +48,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="update",
+ *                  "description"="Performs a rolling update on a cluster"
+ *              }
+ *     },
+ *     "helm_upgrade"={
+ *              "path"="/installations/{id}/upgrade",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="update",
  *                  "description"="Updates this component on a cluster"
  *              }
  *     },

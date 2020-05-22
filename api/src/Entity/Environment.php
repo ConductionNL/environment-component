@@ -44,6 +44,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              }
  *          }
  * 		},
+ *     "helm_update"={
+ *              "path"="/installations/{id}/update",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="update",
+ *                  "description"="Performs a rolling update on all installations in this environment"
+ *              }
+ *     },
  * )
  * @ORM\Entity(repositoryClass="App\Repository\EnvironmentRepository")
  * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")

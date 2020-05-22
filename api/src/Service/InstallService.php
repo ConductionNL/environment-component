@@ -76,6 +76,15 @@ class InstallService
         }
 
     }
+    public function rollingUpdate(Installation $installation){
+        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        try{
+            return $this->clusterService->restartComponent($installation);
+        }
+        catch(ProcessFailedException $error){
+            throw new HttpException(500, $error->getMessage());
+        }
+    }
 
     public function install(Installation $installation, string $environment = null)
     {

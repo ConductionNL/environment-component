@@ -5,6 +5,8 @@ namespace App\Subscriber;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Component;
+use App\Entity\Environment;
+use App\Entity\Installation;
 use App\Service\InstallService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -50,9 +52,10 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
         }
 
         // We should also check on entity = component
-        if ($method != 'GET' || !strpos($route, '_helm_update')) {
+        if ($method != 'GET' || (!strpos($route, '_helm_update') && !strpos($route, 'helm_upgrade'))) {
             return;
         }
+
 
         switch ($contentType) {
             case 'application/json':
@@ -68,8 +71,20 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
                 $contentType = 'application/json';
                 $renderType = 'json';
         }
+        if(strpos($route, '_helm_upgrade')){
+            $results = $this->installService->update($component);
+        }
+        if(strpos($route, '_helm_update')){
+            if($component instanceof Installation){
+                $results = $this->installService->rollingUpdate($component);
+            }
+            elseif($component instanceof Environment){
+                foreach($component->getInstallations() as $installation){
+                    $results = $this->installService->rollingUpdate($installation);
+                }
+            }
+        }
 
-        $results = $this->installService->update($component);
 
         //$component['message'] = $results;
         $response = $this->serializer->serialize(

@@ -99,6 +99,25 @@ class ClusterService
         }
         return $namespaces;
     }
+    public function getReleases(Cluster $cluster){
+        $kubeconfig = $this->writeKubeconfig($cluster);
+
+        $process = new Process(["helm", "ls", "--all-namespaces", "--kubeconfig={$kubeconfig}"]);
+        $process->run();
+        if(!$process->isSuccessful()){
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process);
+        }
+        $this->removeKubeconfig($kubeconfig);
+        $namespaces = [];
+        $iterator = 0;
+        foreach(explode("\n",$process->getOutput()) as $namespace){
+            if($iterator > 0)
+                array_push($namespaces, explode(" ", $namespace)[0]);
+            $iterator++;
+        }
+        return $namespaces;
+    }
     public function addRepo(Installation $installation){
 
         //Add repo to repos
@@ -197,7 +216,7 @@ class ClusterService
 
         $this->addRepo($installation);
 
-        //Install
+        //Rolling Update
         $process = new Process([
             "kubectl",
             "rollout",
