@@ -11,8 +11,10 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use phpDocumentor\Reflection\Types\Boolean;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -48,12 +50,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ClusterRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
- * @ApiFilter(SearchFilter::class)
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact"})
  */
 class Cluster
 {
@@ -134,7 +136,7 @@ class Cluster
     private $domains;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")
@@ -159,10 +161,18 @@ class Cluster
      */
     private $dateModified;
 
+    /**
+     * @var array Installed releases on this cluster
+     *
+     * @Groups({"read","write"})
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $releases = [];
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
-        $this->enviroments = new ArrayCollection();
+        $this->environments = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -314,6 +324,23 @@ class Cluster
     			$environment->setCluster(null);
             }
         }
+
+        return $this;
+    }
+    public function hasEnvironment(string $name){
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq('name', $name));
+        return count($this->getEnvironments()->matching($criteria))>0;
+    }
+
+    public function getReleases(): ?array
+    {
+        return $this->releases;
+    }
+
+    public function setReleases(?array $releases): self
+    {
+        $this->releases = $releases;
 
         return $this;
     }

@@ -2083,6 +2083,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[releases]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'dateCreated[before]'
           in: query
           required: false
@@ -2146,110 +2155,6 @@ paths:
               type: string
           style: form
           explode: true
-        -
-          name: name
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'name[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: description
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'description[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: kubeconfig
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'kubeconfig[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: ip
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'ip[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: token
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'token[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: dateCreated
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dateCreated[]'
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: dateModified
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dateModified[]'
-          in: query
-          required: false
-          schema:
-            type: string
         -
           name: page
           in: query
@@ -3117,6 +3022,12 @@ paths:
                   $ref: '#/components/schemas/Component-read'
       parameters:
         -
+          name: core
+          in: query
+          required: false
+          schema:
+            type: boolean
+        -
           name: 'order[id]'
           in: query
           required: false
@@ -3172,6 +3083,15 @@ paths:
               - desc
         -
           name: 'order[helmRepository]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[core]'
           in: query
           required: false
           schema:
@@ -3355,6 +3275,22 @@ paths:
             type: array
             items:
               type: string
+          style: form
+          explode: true
+        -
+          name: core
+          in: query
+          required: false
+          schema:
+            type: boolean
+        -
+          name: 'core[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: boolean
           style: form
           explode: true
         -
@@ -3902,9 +3838,9 @@ paths:
   '/components/{id}/audit_trail':
     get:
       tags:
-        - Installation
-      operationId: get_audit_trailInstallationItem
-      summary: 'Retrieves a Installation resource.'
+        - Component
+      operationId: get_audit_trailComponentItem
+      summary: 'Retrieves a Component resource.'
       parameters:
         -
           name: id
@@ -3985,47 +3921,47 @@ paths:
           in: query
       responses:
         200:
-          description: 'Installation resource response'
+          description: 'Component resource response'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Installation:jsonld-read'
+                $ref: '#/components/schemas/Component:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/Installation:jsonld-read'
+                $ref: '#/components/schemas/Component:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
         404:
           description: 'Resource not found'
       produces:
@@ -4033,9 +3969,9 @@ paths:
   '/components/{id}/change_log':
     get:
       tags:
-        - Installation
-      operationId: get_change_logsInstallationItem
-      summary: 'Retrieves a Installation resource.'
+        - Component
+      operationId: get_change_logsComponentItem
+      summary: 'Retrieves a Component resource.'
       parameters:
         -
           name: id
@@ -4116,47 +4052,47 @@ paths:
           in: query
       responses:
         200:
-          description: 'Installation resource response'
+          description: 'Component resource response'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Installation:jsonld-read'
+                $ref: '#/components/schemas/Component:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/Installation:jsonld-read'
+                $ref: '#/components/schemas/Component:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
         404:
           description: 'Resource not found'
       produces:
@@ -4164,9 +4100,9 @@ paths:
   '/components/{id}/install':
     get:
       tags:
-        - Installation
-      operationId: helm_installInstallationItem
-      summary: 'Retrieves a Installation resource.'
+        - Component
+      operationId: helm_installComponentItem
+      summary: 'Retrieves a Component resource.'
       parameters:
         -
           name: id
@@ -4247,47 +4183,47 @@ paths:
           in: query
       responses:
         200:
-          description: 'Installation resource response'
+          description: 'Component resource response'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Installation:jsonld-read'
+                $ref: '#/components/schemas/Component:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/Installation:jsonld-read'
+                $ref: '#/components/schemas/Component:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
         404:
           description: 'Resource not found'
       produces:
@@ -4295,9 +4231,9 @@ paths:
   '/components/{id}/update':
     get:
       tags:
-        - Installation
-      operationId: helm_updateInstallationItem
-      summary: 'Retrieves a Installation resource.'
+        - Component
+      operationId: helm_updateComponentItem
+      summary: 'Retrieves a Component resource.'
       parameters:
         -
           name: id
@@ -4378,47 +4314,47 @@ paths:
           in: query
       responses:
         200:
-          description: 'Installation resource response'
+          description: 'Component resource response'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Installation:jsonld-read'
+                $ref: '#/components/schemas/Component:jsonld-read'
             application/json+ld:
               schema:
-                $ref: '#/components/schemas/Installation:jsonld-read'
+                $ref: '#/components/schemas/Component:jsonld-read'
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+hal:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+vnd.api:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/health+json:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/json+health:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/xml:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             application/x-yaml:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             text/csv:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
             text/html:
               schema:
-                $ref: '#/components/schemas/Installation-read'
+                $ref: '#/components/schemas/Component-read'
         404:
           description: 'Resource not found'
       produces:
@@ -4630,13 +4566,13 @@ paths:
           schema:
             type: string
         -
-          name: id
+          name: cluster.id
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'id[]'
+          name: 'cluster.id[]'
           in: query
           required: false
           schema:
@@ -4645,110 +4581,6 @@ paths:
               type: string
           style: form
           explode: true
-        -
-          name: name
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'name[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: description
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'description[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: location
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'location[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: ip
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'ip[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: databaseUrl
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'databaseUrl[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: dateCreated
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dateCreated[]'
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: dateModified
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dateModified[]'
-          in: query
-          required: false
-          schema:
-            type: string
         -
           name: page
           in: query
@@ -5679,6 +5511,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[cache]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'dateCreated[before]'
           in: query
           required: false
@@ -5727,13 +5568,13 @@ paths:
           schema:
             type: string
         -
-          name: id
+          name: cluster.id
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'id[]'
+          name: 'cluster.id[]'
           in: query
           required: false
           schema:
@@ -5742,94 +5583,6 @@ paths:
               type: string
           style: form
           explode: true
-        -
-          name: name
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'name[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: description
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'description[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: debug
-          in: query
-          required: false
-          schema:
-            type: integer
-        -
-          name: 'debug[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: integer
-          style: form
-          explode: true
-        -
-          name: authorization
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'authorization[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: dateCreated
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dateCreated[]'
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: dateModified
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dateModified[]'
-          in: query
-          required: false
-          schema:
-            type: string
         -
           name: page
           in: query
@@ -6484,6 +6237,137 @@ paths:
       tags:
         - Environment
       operationId: get_change_logsEnvironmentItem
+      summary: 'Retrieves a Environment resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Environment resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Environment:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Environment:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+  '/environments/{id}/update':
+    get:
+      tags:
+        - Environment
+      operationId: helm_updateEnvironmentItem
       summary: 'Retrieves a Environment resource.'
       parameters:
         -
@@ -7861,6 +7745,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[deploymentName]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'dateInstalled[before]'
           in: query
           required: false
@@ -7933,13 +7826,13 @@ paths:
           schema:
             type: string
         -
-          name: id
+          name: environment.cluster.id
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'id[]'
+          name: 'environment.cluster.id[]'
           in: query
           required: false
           schema:
@@ -7949,13 +7842,13 @@ paths:
           style: form
           explode: true
         -
-          name: name
+          name: component.id
           in: query
           required: false
           schema:
             type: string
         -
-          name: 'name[]'
+          name: 'component.id[]'
           in: query
           required: false
           schema:
@@ -7964,154 +7857,6 @@ paths:
               type: string
           style: form
           explode: true
-        -
-          name: description
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'description[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: dbUsername
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dbUsername[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: dbPassword
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dbPassword[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: dbName
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dbName[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: authorization
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'authorization[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: dbUrl
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dbUrl[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: helmVersion
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'helmVersion[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: dateInstalled
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dateInstalled[]'
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: dateCreated
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dateCreated[]'
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: dateModified
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'dateModified[]'
-          in: query
-          required: false
-          schema:
-            type: string
         -
           name: page
           in: query
@@ -8630,6 +8375,792 @@ paths:
           name: X-NLX-Audit-Clarification
           description: 'A clarification as to why a request has been made  (doelbinding)'
           in: header
+  '/installations/{id}/audit_trail':
+    get:
+      tags:
+        - Installation
+      operationId: get_audit_trailInstallationItem
+      summary: 'Retrieves a Installation resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Installation resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+  '/installations/{id}/change_log':
+    get:
+      tags:
+        - Installation
+      operationId: get_change_logsInstallationItem
+      summary: 'Retrieves a Installation resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Installation resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+  '/installations/{id}/delete':
+    get:
+      tags:
+        - Installation
+      operationId: helm_deleteInstallationItem
+      summary: 'Retrieves a Installation resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Installation resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+  '/installations/{id}/install':
+    get:
+      tags:
+        - Installation
+      operationId: helm_installInstallationItem
+      summary: 'Retrieves a Installation resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Installation resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+  '/installations/{id}/rollingupdate':
+    get:
+      tags:
+        - Installation
+      operationId: helm_updateInstallationItem
+      summary: 'Retrieves a Installation resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Installation resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+  '/installations/{id}/upgrade':
+    get:
+      tags:
+        - Installation
+      operationId: helm_upgradeInstallationItem
+      summary: 'Retrieves a Installation resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Installation resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Installation:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Installation-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
 components:
   schemas:
     AuditTrail-read:
@@ -8642,114 +9173,114 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
+        application:
+          writeOnly: true
+          description: 'The application that made the request'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
+          nullable: true
         request:
-          readOnly: true
           description: 'The id of the request within that application'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
+          nullable: true
         user:
-          readOnly: true
           description: 'The user on behalf of wich the request was made'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
+          nullable: true
         subject:
-          readOnly: true
           description: '???'
           type: string
+          nullable: true
         process:
-          readOnly: true
           description: 'The procces on behalf of wich the request was made'
           type: string
+          nullable: true
         dataElements:
-          readOnly: true
           description: 'The moment this request was created'
           type: array
           items:
             type: string
+          nullable: true
         dataSubjects:
-          readOnly: true
           description: 'The moment this request was created'
           type: array
           items:
             type: string
+          nullable: true
         resource:
-          readOnly: true
           description: 'The resource that was requested'
           type: string
+          nullable: true
         resourceType:
-          readOnly: true
           description: 'The type of the resource that was requested'
           type: string
+          nullable: true
         route:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
         endpoint:
-          readOnly: true
           description: 'The endpoint that the request was made to'
           type: string
         method:
-          readOnly: true
           description: 'The method that was used'
           type: string
         accept:
-          readOnly: true
           description: 'The contentType that was reqousted'
           type: string
         contentType:
-          readOnly: true
           description: 'The contentType that was suplieds'
           type: string
         content:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
+          nullable: true
         ip:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
         session:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
         headers:
-          readOnly: true
           description: 'The headers supplied by client'
           type: array
           items:
             type: string
         statusCode:
-          readOnly: true
           description: 'The status code returned to client'
           type: integer
+          nullable: true
         notFound:
-          readOnly: true
           description: 'Whether or not the reqousted endpoint was found'
           type: boolean
+          nullable: true
         forbidden:
-          readOnly: true
           description: 'Whether or not the client was allowed to the reqousted endpoint'
           type: boolean
+          nullable: true
         ok:
-          readOnly: true
           description: 'Whether or not there where any problems'
           type: boolean
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this request was created'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this request last Modified'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
+          nullable: true
     AuditTrail-write:
       type: object
       description: 'An resource representing a log line.'
@@ -8772,114 +9303,114 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
+        application:
+          writeOnly: true
+          description: 'The application that made the request'
+          externalDocs:
+            url: 'http://schema.org/url'
+          type: string
+          nullable: true
         request:
-          readOnly: true
           description: 'The id of the request within that application'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
+          nullable: true
         user:
-          readOnly: true
           description: 'The user on behalf of wich the request was made'
           externalDocs:
             url: 'http://schema.org/url'
           type: string
+          nullable: true
         subject:
-          readOnly: true
           description: '???'
           type: string
+          nullable: true
         process:
-          readOnly: true
           description: 'The procces on behalf of wich the request was made'
           type: string
+          nullable: true
         dataElements:
-          readOnly: true
           description: 'The moment this request was created'
           type: array
           items:
             type: string
+          nullable: true
         dataSubjects:
-          readOnly: true
           description: 'The moment this request was created'
           type: array
           items:
             type: string
+          nullable: true
         resource:
-          readOnly: true
           description: 'The resource that was requested'
           type: string
+          nullable: true
         resourceType:
-          readOnly: true
           description: 'The type of the resource that was requested'
           type: string
+          nullable: true
         route:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
         endpoint:
-          readOnly: true
           description: 'The endpoint that the request was made to'
           type: string
         method:
-          readOnly: true
           description: 'The method that was used'
           type: string
         accept:
-          readOnly: true
           description: 'The contentType that was reqousted'
           type: string
         contentType:
-          readOnly: true
           description: 'The contentType that was suplieds'
           type: string
         content:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
+          nullable: true
         ip:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
         session:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
         headers:
-          readOnly: true
           description: 'The headers supplied by client'
           type: array
           items:
             type: string
         statusCode:
-          readOnly: true
           description: 'The status code returned to client'
           type: integer
+          nullable: true
         notFound:
-          readOnly: true
           description: 'Whether or not the reqousted endpoint was found'
           type: boolean
+          nullable: true
         forbidden:
-          readOnly: true
           description: 'Whether or not the client was allowed to the reqousted endpoint'
           type: boolean
+          nullable: true
         ok:
-          readOnly: true
           description: 'Whether or not there where any problems'
           type: boolean
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this request was created'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this request last Modified'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
+          nullable: true
     'AuditTrail:jsonld-write':
       type: object
       description: 'An resource representing a log line.'
@@ -8903,44 +9434,42 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         action:
-          readOnly: true
           type: string
         objectId:
-          readOnly: true
           type: string
+          nullable: true
         objectClass:
-          readOnly: true
           type: string
         version:
-          readOnly: true
           type: integer
         data:
-          readOnly: true
           type: array
           items:
             type: string
+          nullable: true
         username:
-          readOnly: true
           type: string
+          nullable: true
         session:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this request was created'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this request last Modified'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
+          nullable: true
     ChangeLog-write:
       type: object
       description: 'An resource representing a log line.'
@@ -8963,44 +9492,42 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         action:
-          readOnly: true
           type: string
         objectId:
-          readOnly: true
           type: string
+          nullable: true
         objectClass:
-          readOnly: true
           type: string
         version:
-          readOnly: true
           type: integer
         data:
-          readOnly: true
           type: array
           items:
             type: string
+          nullable: true
         username:
-          readOnly: true
           type: string
+          nullable: true
         session:
-          readOnly: true
           description: 'The moment this request was created'
           type: string
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this request was created'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this request last Modified'
           externalDocs:
             url: 'http://schema.org/DateTime'
           type: string
           format: date-time
+          nullable: true
     'ChangeLog:jsonld-write':
       type: object
       description: 'An resource representing a log line.'
@@ -9024,33 +9551,38 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this cluster'
           type: string
         description:
           description: 'the description of this cluster'
           type: string
+          nullable: true
         ip:
           description: 'the IP Address of this cluster'
           type: string
+          nullable: true
         domains:
           type: array
           items:
             $ref: '#/components/schemas/Domain-read'
-        environments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Environment-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
+        releases:
+          description: 'Installed releases on this cluster'
+          type: array
+          items:
+            type: string
+          nullable: true
       required:
         - name
     Cluster-write:
@@ -9065,17 +9597,19 @@ components:
         description:
           description: 'the description of this cluster'
           type: string
+          nullable: true
         kubeconfig:
-          writeOnly: true
           description: 'the kubernetes configuration file of this cluster'
           type: string
+          nullable: true
         ip:
           description: 'the IP Address of this cluster'
           type: string
+          nullable: true
         token:
-          writeOnly: true
           description: 'the Tiller token of this cluster'
           type: string
+          nullable: true
         domains:
           type: array
           items:
@@ -9084,6 +9618,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Environment-write'
+        releases:
+          description: 'Installed releases on this cluster'
+          type: array
+          items:
+            type: string
+          nullable: true
     'Cluster:jsonld-read':
       type: object
       description: 'This entity holds the information about a kubernetes cluster'
@@ -9103,33 +9643,38 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this cluster'
           type: string
         description:
           description: 'the description of this cluster'
           type: string
+          nullable: true
         ip:
           description: 'the IP Address of this cluster'
           type: string
+          nullable: true
         domains:
           type: array
           items:
             $ref: '#/components/schemas/Domain:jsonld-read'
-        environments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Environment:jsonld-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
+        releases:
+          description: 'Installed releases on this cluster'
+          type: array
+          items:
+            type: string
+          nullable: true
       required:
         - name
     'Cluster:jsonld-write':
@@ -9153,17 +9698,19 @@ components:
         description:
           description: 'the description of this cluster'
           type: string
+          nullable: true
         kubeconfig:
-          writeOnly: true
           description: 'the kubernetes configuration file of this cluster'
           type: string
+          nullable: true
         ip:
           description: 'the IP Address of this cluster'
           type: string
+          nullable: true
         token:
-          writeOnly: true
           description: 'the Tiller token of this cluster'
           type: string
+          nullable: true
         domains:
           type: array
           items:
@@ -9172,6 +9719,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Environment:jsonld-write'
+        releases:
+          description: 'Installed releases on this cluster'
+          type: array
+          items:
+            type: string
+          nullable: true
     Component-read:
       type: object
       description: ''
@@ -9182,6 +9735,7 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
@@ -9191,26 +9745,26 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         githubRepository:
           description: 'the Github Repository that contains this component'
           type: string
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
-        installations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Installation-read'
+        core:
+          description: 'Is the component a core component'
+          type: boolean
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
         - code
@@ -9223,7 +9777,6 @@ components:
         - name
         - code
         - githubRepository
-        - githubToken
         - helmRepository
       properties:
         name:
@@ -9235,16 +9788,20 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         githubRepository:
           description: 'the Github Repository that contains this component'
           type: string
         githubToken:
-          writeOnly: true
           description: 'A personal access token for github that can be used to trigger actions on this component'
           type: string
+          nullable: true
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
+        core:
+          description: 'Is the component a core component'
+          type: boolean
         installations:
           type: array
           items:
@@ -9268,6 +9825,7 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
@@ -9277,26 +9835,26 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         githubRepository:
           description: 'the Github Repository that contains this component'
           type: string
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
-        installations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Installation:jsonld-read'
+        core:
+          description: 'Is the component a core component'
+          type: boolean
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
       required:
         - name
         - code
@@ -9309,7 +9867,6 @@ components:
         - name
         - code
         - githubRepository
-        - githubToken
         - helmRepository
       properties:
         '@context':
@@ -9330,16 +9887,20 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         githubRepository:
           description: 'the Github Repository that contains this component'
           type: string
         githubToken:
-          writeOnly: true
           description: 'A personal access token for github that can be used to trigger actions on this component'
           type: string
+          nullable: true
         helmRepository:
           description: 'the Helm Repository that contains this component'
           type: string
+        core:
+          description: 'Is the component a core component'
+          type: boolean
         installations:
           type: array
           items:
@@ -9354,12 +9915,14 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this domain'
           type: string
         description:
           description: 'the description of this domain'
           type: string
+          nullable: true
         location:
           description: 'the base route of this domain'
           externalDocs:
@@ -9368,25 +9931,21 @@ components:
         ip:
           description: 'the IP Address of this domain'
           type: string
+          nullable: true
         databaseUrl:
           description: 'the base url for the managed database that this domain uses'
           type: string
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
-        cluster:
-          $ref: '#/components/schemas/Cluster-read'
-        installations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Installation-read'
+          nullable: true
         healthLogs:
           type: array
           items:
@@ -9407,6 +9966,7 @@ components:
         description:
           description: 'the description of this domain'
           type: string
+          nullable: true
         location:
           description: 'the base route of this domain'
           externalDocs:
@@ -9415,9 +9975,11 @@ components:
         ip:
           description: 'the IP Address of this domain'
           type: string
+          nullable: true
         databaseUrl:
           description: 'the base url for the managed database that this domain uses'
           type: string
+          nullable: true
         cluster:
           $ref: '#/components/schemas/Cluster-write'
         installations:
@@ -9447,12 +10009,14 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this domain'
           type: string
         description:
           description: 'the description of this domain'
           type: string
+          nullable: true
         location:
           description: 'the base route of this domain'
           externalDocs:
@@ -9461,25 +10025,21 @@ components:
         ip:
           description: 'the IP Address of this domain'
           type: string
+          nullable: true
         databaseUrl:
           description: 'the base url for the managed database that this domain uses'
           type: string
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
-        cluster:
-          $ref: '#/components/schemas/Cluster:jsonld-read'
-        installations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Installation:jsonld-read'
+          nullable: true
         healthLogs:
           type: array
           items:
@@ -9509,6 +10069,7 @@ components:
         description:
           description: 'the description of this domain'
           type: string
+          nullable: true
         location:
           description: 'the base route of this domain'
           externalDocs:
@@ -9517,9 +10078,11 @@ components:
         ip:
           description: 'the IP Address of this domain'
           type: string
+          nullable: true
         databaseUrl:
           description: 'the base url for the managed database that this domain uses'
           type: string
+          nullable: true
         cluster:
           $ref: '#/components/schemas/Cluster:jsonld-write'
         installations:
@@ -9540,12 +10103,14 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
@@ -9557,18 +10122,22 @@ components:
           items:
             $ref: '#/components/schemas/Installation-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
+        cache:
+          description: 'Should components be deployed to this environment with caching on or off?'
+          type: integer
       required:
         - name
         - debug
+        - cache
     Environment-write:
       type: object
       description: ''
@@ -9576,6 +10145,7 @@ components:
         - name
         - debug
         - authorization
+        - cache
       properties:
         name:
           description: 'The name of this component'
@@ -9583,13 +10153,14 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
         authorization:
-          writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
+          nullable: true
         cluster:
           $ref: '#/components/schemas/Cluster-write'
         installations:
@@ -9597,6 +10168,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation-write'
+        cache:
+          description: 'Should components be deployed to this environment with caching on or off?'
+          type: integer
     'Environment:jsonld-read':
       type: object
       description: ''
@@ -9616,12 +10190,14 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
@@ -9633,18 +10209,22 @@ components:
           items:
             $ref: '#/components/schemas/Installation:jsonld-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
+        cache:
+          description: 'Should components be deployed to this environment with caching on or off?'
+          type: integer
       required:
         - name
         - debug
+        - cache
     'Environment:jsonld-write':
       type: object
       description: ''
@@ -9652,6 +10232,7 @@ components:
         - name
         - debug
         - authorization
+        - cache
       properties:
         '@context':
           readOnly: true
@@ -9668,13 +10249,14 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
         authorization:
-          writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
+          nullable: true
         cluster:
           $ref: '#/components/schemas/Cluster:jsonld-write'
         installations:
@@ -9682,6 +10264,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-write'
+        cache:
+          description: 'Should components be deployed to this environment with caching on or off?'
+          type: integer
     HealthLog-read:
       type: object
       description: ''
@@ -9689,23 +10274,30 @@ components:
         description:
           description: 'the description of this health log'
           type: string
+          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
         domain:
-          $ref: '#/components/schemas/Domain-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain-read'
         installation:
-          $ref: '#/components/schemas/Installation-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Installation-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
     HealthLog-write:
       type: object
       description: ''
@@ -9713,13 +10305,20 @@ components:
         description:
           description: 'the description of this health log'
           type: string
+          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
         domain:
-          $ref: '#/components/schemas/Domain-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain-write'
         installation:
-          $ref: '#/components/schemas/Installation-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Installation-write'
     'HealthLog:jsonld-read':
       type: object
       description: ''
@@ -9736,23 +10335,30 @@ components:
         description:
           description: 'the description of this health log'
           type: string
+          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
         domain:
-          $ref: '#/components/schemas/Domain:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain:jsonld-read'
         installation:
-          $ref: '#/components/schemas/Installation:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Installation:jsonld-read'
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
     'HealthLog:jsonld-write':
       type: object
       description: ''
@@ -9769,13 +10375,20 @@ components:
         description:
           description: 'the description of this health log'
           type: string
+          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
         domain:
-          $ref: '#/components/schemas/Domain:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain:jsonld-write'
         installation:
-          $ref: '#/components/schemas/Installation:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Installation:jsonld-write'
     Installation-read:
       type: object
       description: ''
@@ -9786,46 +10399,68 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbName:
           description: 'The name of the database this component uses'
           type: string
+          nullable: true
         helmVersion:
           description: 'the Github Repository that contains this component'
           type: string
         component:
-          $ref: '#/components/schemas/Component-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Component-read'
         domain:
-          $ref: '#/components/schemas/Domain-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain-read'
         environment:
-          $ref: '#/components/schemas/Environment-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Environment-read'
         healthLogs:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-read'
         dateInstalled:
-          readOnly: true
           description: 'The moment this entity was last installed'
           type: string
           format: date-time
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
+        properties:
+          description: 'additional properties that are required for this installation, i.e. external API keys'
+          type: array
+          items:
+            $ref: '#/components/schemas/Property-read'
+        deploymentName:
+          description: 'The name of the deployment on the kubernetes cluster'
+          type: string
+          nullable: true
       required:
         - name
         - helmVersion
@@ -9842,37 +10477,58 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbPassword:
-          writeOnly: true
           description: 'The password that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbName:
           description: 'The name of the database this component uses'
           type: string
+          nullable: true
         authorization:
-          writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
+          nullable: true
         dbUrl:
-          writeOnly: true
           description: 'the Github Repository that contains this component'
           type: string
+          nullable: true
         helmVersion:
           description: 'the Github Repository that contains this component'
           type: string
         component:
-          $ref: '#/components/schemas/Component-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Component-write'
         domain:
-          $ref: '#/components/schemas/Domain-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain-write'
         environment:
-          $ref: '#/components/schemas/Environment-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Environment-write'
         healthLogs:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-write'
+        properties:
+          description: 'additional properties that are required for this installation, i.e. external API keys'
+          type: array
+          items:
+            $ref: '#/components/schemas/Property-write'
+        deploymentName:
+          description: 'The name of the deployment on the kubernetes cluster'
+          type: string
+          nullable: true
     'Installation:jsonld-read':
       type: object
       description: ''
@@ -9892,46 +10548,68 @@ components:
           externalDocs:
             url: 'http://schema.org/identifier'
           type: string
+          format: uuid
         name:
           description: 'The name of this component'
           type: string
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbName:
           description: 'The name of the database this component uses'
           type: string
+          nullable: true
         helmVersion:
           description: 'the Github Repository that contains this component'
           type: string
         component:
-          $ref: '#/components/schemas/Component:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Component:jsonld-read'
         domain:
-          $ref: '#/components/schemas/Domain:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain:jsonld-read'
         environment:
-          $ref: '#/components/schemas/Environment:jsonld-read'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Environment:jsonld-read'
         healthLogs:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-read'
         dateInstalled:
-          readOnly: true
           description: 'The moment this entity was last installed'
           type: string
           format: date-time
+          nullable: true
         dateCreated:
-          readOnly: true
           description: 'The moment this entity was created'
           type: string
           format: date-time
+          nullable: true
         dateModified:
-          readOnly: true
           description: 'The moment this entity last Modified'
           type: string
           format: date-time
+          nullable: true
+        properties:
+          description: 'additional properties that are required for this installation, i.e. external API keys'
+          type: array
+          items:
+            $ref: '#/components/schemas/Property:jsonld-read'
+        deploymentName:
+          description: 'The name of the deployment on the kubernetes cluster'
+          type: string
+          nullable: true
       required:
         - name
         - helmVersion
@@ -9957,210 +10635,121 @@ components:
         description:
           description: 'the description of this component'
           type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbPassword:
-          writeOnly: true
           description: 'The password that is needed to log into the cluster database'
           type: string
+          nullable: true
         dbName:
           description: 'The name of the database this component uses'
           type: string
+          nullable: true
         authorization:
-          writeOnly: true
           description: 'The authentication token that is needed to access this token'
           type: string
+          nullable: true
         dbUrl:
-          writeOnly: true
           description: 'the Github Repository that contains this component'
           type: string
+          nullable: true
         helmVersion:
           description: 'the Github Repository that contains this component'
           type: string
         component:
-          $ref: '#/components/schemas/Component:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Component:jsonld-write'
         domain:
-          $ref: '#/components/schemas/Domain:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Domain:jsonld-write'
         environment:
-          $ref: '#/components/schemas/Environment:jsonld-write'
+          nullable: true
+          anyOf:
+            -
+              $ref: '#/components/schemas/Environment:jsonld-write'
         healthLogs:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-write'
+        properties:
+          description: 'additional properties that are required for this installation, i.e. external API keys'
+          type: array
+          items:
+            $ref: '#/components/schemas/Property:jsonld-write'
+        deploymentName:
+          description: 'The name of the deployment on the kubernetes cluster'
+          type: string
+          nullable: true
+    Property-read:
+      type: object
+      properties:
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        name:
+          description: 'the name of the property'
+          type: string
+    Property-write:
+      type: object
+      properties:
+        name:
+          description: 'the name of the property'
+          type: string
+        value:
+          description: 'the value of the property'
+          type: string
+    'Property:jsonld-read':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        name:
+          description: 'the name of the property'
+          type: string
+    'Property:jsonld-write':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        name:
+          description: 'the name of the property'
+          type: string
+        value:
+          description: 'the value of the property'
+          type: string
 definitions:
-  AuditTrail-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this object'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line looks suspicius'
-        maxLength: 2555
-      application:
-        description: 'The application that made the request'
-        type: string
-        format: url
-        maxLength: 255
-      request:
-        description: 'The id of the request within that application'
-        type: string
-        format: url
-        maxLength: 255
-      user:
-        description: 'The user on behalf of wich the request was made'
-        type: string
-        format: url
-        maxLength: 255
-      subject:
-        description: '???'
-        type: \sting
-        maxLength: 255
-      process:
-        description: 'The procces on behalf of wich the request was made'
-        type: \sting
-        maxLength: 255
-      dataElements:
-        description: 'The moment this request was created'
-        type: array
-      dataSubjects:
-        description: 'The moment this request was created'
-        type: array
-      resource:
-        description: 'The resource that was requested'
-        type: \sting
-        maxLength: 255
-      resourceType:
-        description: 'The type of the resource that was requested'
-        type: \sting
-        maxLength: 255
-      route:
-        description: 'The moment this request was created'
-        type: \sting
-        maxLength: 255
-      endpoint:
-        description: 'The endpoint that the request was made to'
-        type: \sting
-        maxLength: 255
-      method:
-        description: 'The method that was used'
-        type: \sting
-        maxLength: 255
-      accept:
-        description: 'The contentType that was reqousted'
-        type: \sting
-        maxLength: 255
-      contentType:
-        description: 'The contentType that was suplieds'
-        type: \sting
-        maxLength: 255
-      content:
-        description: 'The moment this request was created'
-        type: \sting
-        maxLength: 2555
-      ip:
-        description: 'The moment this request was created'
-        type: \sting
-        maxLength: 255
-      session:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      headers:
-        description: 'The headers supplied by client'
-        type: array
-      statusCode:
-        description: 'The status code returned to client'
-        type: int
-        example: '200'
-      notFound:
-        description: 'Whether or not the reqousted endpoint was found'
-        type: bool
-        example: 'false'
-      forbidden:
-        description: 'Whether or not the client was allowed to the reqousted endpoint'
-        type: bool
-        example: 'false'
-      ok:
-        description: 'Whether or not there where any problems'
-        type: bool
-        example: 'true'
-      dateCreated:
-        description: 'The moment this request was created'
-        type: string
-        format: date-time
-        example: '2020-04-08 08:43:36'
-      dateModified:
-        description: 'The moment this request last Modified'
-        type: string
-        format: date-time
-        example: '2020-04-08 08:43:36'
-    required: []
-  AuditTrail-write:
-    properties:
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line looks suspicius'
-        maxLength: 2555
-    required: []
-  ChangeLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this object'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-      action:
-        description: ''
-        type: string
-      objectId:
-        description: ''
-        type: string
-      objectClass:
-        description: ''
-        type: string
-      version:
-        description: ''
-        type: int
-      data:
-        description: ''
-        type: array
-      username:
-        description: ''
-        type: string
-      session:
-        description: 'The moment this request was created'
-        type: \sting
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this request was created'
-        type: string
-        format: date-time
-        example: '2020-04-08 08:43:36'
-      dateModified:
-        description: 'The moment this request last Modified'
-        type: string
-        format: date-time
-        example: '2020-04-08 08:43:36'
-    required: []
-  ChangeLog-write:
-    properties:
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-    required: []
   Cluster-read:
     properties:
       id:
@@ -10187,8 +10776,10 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
+      releases:
+        description: 'Installed releases on this cluster'
+        type: array
       domains: []
-      environments: []
     required:
       - name
   Cluster-write:
@@ -10212,91 +10803,13 @@ definitions:
       token:
         description: 'the Tiller token of this cluster'
         type: string
+      releases:
+        description: 'Installed releases on this cluster'
+        type: array
       domains: []
       environments: []
     required:
       - name
-  Component-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - githubToken
-      - helmRepository
-  Component-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      githubToken:
-        description: 'A personal access token for github that can be used to trigger actions on this component'
-        type: string
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - githubToken
-      - helmRepository
   Domain-read:
     properties:
       id:
@@ -10333,8 +10846,6 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
-      cluster: []
-      installations: []
       healthLogs: []
     required:
       - name
@@ -10370,68 +10881,6 @@ definitions:
     required:
       - name
       - location
-  Environment-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      debug:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      cluster: []
-      installations:
-        description: 'The installations in this environment'
-        type: \ArrayCollection
-    required:
-      - name
-      - debug
-      - authorization
-  Environment-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      debug:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
-      authorization:
-        description: 'The authentication token that is needed to access this token'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      cluster: []
-      installations:
-        description: 'The installations in this environment'
-        type: \ArrayCollection
-    required:
-      - name
-      - debug
-      - authorization
   HealthLog-read:
     properties:
       description:
@@ -10503,10 +10952,17 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
+      deploymentName:
+        description: 'The name of the deployment on the kubernetes cluster'
+        type: string
+        example: pc-dev
       component: []
       domain: []
       environment: []
       healthLogs: []
+      properties:
+        description: 'additional properties that are required for this installation, i.e. external API keys'
+        type: \Property
     required:
       - name
       - helmVersion
@@ -10549,26 +11005,349 @@ definitions:
         type: string
         example: 'https://github.com/ConductionNL/environment-component'
         maxLength: 255
+      deploymentName:
+        description: 'The name of the deployment on the kubernetes cluster'
+        type: string
+        example: pc-dev
       component: []
       domain: []
       environment: []
       healthLogs: []
+      properties:
+        description: 'additional properties that are required for this installation, i.e. external API keys'
+        type: \Property
     required:
       - name
       - helmVersion
+  Component-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  Component-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      githubToken:
+        description: 'A personal access token for github that can be used to trigger actions on this component'
+        type: string
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  Environment-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      cache:
+        description: 'Should components be deployed to this environment with caching on or off?'
+        type: int
+        example: '1'
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - authorization
+      - cache
+  Environment-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
+      authorization:
+        description: 'The authentication token that is needed to access this token'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      cache:
+        description: 'Should components be deployed to this environment with caching on or off?'
+        type: int
+        example: '1'
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - authorization
+      - cache
+  ChangeLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+      action:
+        description: ''
+        type: string
+      objectId:
+        description: ''
+        type: string
+      objectClass:
+        description: ''
+        type: string
+      version:
+        description: ''
+        type: int
+      data:
+        description: ''
+        type: array
+      username:
+        description: ''
+        type: string
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      dateCreated:
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-05-22 12:19:49'
+      dateModified:
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-05-22 12:19:49'
+    required: []
+  ChangeLog-write:
+    properties:
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+    required: []
+  AuditTrail-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line looks suspicius'
+        maxLength: 2555
+      application:
+        description: 'The application that made the request'
+        type: string
+        format: url
+        maxLength: 255
+      request:
+        description: 'The id of the request within that application'
+        type: string
+        format: url
+        maxLength: 255
+      user:
+        description: 'The user on behalf of wich the request was made'
+        type: string
+        format: url
+        maxLength: 255
+      subject:
+        description: '???'
+        type: string
+        maxLength: 255
+      process:
+        description: 'The procces on behalf of wich the request was made'
+        type: string
+        maxLength: 255
+      dataElements:
+        description: 'The moment this request was created'
+        type: array
+      dataSubjects:
+        description: 'The moment this request was created'
+        type: array
+      resource:
+        description: 'The resource that was requested'
+        type: string
+        maxLength: 255
+      resourceType:
+        description: 'The type of the resource that was requested'
+        type: string
+        maxLength: 255
+      route:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      endpoint:
+        description: 'The endpoint that the request was made to'
+        type: string
+        maxLength: 255
+      method:
+        description: 'The method that was used'
+        type: string
+        maxLength: 255
+      accept:
+        description: 'The contentType that was reqousted'
+        type: string
+        maxLength: 255
+      contentType:
+        description: 'The contentType that was suplieds'
+        type: string
+        maxLength: 255
+      content:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 2555
+      ip:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      headers:
+        description: 'The headers supplied by client'
+        type: array
+      statusCode:
+        description: 'The status code returned to client'
+        type: int
+        example: '200'
+      notFound:
+        description: 'Whether or not the reqousted endpoint was found'
+        type: bool
+        example: 'false'
+      forbidden:
+        description: 'Whether or not the client was allowed to the reqousted endpoint'
+        type: bool
+        example: 'false'
+      ok:
+        description: 'Whether or not there where any problems'
+        type: bool
+        example: 'true'
+      dateCreated:
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-05-22 12:19:49'
+      dateModified:
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-05-22 12:19:49'
+    required: []
+  AuditTrail-write:
+    properties:
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line looks suspicius'
+        maxLength: 2555
+    required: []
 tags:
-  -
-    name: AuditTrail
-    description: |
-      An resource representing a log line.
-      
-      This entity represents a product that can be ordered via the OrderRegistratieComponent.
-  -
-    name: ChangeLog
-    description: |
-      An resource representing a log line.
-      
-      This entity represents a product that can be ordered via the OrderRegistratieComponent.
   -
     name: Cluster
     description: |
@@ -10576,19 +11355,7 @@ tags:
       
       
   -
-    name: Component
-    description: |
-      
-      
-      
-  -
     name: Domain
-    description: |
-      
-      
-      
-  -
-    name: Environment
     description: |
       
       
@@ -10605,26 +11372,50 @@ tags:
       
       
       
+  -
+    name: Component
+    description: |
+      
+      
+      
+  -
+    name: Environment
+    description: |
+      
+      
+      
+  -
+    name: ChangeLog
+    description: |
+      An resource representing a log line.
+      
+      This entity represents a product that can be ordered via the OrderRegistratieComponent.
+  -
+    name: AuditTrail
+    description: |
+      An resource representing a log line.
+      
+      This entity represents a product that can be ordered via the OrderRegistratieComponent.
 securityDefinitions:
   JWT-Oauth:
     type: oauth2
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the Installation resource'
-      write: 'write right to the Installation resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the Installation resource'
-      write: 'write right to the Installation resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
 host: irc.zaakonline.nl
 servers:
   -
-    description: 'Demo Omgeving'
-    url: 'http://proto.demo.common-ground.dev'
+    name: conduction.nl
+    url: evc.dev.conduction.nl
 externalDocs:
   -
     description: 'OAS Documentatie'

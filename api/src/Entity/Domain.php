@@ -46,12 +46,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\DomainRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
- * @ApiFilter(SearchFilter::class)
+ * @ApiFilter(SearchFilter::class, properties={"cluster.id": "exact"})
  *
  */
 class Domain
@@ -123,6 +123,7 @@ class Domain
 
     /**
      * @var string the base url for the managed database that this domain uses
+     * @TODO: Shouldn't this be removed?
      *
      * @Groups({"read","write"})
      * @example pgsql://db-cluster.vuga.com:25060/
@@ -149,7 +150,7 @@ class Domain
     private $dateModified;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="domains")
      * @ORM\JoinColumn(nullable=false)
@@ -157,7 +158,7 @@ class Domain
     private $cluster;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="domain")
      */

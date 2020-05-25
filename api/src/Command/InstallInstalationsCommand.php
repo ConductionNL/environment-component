@@ -62,7 +62,13 @@ class InstallInstalationsCommand extends Command
             $io->progressAdvance();
             $io->text("Installing {$result->getComponent()->getName()} on {$result->getDomain()->getCluster()->getName()}");
 
-            $this->installService->update($result);
+            if($result->getDateInstalled() != null){
+
+                $this->installService->update($result, 'prod');
+            }
+            else{
+                $this->installService->install($result, 'prod');
+            }
             //$io->warning('Lorem ipsum dolor sit amet');
             //$io->success('Lorem ipsum dolor sit amet');
 

@@ -42,16 +42,25 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "summary"="Audittrail",
  *                  "description"="Gets the audit trail for this resource"
  *              }
+ *          },
+ *     "helm_update"={
+ *              "path"="/environments/{id}/update",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="update",
+ *                  "description"="Performs a rolling update on all installations in this environment"
+ *              }
  *          }
  * 		},
+
  * )
  * @ORM\Entity(repositoryClass="App\Repository\EnvironmentRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
- * @ApiFilter(SearchFilter::class)
+ * @ApiFilter(SearchFilter::class, properties={"cluster.id": "exact"})
 */
 class Environment
 {
@@ -106,7 +115,7 @@ class Environment
      * @Assert\Choice({0, 1})
      * @ORM\Column(type="integer")
      */
-    private $debug;
+    private $debug = 0;
 
     /**
      * @var string The authentication token that is needed to access this token
@@ -158,9 +167,21 @@ class Environment
      */
     private $dateModified;
 
+    /**
+     * @var int Should components be deployed to this environment with caching on or off?
+     *
+     * @example 1
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
+     * @Assert\NotNull
+     * @ORM\Column(type="integer")
+     */
+    private $cache;
+
     public function __construct()
     {
-        $this->components = new ArrayCollection();
+        $this->installations = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -279,6 +300,18 @@ class Environment
     public function setAuthorization(?string $authorization): self
     {
         $this->authorization = $authorization;
+
+        return $this;
+    }
+
+    public function getCache(): ?int
+    {
+        return $this->cache;
+    }
+
+    public function setCache(int $cache): self
+    {
+        $this->cache = $cache;
 
         return $this;
     }
