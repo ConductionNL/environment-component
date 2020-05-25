@@ -121,7 +121,21 @@ class ClusterService
     public function addRepo(Installation $installation){
 
         //Add repo to repos
-        $process = new Process(["helm","repo", "add","{$installation->getComponent()->getCode()}-repository","{$installation->getComponent()->getHelmRepository()}"]);
+        $process = new Process(["helm","repo", "remove","{$installation->getComponent()->getCode()}-repository"]);
+        $process->run();
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }        $process = new Process(["helm","repo", "add","{$installation->getComponent()->getCode()}-repository","{$installation->getComponent()->getHelmRepository()}"]);
+        $process->run();
+        $process = new Process(["rm","-rf", "~/.helm/cache/archive/*","&&","rm","-rf", "~/.helm/repository/cache/*"]);
+        $process->run();
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+        $process = new Process(["helm","repo", "update"]);
         $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
@@ -133,7 +147,7 @@ class ClusterService
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
         $additionalSettings = "";
         foreach($installation->getProperties() as $property){
-            $additionalSettings .= ",{$property->getName()}={$property->getValue}";
+            $additionalSettings .= ",{$property->getName()}={$property->getValue()}";
         }
         $this->addRepo($installation);
 
@@ -159,7 +173,7 @@ class ClusterService
     public function upgradeComponent(Installation $installation):bool{
         $additionalSettings = "";
         foreach($installation->getProperties() as $property){
-            $additionalSettings .= ",{$property->getName()}={$property->getValue}";
+            $additionalSettings .= ",{$property->getName()}={$property->getValue()}";
         }
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
         $this->addRepo($installation);
@@ -200,11 +214,16 @@ class ClusterService
             $this->removeKubeconfig($kubeconfig);
             throw new ProcessFailedException($process);
         }
+        if($installation->hasDeploymentName()){
+            $name = "{$installation->getDeploymentName()}-{$installation->getEnvironment()->getName()}-cert";
+        }else{
+            $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}-cert";
+        }
         $process = new Process([
             "kubectl",
             "delete",
             "secret",
-            "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}-cert",
+            "$name",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}"
         ]);

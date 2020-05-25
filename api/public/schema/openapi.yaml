@@ -6363,6 +6363,137 @@ paths:
           description: 'Resource not found'
       produces:
         - application/health+json
+  '/environments/{id}/update':
+    get:
+      tags:
+        - Environment
+      operationId: helm_updateEnvironmentItem
+      summary: 'Retrieves a Environment resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Environment resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Environment:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Environment:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Environment-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
   /health_logs:
     get:
       tags:
@@ -8768,7 +8899,7 @@ paths:
           description: 'Resource not found'
       produces:
         - application/health+json
-  '/installations/{id}/update':
+  '/installations/{id}/rollingupdate':
     get:
       tags:
         - Installation
@@ -10679,90 +10810,6 @@ definitions:
       environments: []
     required:
       - name
-  Component-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      core:
-        description: 'Is the component a core component'
-        type: bool
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-    required:
-      - name
-      - code
-      - githubRepository
-      - helmRepository
-  Component-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      githubToken:
-        description: 'A personal access token for github that can be used to trigger actions on this component'
-        type: string
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      core:
-        description: 'Is the component a core component'
-        type: bool
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - helmRepository
   Domain-read:
     properties:
       id:
@@ -10834,78 +10881,6 @@ definitions:
     required:
       - name
       - location
-  Environment-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      debug:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      cache:
-        description: 'Should components be deployed to this environment with caching on or off?'
-        type: int
-        example: '1'
-      cluster: []
-      installations:
-        description: 'The installations in this environment'
-        type: \ArrayCollection
-    required:
-      - name
-      - debug
-      - authorization
-      - cache
-  Environment-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      debug:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
-      authorization:
-        description: 'The authentication token that is needed to access this token'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      cache:
-        description: 'Should components be deployed to this environment with caching on or off?'
-        type: int
-        example: '1'
-      cluster: []
-      installations:
-        description: 'The installations in this environment'
-        type: \ArrayCollection
-    required:
-      - name
-      - debug
-      - authorization
-      - cache
   HealthLog-read:
     properties:
       description:
@@ -11044,6 +11019,215 @@ definitions:
     required:
       - name
       - helmVersion
+  Component-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  Component-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      githubToken:
+        description: 'A personal access token for github that can be used to trigger actions on this component'
+        type: string
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  Environment-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      cache:
+        description: 'Should components be deployed to this environment with caching on or off?'
+        type: int
+        example: '1'
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - authorization
+      - cache
+  Environment-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
+      authorization:
+        description: 'The authentication token that is needed to access this token'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      cache:
+        description: 'Should components be deployed to this environment with caching on or off?'
+        type: int
+        example: '1'
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - authorization
+      - cache
+  ChangeLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+      action:
+        description: ''
+        type: string
+      objectId:
+        description: ''
+        type: string
+      objectClass:
+        description: ''
+        type: string
+      version:
+        description: ''
+        type: int
+      data:
+        description: ''
+        type: array
+      username:
+        description: ''
+        type: string
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      dateCreated:
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-05-22 12:19:49'
+      dateModified:
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-05-22 12:19:49'
+    required: []
+  ChangeLog-write:
+    properties:
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+    required: []
   AuditTrail-read:
     properties:
       id:
@@ -11148,12 +11332,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-05-22 09:46:52'
+        example: '2020-05-22 12:19:49'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-05-22 09:46:52'
+        example: '2020-05-22 12:19:49'
     required: []
   AuditTrail-write:
     properties:
@@ -11161,59 +11345,6 @@ definitions:
         description: 'A note conserning this log lin'
         type: string
         example: 'This log line looks suspicius'
-        maxLength: 2555
-    required: []
-  ChangeLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this object'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-      action:
-        description: ''
-        type: string
-      objectId:
-        description: ''
-        type: string
-      objectClass:
-        description: ''
-        type: string
-      version:
-        description: ''
-        type: int
-      data:
-        description: ''
-        type: array
-      username:
-        description: ''
-        type: string
-      session:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this request was created'
-        type: string
-        format: date-time
-        example: '2020-05-22 09:46:52'
-      dateModified:
-        description: 'The moment this request last Modified'
-        type: string
-        format: date-time
-        example: '2020-05-22 09:46:52'
-    required: []
-  ChangeLog-write:
-    properties:
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
         maxLength: 2555
     required: []
 tags:
@@ -11224,19 +11355,7 @@ tags:
       
       
   -
-    name: Component
-    description: |
-      
-      
-      
-  -
     name: Domain
-    description: |
-      
-      
-      
-  -
-    name: Environment
     description: |
       
       
@@ -11254,13 +11373,25 @@ tags:
       
       
   -
-    name: AuditTrail
+    name: Component
+    description: |
+      
+      
+      
+  -
+    name: Environment
+    description: |
+      
+      
+      
+  -
+    name: ChangeLog
     description: |
       An resource representing a log line.
       
       This entity represents a product that can be ordered via the OrderRegistratieComponent.
   -
-    name: ChangeLog
+    name: AuditTrail
     description: |
       An resource representing a log line.
       
@@ -11271,15 +11402,15 @@ securityDefinitions:
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
 host: irc.zaakonline.nl
 servers:
   -

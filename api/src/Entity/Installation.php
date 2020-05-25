@@ -547,7 +547,23 @@ class Installation
     public function setDeploymentName(?string $deploymentName): self
     {
         $this->deploymentName = $deploymentName;
+        $subdomain = new Property();
+        $subdomain->setName("settings.subdomain");
+        $subdomain->setValue($deploymentName);
+        $this->addProperty($subdomain);
+
+        $name= new Property();
+        $name->setName("settings.name");
+        $name->setValue($deploymentName);
+        $this->addProperty($name);
 
         return $this;
+    }
+    public function hasDeploymentName():bool{
+        if($this->deploymentName){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
