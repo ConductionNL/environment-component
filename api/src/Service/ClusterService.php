@@ -22,7 +22,7 @@ class ClusterService
         $kubeconfig = $this->writeKubeconfig($cluster);
 
         echo "Installing kubernetes dashboard\n";
-        $process4 = new Process(["kubectl","create","-f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml", "--kubeconfig={$kubeconfig}"]);
+        $process4 = new Process(["kubectl","apply","-f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml", "--kubeconfig={$kubeconfig}"]);
         $process4->run();
         if(!$process4->isSuccessful()) {
             $this->removeKubeconfig($kubeconfig);
