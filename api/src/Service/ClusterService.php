@@ -22,7 +22,7 @@ class ClusterService
         $kubeconfig = $this->writeKubeconfig($cluster);
 
         echo "Installing kubernetes dashboard\n";
-        $process4 = new Process(["kubectl","apply","-f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml", "--kubeconfig={$kubeconfig}"]);
+        $process4 = new Process(["kubectl","apply","-f","https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml", "--kubeconfig={$kubeconfig}"]);
         $process4->run();
         if(!$process4->isSuccessful()) {
             $this->removeKubeconfig($kubeconfig);
@@ -121,12 +121,6 @@ class ClusterService
     public function addRepo(Installation $installation){
 
         //Add repo to repos
-        $process = new Process(["helm","repo", "remove","{$installation->getComponent()->getCode()}-repository"]);
-        $process->run();
-        if(!$process->isSuccessful()){
-            throw new ProcessFailedException($process);
-        }        $process = new Process(["helm","repo", "add","{$installation->getComponent()->getCode()}-repository","{$installation->getComponent()->getHelmRepository()}"]);
-        $process->run();
         $process = new Process(["rm","-rf", "~/.helm/cache/archive/*","&&","rm","-rf", "~/.helm/repository/cache/*"]);
         $process->run();
         if(!$process->isSuccessful()){
