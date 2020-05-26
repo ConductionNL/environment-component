@@ -30,6 +30,13 @@ class ClusterService
         }
 
         echo "Installing Ingress\n";
+        $process5 = new Process(["helm", "repo","add","stable","https://kubernetes-charts.storage.googleapis.com"]);
+        $process5->run();
+        if(!$process5->isSuccessful()){
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process5);
+        }
+
         $process5 = new Process(["helm", "install","loadbalancer","stable/nginx-ingress","--kubeconfig=$kubeconfig"]);
         $process5->run();
         if(!$process5->isSuccessful()){
@@ -57,7 +64,7 @@ class ClusterService
             $this->removeKubeconfig($kubeconfig);
             throw new ProcessFailedException($process11);
         }
-        $process10 = new Process(["helm","install","cert-manager","--namespace=cert-manager","--version=v0.15.0","jetstack/cert-manager","--set installCRDs=true","--kubeconfig=$kubeconfig"]);
+        $process10 = new Process(["helm","install","cert-manager","--namespace=cert-manager","--version=v0.15.0","jetstack/cert-manager","--set","installCRDs=true","--kubeconfig=$kubeconfig"]);
         $process10->run();
         if(!$process10->isSuccessful()){
             $this->removeKubeconfig($kubeconfig);
@@ -126,6 +133,8 @@ class ClusterService
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
+        $process = new Process(["helm","repo", "add","{$installation->getComponent()->getCode()}-repository", "{$installation->getComponent()->getHelmRepository()}"]);
+        $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
