@@ -43,12 +43,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "description"="Deletes this component from a cluster"
  *              }
  *     },
+ *     "helm_upgrade"={
+ *              "path"="/installations/{id}/upgrade",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="upgrade",
+ *                  "description"="Updates this component on a cluster"
+ *              }
+ *     },
  *     "helm_update"={
- *              "path"="/installations/{id}/update",
+ *              "path"="/installations/{id}/rollingupdate",
  *              "method"="get",
  *              "swagger_context" = {
  *                  "summary"="update",
- *                  "description"="Updates this component on a cluster"
+ *                  "description"="Performs a rolling update on a cluster"
  *              }
  *     },
  *     "get_change_logs"={
@@ -70,7 +78,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\InstallationRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
@@ -255,9 +263,28 @@ class Installation
      */
     private $dateModified;
 
+    /**
+     * @var Property additional properties that are required for this installation, i.e. external API keys
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade="persist")
+     */
+    private $properties;
+
+    /**
+     * @var string The name of the deployment on the kubernetes cluster
+     *
+     * @example pc-dev
+     *
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $deploymentName;
+
     public function __construct()
     {
         $this->healthLogs = new ArrayCollection();
+        $this->properties = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -474,5 +501,69 @@ class Installation
         $this->domain = $domain;
         $domain->addInstallation($this);
         return $this;
+    }
+
+    /**
+     * @return Collection|Property[]
+     */
+    public function getProperties(): Collection
+    {
+        return $this->properties;
+    }
+
+    public function addProperty(Property $property): self
+    {
+        if (!$this->properties->contains($property)) {
+            $this->properties[] = $property;
+            $property->setInstallation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProperty(Property $property): self
+    {
+        if ($this->properties->contains($property)) {
+            $this->properties->removeElement($property);
+            // set the owning side to null (unless already changed)
+            if ($property->getInstallation() === $this) {
+                $property->setInstallation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDeploymentName(): ?string
+    {
+        if($this->deploymentName){
+            return $this->deploymentName;
+        }
+        else{
+            return "{$this->getComponent()->getCode()}-{$this->getEnvironment()->getName()}";
+        }
+    }
+
+    public function setDeploymentName(?string $deploymentName): self
+    {
+        $this->deploymentName = $deploymentName;
+        $subdomain = new Property();
+        $subdomain->setName("settings.subdomain");
+        $subdomain->setValue($deploymentName);
+        $this->addProperty($subdomain);
+
+        $name= new Property();
+        $name->setName("settings.name");
+        $name->setValue($deploymentName);
+        $this->addProperty($name);
+
+        return $this;
+    }
+    public function hasDeploymentName():bool{
+        if($this->deploymentName){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

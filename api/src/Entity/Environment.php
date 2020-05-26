@@ -42,11 +42,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "summary"="Audittrail",
  *                  "description"="Gets the audit trail for this resource"
  *              }
+ *          },
+ *     "helm_update"={
+ *              "path"="/environments/{id}/update",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="update",
+ *                  "description"="Performs a rolling update on all installations in this environment"
+ *              }
  *          }
  * 		},
+
  * )
  * @ORM\Entity(repositoryClass="App\Repository\EnvironmentRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
@@ -157,6 +166,18 @@ class Environment
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
+
+    /**
+     * @var int Should components be deployed to this environment with caching on or off?
+     *
+     * @example 1
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
+     * @Assert\NotNull
+     * @ORM\Column(type="integer")
+     */
+    private $cache;
 
     public function __construct()
     {
@@ -279,6 +300,18 @@ class Environment
     public function setAuthorization(?string $authorization): self
     {
         $this->authorization = $authorization;
+
+        return $this;
+    }
+
+    public function getCache(): ?int
+    {
+        return $this->cache;
+    }
+
+    public function setCache(int $cache): self
+    {
+        $this->cache = $cache;
 
         return $this;
     }
