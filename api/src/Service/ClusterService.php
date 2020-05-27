@@ -22,7 +22,7 @@ class ClusterService
         $kubeconfig = $this->writeKubeconfig($cluster);
 
         echo "Installing kubernetes dashboard\n";
-        $process4 = new Process(["kubectl","create","-f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml", "--kubeconfig={$kubeconfig}"]);
+        $process4 = new Process(["kubectl","apply","-f","https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml", "--kubeconfig={$kubeconfig}"]);
         $process4->run();
         if(!$process4->isSuccessful()) {
             $this->removeKubeconfig($kubeconfig);
@@ -30,6 +30,13 @@ class ClusterService
         }
 
         echo "Installing Ingress\n";
+        $process5 = new Process(["helm", "repo","add","stable","https://kubernetes-charts.storage.googleapis.com"]);
+        $process5->run();
+        if(!$process5->isSuccessful()){
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process5);
+        }
+
         $process5 = new Process(["helm", "install","loadbalancer","stable/nginx-ingress","--kubeconfig=$kubeconfig"]);
         $process5->run();
         if(!$process5->isSuccessful()){
@@ -57,7 +64,7 @@ class ClusterService
             $this->removeKubeconfig($kubeconfig);
             throw new ProcessFailedException($process11);
         }
-        $process10 = new Process(["helm","install","cert-manager","--namespace=cert-manager","--version=v0.15.0","jetstack/cert-manager","--set installCRDs=true","--kubeconfig=$kubeconfig"]);
+        $process10 = new Process(["helm","install","cert-manager","--namespace=cert-manager","--version=v0.15.0","jetstack/cert-manager","--set","installCRDs=true","--kubeconfig=$kubeconfig"]);
         $process10->run();
         if(!$process10->isSuccessful()){
             $this->removeKubeconfig($kubeconfig);
@@ -121,17 +128,13 @@ class ClusterService
     public function addRepo(Installation $installation){
 
         //Add repo to repos
-        $process = new Process(["helm","repo", "remove","{$installation->getComponent()->getCode()}-repository"]);
-        $process->run();
-        if(!$process->isSuccessful()){
-            throw new ProcessFailedException($process);
-        }        $process = new Process(["helm","repo", "add","{$installation->getComponent()->getCode()}-repository","{$installation->getComponent()->getHelmRepository()}"]);
-        $process->run();
         $process = new Process(["rm","-rf", "~/.helm/cache/archive/*","&&","rm","-rf", "~/.helm/repository/cache/*"]);
         $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
+        $process = new Process(["helm","repo", "add","{$installation->getComponent()->getCode()}-repository", "{$installation->getComponent()->getHelmRepository()}"]);
+        $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
