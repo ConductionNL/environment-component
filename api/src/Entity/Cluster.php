@@ -2,19 +2,17 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use phpDocumentor\Reflection\Types\Boolean;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -22,7 +20,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This entity holds the information about a kubernetes cluster
+ * This entity holds the information about a kubernetes cluster.
  *
  * @ApiResource(
  *     	normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
@@ -113,6 +111,7 @@ class Cluster
      * @var string the IP Address of this cluster
      *
      * @Groups({"read","write"})
+     *
      * @example 255.255.255.0
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -300,15 +299,14 @@ class Cluster
      */
     public function getEnvironments(): Collection
     {
-    	return $this->environments;
+        return $this->environments;
     }
 
     public function addEnvironment(Environment $environment): self
     {
-
-    	if (!$this->environments->contains($environment)) {
-    		$this->environments[] = $environment;
-    		$environment->setCluster($this);
+        if (!$this->environments->contains($environment)) {
+            $this->environments[] = $environment;
+            $environment->setCluster($this);
         }
 
         return $this;
@@ -316,21 +314,23 @@ class Cluster
 
     public function removeEnvironment(Environment $environment): self
     {
-
-    	if ($this->environments->contains($environment)) {
-    		$this->environments->removeElement($environment);
+        if ($this->environments->contains($environment)) {
+            $this->environments->removeElement($environment);
             // set the owning side to null (unless already changed)
-    		if ($environment->getCluster() === $this) {
-    			$environment->setCluster(null);
+            if ($environment->getCluster() === $this) {
+                $environment->setCluster(null);
             }
         }
 
         return $this;
     }
-    public function hasEnvironment(string $name){
+
+    public function hasEnvironment(string $name)
+    {
         $criteria = Criteria::create()
             ->andWhere(Criteria::expr()->eq('name', $name));
-        return count($this->getEnvironments()->matching($criteria))>0;
+
+        return count($this->getEnvironments()->matching($criteria)) > 0;
     }
 
     public function getReleases(): ?array

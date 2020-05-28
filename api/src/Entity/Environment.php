@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -52,7 +51,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              }
  *          }
  * 		},
-
+ *
  * )
  * @ORM\Entity(repositoryClass="App\Repository\EnvironmentRepository")
  * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
@@ -61,7 +60,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
  * @ApiFilter(SearchFilter::class, properties={"cluster.id": "exact"})
-*/
+ */
 class Environment
 {
     /**
@@ -224,6 +223,7 @@ class Environment
 
         return $this;
     }
+
     public function getCluster(): ?Cluster
     {
         return $this->cluster;
@@ -253,7 +253,6 @@ class Environment
 
         return $this;
     }
-
 
     public function removeInstallation(Installation $installation): self
     {
@@ -315,5 +314,4 @@ class Environment
 
         return $this;
     }
-
 }

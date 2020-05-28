@@ -13,7 +13,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class HealthCommand extends Command
 {
-
     /**
      * {@inheritdoc}
      */
@@ -47,6 +46,5 @@ class HealthCommand extends Command
 //        }
 
         // do some magic
-
     }
 }
