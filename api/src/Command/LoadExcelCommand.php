@@ -4,24 +4,20 @@
 
 namespace App\Command;
 
+use App\Service\ExcelService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Doctrine\ORM\EntityManagerInterface;
-
-
-use App\Service\ExcelService;
 
 class LoadExcelCommand extends Command
 {
-
     private $excelService;
     private $em;
 
-    public function __construct(ExcelService  $excelService, EntityManagerInterface $em)
+    public function __construct(ExcelService $excelService, EntityManagerInterface $em)
     {
         $this->excelService = $excelService;
         $this->em = $em;
@@ -53,9 +49,7 @@ class LoadExcelCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-
         $io->title('Installing or updating component properties');
         $this->excelService->load($this->em);
-
     }
 }

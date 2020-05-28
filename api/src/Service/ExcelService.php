@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Service;
-
 
 use App\Entity\Cluster;
 use App\Entity\Component;
@@ -28,7 +26,7 @@ class ExcelService
     }
 
     /**
-     * Creates a reader for Xlsx files
+     * Creates a reader for Xlsx files.
      *
      * @return PhpSpreadsheet\Reader\Xlsx
      */
@@ -41,9 +39,10 @@ class ExcelService
     }
 
     /**
-     * Actually loads the Xlsx file
+     * Actually loads the Xlsx file.
      *
      * @param string $filename
+     *
      * @return PhpSpreadsheet\Spreadsheet
      */
     public function loadXlsx(string $filename): PhpSpreadsheet\Spreadsheet
@@ -59,23 +58,25 @@ class ExcelService
     }
 
     /**
-     * Loads environments
+     * Loads environments.
      *
-     * @param Worksheet $environments
-     * @param Cluster $cluster
+     * @param Worksheet     $environments
+     * @param Cluster       $cluster
      * @param EntityManager $manager
-     * @return ArrayCollection
+     *
      * @throws \Doctrine\ORM\ORMException
+     *
+     * @return ArrayCollection
      */
     public function loadEnvironmentsFromSpreadsheet(
         Worksheet $environments,
         Cluster $cluster,
         EntityManager $manager
-    ){
+    ) {
         $envs = new ArrayCollection();
-        foreach($environments->toArray() as $environmentArray) {
+        foreach ($environments->toArray() as $environmentArray) {
             /**
-             * The environmentArray is build as follows:
+             * The environmentArray is build as follows:.
              *
              * [0]: Column A: the name of the environment
              * [1]: Column B: the description of the environment
@@ -84,13 +85,13 @@ class ExcelService
              */
             if (!$environmentArray[0]) {
                 continue;
-            }elseif($cluster->hasEnvironment($environmentArray[0])){
+            } elseif ($cluster->hasEnvironment($environmentArray[0])) {
                 continue;
             }
             $env = new Environment();
             $env->setName($environmentArray[0]);
             $env->setDescription($environmentArray[1]);
-            if($environmentArray[2]){
+            if ($environmentArray[2]) {
                 $env->setDebug($environmentArray[2]);
             }
             $env->setAuthorization($environmentArray[3]);
@@ -98,16 +99,18 @@ class ExcelService
             $manager->persist($env);
             $envs->add($env);
         }
+
         return $envs;
     }
 
     /**
-     * Loads components and installations
+     * Loads components and installations.
      *
-     * @param Worksheet $components
-     * @param Domain $domain
+     * @param Worksheet       $components
+     * @param Domain          $domain
      * @param ArrayCollection $environments
-     * @param EntityManager $manager
+     * @param EntityManager   $manager
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -116,12 +119,12 @@ class ExcelService
         Domain $domain,
         ArrayCollection $environments,
         EntityManager $manager
-    ){
-        $iterator=0;
+    ) {
+        $iterator = 0;
 
-        foreach($components->toArray() as $componentArray){
+        foreach ($components->toArray() as $componentArray) {
             /**
-             * The componentArray is build as follows:
+             * The componentArray is build as follows:.
              *
              * [0]: Column A: the code of the component
              * [1]: Column B: the name of the component
@@ -132,11 +135,11 @@ class ExcelService
              * [6]: Column G: a date that indicates the component has been installed before
              */
             // We only read the component if the required parameters are present
-            if(!$componentArray[0] || !$componentArray[1] || !$componentArray[3] || !$componentArray[4]){
+            if (!$componentArray[0] || !$componentArray[1] || !$componentArray[3] || !$componentArray[4]) {
                 continue;
             }
             // Components should have a unique code. If a component with this code is already in the database, we skip it
-            elseif(count($manager->getRepository('App:Component')->findBy(['code' => $componentArray[0]]))>0){
+            elseif (count($manager->getRepository('App:Component')->findBy(['code' => $componentArray[0]])) > 0) {
                 continue;
             }
             // Component Lists
@@ -146,13 +149,13 @@ class ExcelService
             $component->setDescription($componentArray[2]);
             $component->setGithubRepository($componentArray[3]);
             $component->setHelmRepository($componentArray[4]);
-            $component->setCore((bool)$componentArray[5]);
+            $component->setCore((bool) $componentArray[5]);
             $manager->persist($component);
 
             // Setup an installation for above component
-            if($component->getCore()){
-                foreach($environments as $environment){
-                    if($component->hasInstallationInEnvironment($environment)){
+            if ($component->getCore()) {
+                foreach ($environments as $environment) {
+                    if ($component->hasInstallationInEnvironment($environment)) {
                         continue;
                     }
                     $installation = new Installation();
@@ -163,13 +166,13 @@ class ExcelService
                     $installation->setName($component->getName());
                     $installation->setDescription($component->getDescription());
                     $installation->setHelmVersion('v2.12.3');
-                    if($componentArray[6] != null){
+                    if ($componentArray[6] != null) {
                         $installation->setDateInstalled(new \DateTime($componentArray[6]));
                     }
                     $manager->persist($installation);
                 }
             }
-            if($iterator > 25){
+            if ($iterator > 25) {
                 $manager->flush();
             }
             $iterator++;
@@ -177,12 +180,13 @@ class ExcelService
     }
 
     /**
-     * Loads clusters and domains
+     * Loads clusters and domains.
      *
-     * @param Worksheet $clusters
-     * @param Worksheet $components
-     * @param Worksheet $environments
+     * @param Worksheet     $clusters
+     * @param Worksheet     $components
+     * @param Worksheet     $environments
      * @param EntityManager $manager
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -191,10 +195,10 @@ class ExcelService
         Worksheet $components,
         Worksheet $environments,
         EntityManager $manager
-    ){
-        foreach($clusters->toArray() as $clusterArray) {
+    ) {
+        foreach ($clusters->toArray() as $clusterArray) {
             /**
-             * The componentArray is build as follows:
+             * The componentArray is build as follows:.
              *
              * [0]: Column A: the name of the cluster and the domain
              * [1]: Column B: the description of the cluster
@@ -203,10 +207,9 @@ class ExcelService
              */
             if (!$clusterArray[0] || !$clusterArray[3]) {
                 continue;
-            }
-            elseif (count($existingClusters = $manager->getRepository('App:Cluster')->findBy(['name' => $clusterArray[0]]))>0){
+            } elseif (count($existingClusters = $manager->getRepository('App:Cluster')->findBy(['name' => $clusterArray[0]])) > 0) {
                 $cluster = $existingClusters[0];
-                if($cluster instanceof Cluster){
+                if ($cluster instanceof Cluster) {
                     $envs = $this->loadEnvironmentsFromSpreadsheet($environments, $cluster, $manager);
                     $this->loadComponentsFromSpreadsheet($components, $cluster->getDomains()[0], $envs, $manager);
                 }
@@ -224,7 +227,6 @@ class ExcelService
             $domain->setCluster($cluster);
             $manager->persist($domain);
 
-
             $envs = $this->loadEnvironmentsFromSpreadsheet($environments, $cluster, $manager);
             $this->loadComponentsFromSpreadsheet($components, $domain, $envs, $manager);
             $manager->flush();
@@ -232,14 +234,16 @@ class ExcelService
     }
 
     /**
-     * Divides the spreadsheet in worksheets to be parsed
+     * Divides the spreadsheet in worksheets to be parsed.
      *
-     * @param string $filename
+     * @param string        $filename
      * @param EntityManager $manager
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function loadFromSpreadsheet(string $filename, EntityManager $manager){
+    public function loadFromSpreadsheet(string $filename, EntityManager $manager)
+    {
         $spreadSheet = $this->loadXlsx($filename);
 
         $clusters = $spreadSheet->getSheetByName('clusters');
@@ -250,15 +254,16 @@ class ExcelService
     }
 
     /**
-     * Defines the filename and starts the loading procedure
+     * Defines the filename and starts the loading procedure.
      *
      * @param EntityManager $manager
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function load(EntityManager $manager)
     {
         // Lets make sure we only run these fixtures on larping enviroment
-        $this->loadFromSpreadsheet(dirname(__FILE__) . '/resources/components.xlsx', $manager);
+        $this->loadFromSpreadsheet(dirname(__FILE__).'/resources/components.xlsx', $manager);
     }
 }

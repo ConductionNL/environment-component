@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -52,7 +51,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
  * @ApiFilter(SearchFilter::class, properties={"cluster.id": "exact"})
- *
  */
 class Domain
 {
@@ -116,6 +114,7 @@ class Domain
      * @TODO: maybe this should not be here, as clusters also contain ip addresses
      *
      * @Groups({"read","write"})
+     *
      * @example 255.255.255.0
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -126,6 +125,7 @@ class Domain
      * @TODO: Shouldn't this be removed?
      *
      * @Groups({"read","write"})
+     *
      * @example pgsql://db-cluster.vuga.com:25060/
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -170,7 +170,6 @@ class Domain
      * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="domain", orphanRemoval=true)
      */
     private $healthLogs;
-
 
     public function __construct()
     {

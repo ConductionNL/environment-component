@@ -49,7 +49,6 @@ class InstallationRepository extends ServiceEntityRepository
             ->orderBy('i.dateModified', 'ASC')
             ->setMaxResults($maxResults)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 }

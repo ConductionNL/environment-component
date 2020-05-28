@@ -4,24 +4,20 @@
 
 namespace App\Command;
 
+use App\Service\InstallService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Doctrine\ORM\EntityManagerInterface;
-
-
-use App\Service\InstallService;
 
 class InstallInstalationsCommand extends Command
 {
-
     private $installService;
     private $em;
 
-    public function __construct(InstallService  $installService, EntityManagerInterface $em)
+    public function __construct(InstallService $installService, EntityManagerInterface $em)
     {
         $this->installService = $installService;
         $this->em = $em;
@@ -58,23 +54,19 @@ class InstallInstalationsCommand extends Command
         $io->title('Installing or updating '.count($results).' installations');
         $io->progressStart(count($results));
 
-        foreach($results as $result){
+        foreach ($results as $result) {
             $io->progressAdvance();
             $io->text("Installing {$result->getComponent()->getName()} on {$result->getDomain()->getCluster()->getName()}");
 
-            if($result->getDateInstalled() != null){
-
+            if ($result->getDateInstalled() != null) {
                 $this->installService->update($result, 'prod');
-            }
-            else{
+            } else {
                 $this->installService->install($result, 'prod');
             }
             //$io->warning('Lorem ipsum dolor sit amet');
             //$io->success('Lorem ipsum dolor sit amet');
-
         }
 
         $io->progressFinish();
-
     }
 }
