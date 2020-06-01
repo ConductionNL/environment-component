@@ -191,6 +191,14 @@ class Cluster
     private $dateModified;
 
     /**
+     * @var Datetime The moment this cluster was configured
+     *
+     * @Groups({"read"})
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateConfigured;
+
+    /**
      * @var array Installed releases on this cluster
      *
      * @Groups({"read","write"})
@@ -344,6 +352,18 @@ class Cluster
     public function setDateModified(?\DateTimeInterface $dateModified): self
     {
         $this->dateModified = $dateModified;
+
+        return $this;
+    }
+
+    public function getDateConfigured(): ?\DateTimeInterface
+    {
+        return $this->dateConfigured;
+    }
+
+    public function setDateConfigured(?\DateTimeInterface $dateConfigured): self
+    {
+        $this->dateConfigured = $dateConfigured;
 
         return $this;
     }
