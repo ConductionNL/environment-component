@@ -199,6 +199,7 @@ class DigitalOceanService
         }
         return $dbCluster;
     }
+
     public function getDatabaseByName($name, $dbCluster){
         $database = [];
         $dbs = $this->getDatabases($dbCluster['id']);
