@@ -4,25 +4,18 @@
 
 settings:
   registryBase: docker.io/conduction
-  projectName: pc
-  name: pc
-  title: Proto component commonground
+  projectName: evc
+  name: evc
+  title: Environment Component
   version: V.0.1
+  id: 
   description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.&#039;'
   type: component
   repro: https://github.com/ConductionNL/proto-component
-  demo: pc.zaakonline.nl
-  container: https://hub.docker.com/repository/docker/conduction/pc-php
+  demo: evc.zaakonline.nl
+  container: https://hub.docker.com/repository/docker/conduction/evc-php
   domain: conduction.nl
-  subdomain: pc
-  domains:
-    - conduction.nl
-    - zaakonline.nl
-    - larping.eu
-    - common-ground.dev
-    - trouwplanner.online
-    - huwelijksplanner.online
-  domainsJson: ["conduction.nl","zaakonline.nl","larping.eu","common-ground.dev","trouwplanner.online","huwelijksplanner.online"]
+  subdomain: evc
   organisationName: Conduction
   email: info@conduction.nl
   country: Netherlands
@@ -34,7 +27,7 @@ settings:
   cache: 1
   replicaCount: 1
   corsAllowOrigin: ['*']
-  trustedHosts: '127.0.0.1$|^(.+\.)?conduction\.nl$|^(.+\.)?huwelijksplanner\.online$|^(.+\.)?larping\.eu$|^(.+\.)?common-ground\.dev$|^(.+\.)?trouwplanner\.online$|^(.+\.)?zaakonline\.nl$|localhost'
+  trustedHosts: 'localhost$|^(.+\.)127.0.0.1$|^(.+\.)?conduction\.nl$'
   pullPolicy: Always
   # You will need these proxies on kubernetes
   trustedProxies:
@@ -57,6 +50,8 @@ security:
   commongroundKey: "9329d8d0-1d5e-433c-bb47-6991053c7fcb"
   applicationKey: "45c1a4b6-59d3-4a6e-86bf-88a872f35845"
   userKey: "79d5b14c-70ab-41fb-ac02-917e3288870b"
+  digitaloceanKey: "%env(APP_DIGITALOCEAN_KEY)"
+  githubKey: "%env(APP_GITHUB_KEY)"
   authorisationProviderUser: https://uc.larping.eu
   authorisationProviderApplication: https://ac.larping.eu
 

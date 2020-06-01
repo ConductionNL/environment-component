@@ -2,14 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-<<<<<<< Updated upstream
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -43,30 +41,29 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "summary"="Audittrail",
  *                  "description"="Gets the audit trail for this resource"
  *              }
+ *          },
+ *     "helm_update"={
+ *              "path"="/environments/{id}/update",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="update",
+ *                  "description"="Performs a rolling update on all installations in this environment"
+ *              }
  *          }
  * 		},
+ *
  * )
  * @ORM\Entity(repositoryClass="App\Repository\EnvironmentRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
- * @ApiFilter(SearchFilter::class)
-=======
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ApiResource()
- * @ORM\Entity(repositoryClass="App\Repository\EnviromentRepository")
->>>>>>> Stashed changes
+ * @ApiFilter(SearchFilter::class, properties={"cluster.id": "exact"})
  */
 class Environment
 {
     /**
-<<<<<<< Updated upstream
      * @var UuidInterface The UUID identifier of this resource
      *
      * @example e2984465-190a-4562-829e-a8cca81aa35d
@@ -117,32 +114,39 @@ class Environment
      * @Assert\Choice({0, 1})
      * @ORM\Column(type="integer")
      */
-    private $debug;
+    private $debug = 0;
+
+    /**
+     * @var string The authentication token that is needed to access this token
+     *
+     * @example evc-dev
+     *
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"write"})
+     * @ORM\Column(type="string", length=255, nullable=true, name="authorization_key")
+     */
+    private $authorization;
 
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-=======
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
->>>>>>> Stashed changes
      * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="environments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $cluster;
 
     /**
-<<<<<<< Updated upstream
+     * @var ArrayCollection The installations in this environment
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Domain", mappedBy="environment")
+     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="environment")
      */
-    private $domains;
+    private $installations;
 
     /**
      * @var Datetime The moment this entity was created
@@ -162,29 +166,28 @@ class Environment
      */
     private $dateModified;
 
+    /**
+     * @var int Should components be deployed to this environment with caching on or off?
+     *
+     * @example 1
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
+     * @Assert\NotNull
+     * @ORM\Column(type="integer")
+     */
+    private $cache;
+
     public function __construct()
     {
-        $this->domains = new ArrayCollection();
+        $this->installations = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
-=======
-     * @ORM\OneToMany(targetEntity="App\Entity\Component", mappedBy="environment", orphanRemoval=true)
-     */
-    private $components;
-
-    public function __construct()
-    {
-        $this->components = new ArrayCollection();
-    }
-
-    public function getId(): ?int
->>>>>>> Stashed changes
     {
         return $this->id;
     }
 
-<<<<<<< Updated upstream
     public function getName(): ?string
     {
         return $this->name;
@@ -221,8 +224,6 @@ class Environment
         return $this;
     }
 
-=======
->>>>>>> Stashed changes
     public function getCluster(): ?Cluster
     {
         return $this->cluster;
@@ -236,61 +237,35 @@ class Environment
     }
 
     /**
-<<<<<<< Updated upstream
-     * @return Collection|Domain[]
+     * @return Collection|Installation[]
      */
-    public function getDomains(): Collection
+    public function getInstallations(): Collection
     {
-        return $this->domains;
+        return $this->installations;
     }
 
-    public function addDomain(Domain $domain): self
+    public function addInstallation(Installation $installation): self
     {
-        if (!$this->domains->contains($domain)) {
-            $this->domains[] = $domain;
-            $domain->setEnvironment($this);
-=======
-     * @return Collection|Component[]
-     */
-    public function getComponents(): Collection
-    {
-        return $this->components;
-    }
-
-    public function addComponent(Component $component): self
-    {
-        if (!$this->components->contains($component)) {
-            $this->components[] = $component;
-            $component->setEnviroment($this);
->>>>>>> Stashed changes
+        if (!$this->installations->contains($installation)) {
+            $this->installations[] = $installation;
+            $installation->setEnviroment($this);
         }
 
         return $this;
     }
 
-<<<<<<< Updated upstream
-    public function removeDomain(Domain $domain): self
+    public function removeInstallation(Installation $installation): self
     {
-        if ($this->domains->contains($domain)) {
-            $this->domains->removeElement($domain);
+        if ($this->installations->contains($installation)) {
+            $this->installations->removeElement($installation);
             // set the owning side to null (unless already changed)
-            if ($domain->getEnvironment() === $this) {
-                $domain->setEnvironment(null);
-=======
-    public function removeComponent(Component $component): self
-    {
-        if ($this->components->contains($component)) {
-            $this->components->removeElement($component);
-            // set the owning side to null (unless already changed)
-            if ($component->getEnviroment() === $this) {
-                $component->setEnviroment(null);
->>>>>>> Stashed changes
+            if ($installation->getEnviroment() === $this) {
+                $installation->setEnviroment(null);
             }
         }
 
         return $this;
     }
-<<<<<<< Updated upstream
 
     public function getDateCreated(): ?\DateTimeInterface
     {
@@ -315,6 +290,28 @@ class Environment
 
         return $this;
     }
-=======
->>>>>>> Stashed changes
+
+    public function getAuthorization(): ?string
+    {
+        return $this->authorization;
+    }
+
+    public function setAuthorization(?string $authorization): self
+    {
+        $this->authorization = $authorization;
+
+        return $this;
+    }
+
+    public function getCache(): ?int
+    {
+        return $this->cache;
+    }
+
+    public function setCache(int $cache): self
+    {
+        $this->cache = $cache;
+
+        return $this;
+    }
 }

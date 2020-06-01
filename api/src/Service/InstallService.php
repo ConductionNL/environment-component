@@ -1,101 +1,111 @@
 <?php
 
-
 namespace App\Service;
 
+use App\Entity\Installation;
+use Conduction\CommonGroundBundle\Service\CommonGroundService;
+use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
-use App\Entity\Cluster;
-use App\Entity\Component;
-use App\Entity\Domain;
-use App\Entity\Environment;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class InstallService
 {
+    private $digitalOceanService;
     private $commonGroundService;
+    private $clusterService;
     private $client;
+    private $em;
+    private $params;
 
-    public function __construct(CommonGroundService $commonGroundService)
+    public function __construct(ParameterBagInterface $params, DigitalOceanService $digitalOceanService, CommonGroundService $commonGroundService, EntityManagerInterface $em, ClusterService $clusterService)
     {
+        $this->digitalOceanService = $digitalOceanService;
         $this->commonGroundService = $commonGroundService;
+        $this->clusterService = $clusterService;
         $this->client = new Client();
+        $this->em = $em;
+        $this->params = $params;
     }
 
-    public function formDbUrl($dbBaseUrl, $dbUsername, $dbPassword, $dbName){
-        $parsedUrl = parse_url($dbBaseUrl);
-        return "{$parsedUrl['schema']}://$dbUsername:$dbPassword@{$parsedUrl['host']}:{$parsedUrl['port']}/$dbName?sslmode=require&serverVersion=11";
-    }
-
-    public function getGithubAPIUrl($repository){
-        $parsedUrl = parse_url($repository);
-        return "https://api.github.com/repos{$parsedUrl['path']}/dispatches";
-    }
-
-    // Volgens mij heb je hier twee functies nodig install/update. En heeft de functie alleen een component nodig (rest zit daar immers al aan vast
-
-    public function update(Component $component)
+    public function delete(Installation $installation)
     {
-        $url = $this->getGithubAPIUrl($component->getGithubRepository());
-        $request['environment'] = $component->getEnvironment()->getName();
-        $request['domain'] = $component->getDomain()->getName();
-        $request['dburl'] = $this->formDbUrl($domain->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
-        $request['authorization'] = $component->getAuthorization();
-        $request['kubeconfig'] = $component->getEnvironment()->getKubeconfig();
-        $request['eventType'] = "start_upgrade_workflow";
+        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
 
-        $result = $this->client->post($url,
-            [
-                'body' => json_encode($request),
-                'headers'=>
-                    [
-                        "Authorization"=> "Bearer ".$component->getGithubToken(),
-                        'Content-Type'=>'application/json',
-                        'Accept'=>'application/vnd.github.everest-preview+json'
-                    ]
-            ]
-        );
-        if($result->getStatusCode() == 204){
-            return "Action triggered, check {$component->getGithubRepository()}/actions for the status";
-        }
-        else{
-            return 1;
-        }
+        try {
+            $result = $this->clusterService->deleteComponent($installation);
+            $installation->setDateInstalled(null);
+            $this->em->persist($installation);
 
+            return $result;
+        } catch (ProcessFailedException $e) {
+            throw new HttpException(500, $e->getMessage());
+        }
     }
 
-    public function install(Cluster $cluster, Environment $environment, Domain $domain, Component $component, string $event)
+    public function update(Installation $installation, string $environment = null)
     {
-        $url = $this->getGithubAPIUrl($component->getGithubRepository());
-        $request['environment'] = $environment->getName();
-        $request['domain'] = $domain->getName();
-        $request['dburl'] = $this->formDbUrl($domain->getDatabaseUrl(), $component->getDbUsername(), $component->getDbPassword(), $component->getDbName());
-        $request['authorization'] = $component->getAuthorization();
-        $request['kubeconfig'] = $cluster->getKubeconfig();
-        switch($event){
-            case "install":
-                $request['eventType'] = "start_install_workflow";
-                break;
-            case "upgrade":
-                $request['eventType'] = "start_upgrade_workflow";
-                break;
-            default:
-                return 1;
+        // Als we geen db url hebben url maken
+//        if(!$installation->getDbUrl()){
+        $installation = $this->digitalOceanService->createConnectionUrl($installation);
+//        }
+        if ($environment && $installation->getEnvironment()->getName() != $environment) {
+            return 'Installation not in environment';
         }
-        $result = $this->client->post($url,
-            [
-                'body' => json_encode($request),
-                'headers'=>
-                    [
-                        "Authorization"=> "Bearer ".$component->getGithubToken(),
-                        'Content-Type'=>'application/json',
-                        'Accept'=>'application/vnd.github.everest-preview+json'
-                    ]
-            ]
-        );
-        if($result->getStatusCode() == 204){
-            return "Action triggered, check {$component->getGithubRepository()}/actions for the status";
+
+        // Altijd een nieuwe kubeconfig ophalen
+        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+
+        try {
+            $result = $this->clusterService->upgradeComponent($installation);
+            $result = $this->clusterService->restartComponent($installation);
+            $installation->setDateInstalled(new \DateTime('now'));
+            $this->em->persist($installation);
+            $this->em->flush();
+
+            return $result;
+        } catch (ProcessFailedException $error) {
+            throw new HttpException(500, $error->getMessage());
         }
-        else{
-            return 1;
+    }
+
+    public function rollingUpdate(Installation $installation)
+    {
+        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+
+        try {
+            return $this->clusterService->restartComponent($installation);
+        } catch (ProcessFailedException $error) {
+            throw new HttpException(500, $error->getMessage());
+        }
+    }
+
+    public function install(Installation $installation, string $environment = null)
+    {
+        // Als we geen db url hebben url maken
+        if (!$installation->getDbUrl()) {
+            $installation = $this->digitalOceanService->createConnectionUrl($installation);
+        }
+        if ($environment && $installation->getEnvironment()->getName() != $environment) {
+            return 'Installation not in environment';
+        }
+
+        // Altijd een nieuwe kubeconfig ophalen
+        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        if (!in_array($installation->getEnvironment()->getName(), $this->clusterService->getNamespaces($installation->getEnvironment()->getCluster()))) {
+            $this->clusterService->createNamespace($installation->getEnvironment());
+        }
+
+        try {
+            $result = $this->clusterService->installComponent($installation);
+            $installation->setDateInstalled(new \DateTime('now'));
+            $this->em->persist($installation);
+            $this->em->flush();
+
+            return $result;
+        } catch (ProcessFailedException $error) {
+            throw new HttpException(500, $error->getMessage());
         }
     }
 }

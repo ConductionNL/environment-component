@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This entity holds the information about a kubernetes cluster
+ * This entity holds the information about a kubernetes cluster.
  *
  * @ApiResource(
  *     	normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
@@ -48,12 +48,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ClusterRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
- * @ApiFilter(SearchFilter::class)
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact"})
  */
 class Cluster
 {
@@ -103,7 +103,7 @@ class Cluster
      * @Gedmo\Versioned
      * @Groups({"write"})
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $kubeconfig;
 
@@ -111,6 +111,7 @@ class Cluster
      * @var string the IP Address of this cluster
      *
      * @Groups({"read","write"})
+     *
      * @example 255.255.255.0
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -121,7 +122,7 @@ class Cluster
      *
      *
      * @Groups({"write"})
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $token;
 
@@ -134,7 +135,7 @@ class Cluster
     private $domains;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")
@@ -160,18 +161,17 @@ class Cluster
     private $dateModified;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster", orphanRemoval=true)
+     * @var array Installed releases on this cluster
+     *
+     * @Groups({"read","write"})
+     * @ORM\Column(type="array", nullable=true)
      */
-    private $environments;
+    private $releases = [];
 
     public function __construct()
     {
         $this->domains = new ArrayCollection();
-<<<<<<< Updated upstream
         $this->environments = new ArrayCollection();
-=======
-        $this->enviroments = new ArrayCollection();
->>>>>>> Stashed changes
     }
 
     public function getId(): ?Uuid
@@ -299,24 +299,14 @@ class Cluster
      */
     public function getEnvironments(): Collection
     {
-<<<<<<< Updated upstream
         return $this->environments;
-=======
-    	return $this->environments;
->>>>>>> Stashed changes
     }
 
     public function addEnvironment(Environment $environment): self
     {
-<<<<<<< Updated upstream
         if (!$this->environments->contains($environment)) {
             $this->environments[] = $environment;
             $environment->setCluster($this);
-=======
-    	if (!$this->environments->contains($environment)) {
-    		$this->environments[] = $environment;
-    		$environment->setCluster($this);
->>>>>>> Stashed changes
         }
 
         return $this;
@@ -324,21 +314,33 @@ class Cluster
 
     public function removeEnvironment(Environment $environment): self
     {
-<<<<<<< Updated upstream
         if ($this->environments->contains($environment)) {
             $this->environments->removeElement($environment);
             // set the owning side to null (unless already changed)
             if ($environment->getCluster() === $this) {
                 $environment->setCluster(null);
-=======
-    	if ($this->environments->contains($environment)) {
-    		$this->environments->removeElement($environment);
-            // set the owning side to null (unless already changed)
-    		if ($environment->getCluster() === $this) {
-    			$environment->setCluster(null);
->>>>>>> Stashed changes
             }
         }
+
+        return $this;
+    }
+
+    public function hasEnvironment(string $name)
+    {
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq('name', $name));
+
+        return count($this->getEnvironments()->matching($criteria)) > 0;
+    }
+
+    public function getReleases(): ?array
+    {
+        return $this->releases;
+    }
+
+    public function setReleases(?array $releases): self
+    {
+        $this->releases = $releases;
 
         return $this;
     }

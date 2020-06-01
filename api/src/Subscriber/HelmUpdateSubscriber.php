@@ -2,15 +2,16 @@
 
 namespace App\Subscriber;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Component;
+use App\Entity\Environment;
+use App\Entity\Installation;
 use App\Service\InstallService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -20,8 +21,9 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
     private $em;
     private $serializer;
     private $nlxLogService;
+    private $installService;
 
-    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SerializerInterface $serializer, InstallService $InstallService)
+    public function __construct(ParameterBagInterface $params, EntityManagerInterface $em, SerializerInterface $serializer, InstallService $installService)
     {
         $this->params = $params;
         $this->em = $em;
@@ -36,18 +38,17 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function HelmUpdate(GetResponseForControllerResultEvent $event)
+    public function HelmUpdate(ViewEvent $event)
     {
         $method = $event->getRequest()->getMethod();
         $contentType = $event->getRequest()->headers->get('accept');
         $route = $event->getRequest()->attributes->get('_route');
-        $result = $event->getControllerResult();
+        $component = $event->getControllerResult();
         if (!$contentType) {
             $contentType = $event->getRequest()->headers->get('Accept');
         }
-
         // We should also check on entity = component
-        if ($method != 'GET' || !strpos($route, '_helm_update')) {
+        if ($method != 'GET' || (!strpos($route, '_helm_update') && !strpos($route, 'helm_upgrade'))) {
             return;
         }
 
@@ -65,11 +66,24 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
                 $contentType = 'application/json';
                 $renderType = 'json';
         }
+        if (strpos($route, '_helm_upgrade')) {
+            $results = $this->installService->update($component);
+        }
+        if (strpos($route, '_helm_update')) {
+            if ($component instanceof Installation) {
+                $results = $this->installService->rollingUpdate($component);
+            } elseif ($component instanceof Environment) {
+                foreach ($component->getInstallations() as $installation) {
+                    if ($installation->getDateInstalled() != null) {
+                        $results = $this->installService->rollingUpdate($installation);
+                    }
+                }
+            }
+        }
 
-        $results = $this->installService->update($component);
-
+        //$component['message'] = $results;
         $response = $this->serializer->serialize(
-            $results,
+            $component,
             'json',
             ['enable_max_depth'=> true]
         );
@@ -78,7 +92,7 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
 
         $response = new Response(
             $response,
-            Response::HTTP_CREATED,
+            Response::HTTP_OK,
             ['content-type' => $contentType]
         );
 

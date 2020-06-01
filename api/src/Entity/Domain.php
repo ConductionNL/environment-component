@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -46,13 +45,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\DomainRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
  * @ApiFilter(DateFilter::class, strategy=DateFilter::EXCLUDE_NULL)
- * @ApiFilter(SearchFilter::class)
- *
+ * @ApiFilter(SearchFilter::class, properties={"cluster.id": "exact"})
  */
 class Domain
 {
@@ -99,13 +97,14 @@ class Domain
     /**
      * @var string the base route of this domain
      *
-     * @example https://conduction.nl
+     * @example conduction.nl
      *
      * @Assert\Url
      * @Assert\Length(
      *     max=255
      * )
      * @Assert\NotNull
+     * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
     private $location;
@@ -115,6 +114,7 @@ class Domain
      * @TODO: maybe this should not be here, as clusters also contain ip addresses
      *
      * @Groups({"read","write"})
+     *
      * @example 255.255.255.0
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -122,6 +122,9 @@ class Domain
 
     /**
      * @var string the base url for the managed database that this domain uses
+     * @TODO: Shouldn't this be removed?
+     *
+     * @Groups({"read","write"})
      *
      * @example pgsql://db-cluster.vuga.com:25060/
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -147,7 +150,7 @@ class Domain
     private $dateModified;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="domains")
      * @ORM\JoinColumn(nullable=false)
@@ -155,11 +158,11 @@ class Domain
     private $cluster;
 
     /**
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
-     * @ORM\ManyToMany(targetEntity="App\Entity\Component", mappedBy="domains")
+     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="domain")
      */
-    private $components;
+    private $installations;
 
     /**
      * @Groups({"read","write"})
@@ -168,15 +171,9 @@ class Domain
      */
     private $healthLogs;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="domains")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $environment;
-
     public function __construct()
     {
-        $this->components = new ArrayCollection();
+        $this->installations = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
     }
 
@@ -282,28 +279,31 @@ class Domain
     }
 
     /**
-     * @return Collection|Component[]
+     * @return Collection|Installation[]
      */
-    public function getComponents(): Collection
+    public function getInstallations(): Collection
     {
-        return $this->components;
+        return $this->installations;
     }
 
-    public function addComponent(Component $component): self
+    public function addInstallation(Installation $installation): self
     {
-        if (!$this->components->contains($component)) {
-            $this->components[] = $component;
-            $component->addDomain($this);
+        if (!$this->installations->contains($installation)) {
+            $this->installations[] = $installation;
+            $installation->setDomain($this);
         }
 
         return $this;
     }
 
-    public function removeComponent(Component $component): self
+    public function removeInstallation(Installation $installation): self
     {
-        if ($this->components->contains($component)) {
-            $this->components->removeElement($component);
-            $component->removeDomain($this);
+        if ($this->components->contains($installation)) {
+            $this->components->removeElement($installation);
+            // set the owning side to null (unless already changed)
+            if ($installation->getDomain() === $this) {
+                $installation->setDomain(null);
+            }
         }
 
         return $this;
@@ -336,18 +336,6 @@ class Domain
                 $healthLog->setDomain(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getEnvironment(): ?Environment
-    {
-        return $this->environment;
-    }
-
-    public function setEnvironment(?Environment $environment): self
-    {
-        $this->environment = $environment;
 
         return $this;
     }

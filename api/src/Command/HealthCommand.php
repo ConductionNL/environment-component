@@ -13,7 +13,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class HealthCommand extends Command
 {
-
     /**
      * {@inheritdoc}
      */
@@ -26,10 +25,9 @@ class HealthCommand extends Command
 
         // the full command description shown when running the command with
         // the "--help" option
-        ->setHelp('This command allows you to create a new hel chart from the helm template')
-        ->setAliases(['app:helm:export'])
-        ->setDescription('Dump the OpenAPI documentation')
-        ->addOption('component', null, InputOption::VALUE_OPTIONAL, 'the component that you want to health check')
+        ->setHelp('This command will perform a health check on all or a single domain')
+        ->setDescription('Perform health check on domain')
+        ->addOption('domain', null, InputOption::VALUE_OPTIONAL, 'the component that you want to health check');
     }
 
     /**
@@ -43,11 +41,10 @@ class HealthCommand extends Command
 
         // get component
 
-        if (!$component) {
-        	throw new InvalidOptionException(sprintf('A component with given id could not be found ("%s" given).', $componentId));
-        }
+//        if (!$component) {
+//        	throw new InvalidOptionException(sprintf('A component with given id could not be found ("%s" given).', $componentId));
+//        }
 
         // do some magic
-
     }
 }

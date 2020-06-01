@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
@@ -27,25 +27,42 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		"get",
  * 	    "put",
  * 	   "delete",
+ *     "helm_install"={
+ *              "path"="/components/{id}/install",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="install",
+ *                  "description"="Installs this component to a cluster"
+ *              }
+ *     },
  *     "helm_update"={
  *              "path"="/components/{id}/update",
  *              "method"="get",
  *              "swagger_context" = {
- *                  "summary"="Changelogs",
- *                  "description"="Updates the component on its designated cluster"
+ *                  "summary"="update",
+ *                  "description"="Updates this component to a cluster"
  *              }
- *          },
- *     "helm_isntall"={
- *              "path"="/components/{id}/install",
+ *     },
+ *     "get_change_logs"={
+ *              "path"="/components/{id}/change_log",
  *              "method"="get",
  *              "swagger_context" = {
- *                  "summary"="Install",
- *                  "description"="Installs the component on its designated cluster"
+ *                  "summary"="Changelogs",
+ *                  "description"="Gets al the change logs for this resource"
  *              }
  *          },
+ *     "get_audit_trail"={
+ *              "path"="/components/{id}/audit_trail",
+ *              "method"="get",
+ *              "swagger_context" = {
+ *                  "summary"="Audittrail",
+ *                  "description"="Gets the audit trail for this resource"
+ *              }
+ *          }
+ * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ComponentRepository")
- * @Gedmo\Loggable(logEntryClass="App\Entity\ChangeLog")
+ * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
  * @ApiFilter(OrderFilter::class)
@@ -71,7 +88,7 @@ class Component
     /**
      * @var string The name of this component
      *
-     * @example evc
+     * @example environment component
      *
      * @Gedmo\Versioned
      * @Assert\NotNull
@@ -84,9 +101,9 @@ class Component
     private $name;
 
     /**
-     * @var string The full name of this component
+     * @var string The unique commonground short code for this component
      *
-     * @example environment component
+     * @example evc
      *
      * @Gedmo\Versioned
      * @Assert\NotNull
@@ -96,7 +113,7 @@ class Component
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private $code;
 
     /**
      * @var string the description of this component
@@ -110,67 +127,6 @@ class Component
     private $description;
 
     /**
-     * @var string The username that is needed to log into the cluster database
-     *
-     * @example evc-dev
-     *
-     * @Gedmo\Versioned
-     * @Assert\NotNull
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"read","write"})
-     * @ORM\Column(type="string", length=255)
-     * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="components")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $dbUsername;
-
-    /**
-     * @var string The password that is needed to log into the cluster database
-     *
-     *
-     * @Gedmo\Versioned
-     * @Assert\NotNull
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"write"})
-     * @ORM\Column(type="string", length=255)
-     */
-    private $dbPassword;
-
-    /**
-     * @var string The name of the database this component uses
-     *
-     *
-     * @Gedmo\Versioned
-     * @Assert\NotNull
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"read","write"})
-     * @MaxDepth(1)
-     * @ORM\Column(type="string", length=255)
-     */
-    private $dbName;
-
-    /**
-     * @var string The authentication token that is needed to access this token
-     *
-     * @example evc-dev
-     *
-     * @Gedmo\Versioned
-     * @Assert\NotNull
-     * @Assert\Length(
-     *      max = 255
-     * )
-     * @Groups({"write"})
-     * @ORM\Column(type="string", length=255)
-     */
-    private $authorization;
-
-    /**
      * @var string the Github Repository that contains this component
      *
      * @example https://github.com/ConductionNL/environment-component
@@ -179,7 +135,7 @@ class Component
      * @Assert\Length(
      *      max = 255
      * )
-     * @Groups({"write"})
+     * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
     private $githubRepository;
@@ -188,7 +144,6 @@ class Component
      * @var string A personal access token for github that can be used to trigger actions on this component
      *
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
@@ -198,18 +153,34 @@ class Component
     private $githubToken;
 
     /**
+     * @var string the Helm Repository that contains this component
+     *
+     * @example https://github.com/ConductionNL/environment-component/api/helm
+     * @Gedmo\Versioned
+     * @Assert\NotNull
+     * @Assert\Length(
+     *      max = 255
+     * )
      * @Groups({"read","write"})
-     * @MaxDepth(1)
-     * @ORM\ManyToMany(targetEntity="App\Entity\Domain", inversedBy="components")
+     * @ORM\Column(type="string", length=255)
      */
-    private $domains;
+    private $helmRepository;
 
     /**
+     * @var bool Is the component a core component
+     *
      * @Groups({"read","write"})
-     * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="component")
+     * @Gedmo\Versioned
+     * @ORM\Column(type="boolean")
      */
-    private $healthLogs;
+    private $core = false;
+
+    /**
+     * @Groups({"write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="component")
+     */
+    private $installations;
 
     /**
      * @var Datetime The moment this entity was created
@@ -219,7 +190,6 @@ class Component
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateCreated;
-
     /**
      * @var Datetime The moment this entity last Modified
      *
@@ -231,8 +201,7 @@ class Component
 
     public function __construct()
     {
-        $this->domains = new ArrayCollection();
-        $this->healthLogs = new ArrayCollection();
+        $this->installations = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -252,6 +221,18 @@ class Component
         return $this;
     }
 
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -264,76 +245,69 @@ class Component
         return $this;
     }
 
-    public function getEnvironment(): ?Environment
-    {
-        return $this->environment;
-    }
-
-    public function setEnvironment(?Environment $environment): self
-    {
-        $this->environment = $environment;
-
-        return $this;
-    }
-
-    public function getDbUsername(): ?string
-    {
-        return $this->dbUsername;
-    }
-
-    public function setDbUsername(string $dbUsername): self
-    {
-        $this->dbUsername = $dbUsername;
-
-        return $this;
-    }
-
-    public function getDbPassword(): ?string
-    {
-        return $this->dbPassword;
-    }
-
-    public function setDbPassword(string $dbPassword): self
-    {
-        $this->dbPassword = $dbPassword;
-
-        return $this;
-    }
-
-    public function getAuthorization(): ?string
-    {
-        return $this->authorization;
-    }
-
-    public function setAuthorization(string $authorization): self
-    {
-        $this->authorization = $authorization;
-
-        return $this;
-    }
-
     /**
-     * @return Collection|Domain[]
+     * @return Collection|Installation[]
      */
-    public function getDomains(): Collection
+    public function getInstallations(): Collection
     {
-        return $this->domains;
+        return $this->installations;
     }
 
-    public function addDomain(Domain $domain): self
+    public function addInstallation(Installation $installation): self
     {
-        if (!$this->domains->contains($domain)) {
-            $this->domains[] = $domain;
+        if (!$this->installations->contains($installation)) {
+            $this->installations[] = $installation;
+            $installation->setComponent($this);
         }
 
         return $this;
     }
 
-    public function removeDomain(Domain $domain): self
+    public function removeInstallation(Installation $installation): self
     {
-        if ($this->domains->contains($domain)) {
-            $this->domains->removeElement($domain);
+        if ($this->installations->contains($installation)) {
+            $this->installations->removeElement($installation);
+            // set the owning side to null (unless already changed)
+            if ($installation->getComponent() === $this) {
+                $installation->setComponent(null);
+            }
         }
+
+        return $this;
+    }
+
+    public function getGithubRepository(): ?string
+    {
+        return $this->githubRepository;
+    }
+
+    public function setGithubRepository(string $githubRepository): self
+    {
+        $this->githubRepository = $githubRepository;
+
+        return $this;
+    }
+
+    public function getGithubToken(): ?string
+    {
+        return $this->githubToken;
+    }
+
+    public function setGithubToken(?string $githubToken): self
+    {
+        $this->githubToken = $githubToken;
+
+        return $this;
+    }
+
+    public function getHelmRepository(): ?string
+    {
+        return $this->helmRepository;
+    }
+
+    public function setHelmRepository(string $helmRepository): self
+    {
+        $this->helmRepository = $helmRepository;
 
         return $this;
     }
@@ -362,82 +336,23 @@ class Component
         return $this;
     }
 
-    /**
-     * @return Collection|HealthLog[]
-     */
-    public function getHealthLogs(): Collection
+    public function getCore(): ?bool
     {
-        return $this->healthLogs;
+        return $this->core;
     }
 
-    public function addHealthLog(HealthLog $healthLog): self
+    public function setCore(bool $core): self
     {
-        if (!$this->healthLogs->contains($healthLog)) {
-            $this->healthLogs[] = $healthLog;
-            $healthLog->setComponent($this);
-        }
+        $this->core = $core;
 
         return $this;
     }
 
-    public function removeHealthLog(HealthLog $healthLog): self
+    public function hasInstallationInEnvironment(Environment $environment): bool
     {
-        if ($this->healthLogs->contains($healthLog)) {
-            $this->healthLogs->removeElement($healthLog);
-            // set the owning side to null (unless already changed)
-            if ($healthLog->getComponent() === $this) {
-                $healthLog->setComponent(null);
-            }
-        }
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq('environment', $environment));
 
-        return $this;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getDbName(): ?string
-    {
-        return $this->dbName;
-    }
-
-    public function setDbName(string $dbName): self
-    {
-        $this->dbName = $dbName;
-
-        return $this;
-    }
-
-    public function getGithubRepository(): ?string
-    {
-        return $this->githubRepository;
-    }
-
-    public function setGithubRepository(string $githubRepository): self
-    {
-        $this->githubRepository = $githubRepository;
-
-        return $this;
-    }
-
-    public function getGithubToken(): ?string
-    {
-        return $this->githubToken;
-    }
-
-    public function setGithubToken(?string $githubToken): self
-    {
-        $this->githubToken = $githubToken;
-
-        return $this;
+        return count($this->getInstallations()->matching($criteria)) > 0;
     }
 }
