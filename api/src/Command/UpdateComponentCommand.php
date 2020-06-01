@@ -49,7 +49,7 @@ class UpdateComponentCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $installation = $this->em->getRepository('App\Entity\Installation')->find( $input->getArgument('cluster'));
+        $installation = $this->em->getRepository('App\Entity\Installation')->find( $input->getArgument('component'));
 
         if($installation->getDateInstalled() != null){
             $io->title('Updating '.$installation->getName().' ('.$installation->getId().')');

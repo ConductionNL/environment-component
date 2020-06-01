@@ -49,8 +49,8 @@ class DeleteComponentCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $installation = $this->em->getRepository('App\Entity\Installation')->find( $input->getArgument('cluster'));
-        $io->title('Updating '.$installation->getName().' ('.$installation->getId().')');
+        $installation = $this->em->getRepository('App\Entity\Installation')->find( $input->getArgument('component'));
+        $io->title('Deleting '.$installation->getName().' ('.$installation->getId().')');
         $this->installService->delete($installation);
 
     }
