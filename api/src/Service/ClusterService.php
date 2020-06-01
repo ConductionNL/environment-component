@@ -60,6 +60,7 @@ class ClusterService
             throw new ProcessFailedException($process9);
         }
 
+        // Creating the name space for the cert manager
         $process11 = new Process(['kubectl', 'create', 'namespace', 'cert-manager', "--kubeconfig=$kubeconfig"]);
         $process11->run();
         if (!$process11->isSuccessful()) {
@@ -67,6 +68,8 @@ class ClusterService
 
             throw new ProcessFailedException($process11);
         }
+
+        // Installing the cert manager
         $process10 = new Process(['helm', 'install', 'cert-manager', '--namespace=cert-manager', '--version=v0.15.0', 'jetstack/cert-manager', '--set installCRDs=true', "--kubeconfig=$kubeconfig"]);
         $process10->run();
         if (!$process10->isSuccessful()) {
@@ -74,7 +77,19 @@ class ClusterService
 
             throw new ProcessFailedException($process10);
         }
+
+        // Installing the general cluster cert issuer
+        $process11 = new Process(['kubectl', 'create', '-f https://raw.githubusercontent.com/ConductionNL/environment-component/resources/cert-issuer.yaml', "--kubeconfig=$kubeconfig"]);
+        $process11->run();
+        if (!$process11->isSuccessful()) {
+            $this->removeKubeconfig($kubeconfig);
+
+            throw new ProcessFailedException($process10);
+        }
         $this->removeKubeconfig($kubeconfig);
+
+        $cluster->setStatus('running');
+        return $cluster;
     }
 
     public function createNamespace(Environment $environment): bool
