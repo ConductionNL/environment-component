@@ -22,6 +22,11 @@ class ClusterService
         unlink($filename);
     }
 
+    public function createCluster(Cluster $cluster)
+    {
+
+    }
+
     public function configureCluster(Cluster $cluster)
     {
         $kubeconfig = $this->writeKubeconfig($cluster);
