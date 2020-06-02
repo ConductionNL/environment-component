@@ -69,10 +69,10 @@ class ClusterSubscriber implements EventSubscriberInterface
                 $renderType = 'json';
         }
 
-        $result = $this->digitalOceanService->createKubeConfig($result);
-
-        $releases = $this->clusterService->getReleases($result);
-        $result->setReleases($releases);
+//        $result = $this->digitalOceanService->createKubeConfig($result);
+//
+//        $releases = $this->clusterService->getReleases($result);
+//        $result->setReleases($releases);
 
         $response = $this->serializer->serialize(
             $result,

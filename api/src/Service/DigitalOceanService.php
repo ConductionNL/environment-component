@@ -97,9 +97,9 @@ class DigitalOceanService
 
         // Creating the cluster configuration
         $kubernetesCluster = [
-            'name'       => $cluster->getName(),
-            'region'     => 'ams3',
-            'version'    => '1.17.5-do.2', //TODO: dit mag nog dynamisch
+            'name' => $cluster->getName(),
+            'region' => 'ams3',
+            'version' => '1.17.5-do.0', //TODO: dit mag nog dynamisch
             'node_pools' => [[
                 'size'  => 's-4vcpu-8gb', //TODO: dit mag nog dynamisch
                 'count' => 3,//TODO: dit mag nog dynamisch
@@ -246,9 +246,7 @@ class DigitalOceanService
 
         return $dbCluster;
     }
-
-    public function getDatabaseByName($name, $dbCluster)
-    {
+    public function getDatabaseByName($name, $dbCluster){
         $database = [];
         $dbs = $this->getDatabases($dbCluster['id']);
         foreach ($dbs['dbs'] as $db) {
