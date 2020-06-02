@@ -47,11 +47,11 @@ class InstallationSubscriber implements EventSubscriber
 
         if($action == 'remove'){
             $process = new Process(['bin/console', 'app:component:delete', $installation->getId()]);
-            $process->run();
+            $process->start();
         }
         else{
             $process = new Process(['bin/console', 'app:component:update', $installation->getId()]);
-            $process->run();
+            $process->start();
         }
     }
 }

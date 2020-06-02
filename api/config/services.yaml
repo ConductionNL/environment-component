@@ -25,6 +25,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    
+    App\Subscriber\K8ClusterDoctrineSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
 
     'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
 
@@ -89,3 +93,5 @@ services:
         decorates: 'api_platform.swagger.normalizer.api_gateway'
         arguments: [ '@Conduction\CommonGroundBundle\Swagger\SwaggerDecorator.inner' ]
         autoconfigure: false
+        
+    

@@ -5,6 +5,7 @@
 namespace App\Command;
 
 use App\Service\ClusterService;
+use App\Service\DigitalOceanService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,11 +16,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ConfigureClustersCommand extends Command
 {
     private $clusterService;
+    private $digitalOceanService;
     private $em;
 
-    public function __construct(ClusterService $clusterService, EntityManagerInterface $em)
+    public function __construct(ClusterService $clusterService, EntityManagerInterface $em, DigitalOceanService $digitalOceanService)
     {
         $this->clusterService = $clusterService;
+        $this->digitalOceanService = $digitalOceanService;
         $this->em = $em;
 
         parent::__construct();
@@ -53,11 +56,12 @@ class ConfigureClustersCommand extends Command
         foreach ($results as $cluster) {
 
             $io->text("checking {$cluster->getName()}");
-            $cluster->setStatus( $this->clusterService->getStatus($cluster));
+            $cluster->setStatus( $this->digitalOceanService->getStatus($cluster));
             // check if the cluster is running
             if($cluster->getStatus() == 'running'){
                 $io->text("configuring {$cluster->getName()}");
-                $this->clusterService->configure($cluster);
+                $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                $this->clusterService->configureCluster($cluster);
                 $now = New \DateTime();
                 $cluster->setDateConfigured($now);
             }

@@ -47,11 +47,11 @@ class K8ClusterDoctrineSubscriber implements EventSubscriber
 
         if($action == 'remove'){
             $process = new Process(['bin/console', 'app:k8cluster:delete', $cluster->getId()]);
-            $process->run();
+            $process->start();
         }
         elseif($action == 'persist'){
             $process = new Process(['bin/console', 'app:k8cluster:create', $cluster->getId()]);
-            $process->run();
+            $process->start();
         }
     }
 }

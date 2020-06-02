@@ -97,9 +97,9 @@ class DigitalOceanService
 
         // Creating the cluster configuration
         $kubernetesCluster = [
-            'name' => $cluster->getName(),
-            'region' => 'ams3',
-            'version' => '1.17.5-do.0', //TODO: dit mag nog dynamisch
+            'name'       => $cluster->getName(),
+            'region'     => 'ams3',
+            'version'    => '1.17.5-do.0', //TODO: dit mag nog dynamisch
             'node_pools' => [[
                 'size'  => 's-4vcpu-8gb', //TODO: dit mag nog dynamisch
                 'count' => 3,//TODO: dit mag nog dynamisch
@@ -121,6 +121,8 @@ class DigitalOceanService
             $clusterArray = json_decode($response->getBody(), true)['kubernetes_cluster'];
             $cluster->setStatus('creating');
             $cluster->setProviderId($clusterArray['id']);
+            $this->em->persist($cluster);
+            $this->em->flush();
             /*
             echo "Waiting until the cluster is ready\n";
             while ($clusterArray['status']['state'] != 'running') {
@@ -130,7 +132,7 @@ class DigitalOceanService
                 //                echo $cluster['status']['state'];
             }
             */
-            $this->this->configureCluster($cluster);
+            $this->configureCluster($cluster);
 
             return $cluster;
         }
@@ -154,6 +156,10 @@ class DigitalOceanService
         }
 
         return false;
+    }
+    public function getStatus(Cluster $cluster){
+        $clusterArray = json_decode($this->client->get("kubernetes/clusters/{$cluster->getProviderId()}")->getBody(), true)['kubernetes_cluster'];
+        return $clusterArray['status']['state'];
     }
 
     public function createDatabaseCluster(string $name): array

@@ -31,14 +31,27 @@ class ClusterService
     {
         $kubeconfig = $this->writeKubeconfig($cluster);
 
+        var_dump($cluster->getKubeconfig());
+
+        $process = new Process(['helm', 'repo', 'add', "stable", ""]);
+        $process->run();
+        if (!$process->isSuccessful()) {
+            $this->removeKubeconfig($kubeconfig);
+
+            throw new ProcessFailedException($process);
+        }
+
         echo "Installing kubernetes dashboard\n";
-        $process4 = new Process(["kubectl","apply","-f","https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml", "--kubeconfig={$kubeconfig}"]);
+        $process4 = new Process(['kubectl', 'create', '-f','https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml', "--kubeconfig={$kubeconfig}"]);
         $process4->run();
         if (!$process4->isSuccessful()) {
             $this->removeKubeconfig($kubeconfig);
 
             throw new ProcessFailedException($process4);
         }
+
+        echo "Add Stable Repo\n";
+        $process5 = new Process(['helm', 'repo', 'loadbalancer', 'stable/nginx-ingress', "--kubeconfig=$kubeconfig"]);
 
         echo "Installing Ingress\n";
         $process5 = new Process(["helm", "repo","add","stable","https://kubernetes-charts.storage.googleapis.com"]);
@@ -175,16 +188,16 @@ class ClusterService
 
     public function addRepo(Installation $installation)
     {
-
-        //Add repo to repos
-        $process = new Process(["rm","-rf", "~/.helm/cache/archive/*","&&","rm","-rf", "~/.helm/repository/cache/*"]);
+        $process = new Process(['rm', '-rf', '~/.helm/cache/archive/*', '&&', 'rm', '-rf', '~/.helm/repository/cache/*']);
         $process->run();
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        $process = new Process(["helm","repo", "add","{$installation->getComponent()->getCode()}-repository", "{$installation->getComponent()->getHelmRepository()}"]);
+
+        //Add repo to repos
+        $process = new Process(['helm', 'repo', 'add', "{$installation->getComponent()->getCode()}-repository", "{$installation->getComponent()->getHelmRepository()}"]);
         $process->run();
-        if(!$process->isSuccessful()){
+        if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         $process = new Process(['helm', 'repo', 'update']);
@@ -223,7 +236,11 @@ class ClusterService
 
         return $process->isSuccessful();
     }
+    public function getStatus(Cluster $cluster){
+        //TODO: make this dynamic based on provider
 
+
+    }
     public function upgradeComponent(Installation $installation): bool
     {
         $additionalSettings = '';

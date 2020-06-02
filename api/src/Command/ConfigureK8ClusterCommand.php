@@ -18,6 +18,7 @@ class ConfigureK8ClusterCommand  extends Command
     private $installService;
     private $em;
 
+    private $clusterService;
     public function __construct(ClusterService $clusterService, EntityManagerInterface $em)
     {
         $this->clusterService = $clusterService;
@@ -51,7 +52,7 @@ class ConfigureK8ClusterCommand  extends Command
 
         $cluster = $this->em->getRepository('App\Entity\Cluster')->find( $input->getArgument('cluster'));
         $io->title('Deleting '.$cluster->getName().' ('.$cluster->getId().')');
-        $this->clusterService->delete($cluster);
+        $this->clusterService->configureCluster($cluster);
 
     }
 }

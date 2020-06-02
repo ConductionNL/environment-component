@@ -4,7 +4,7 @@
 
 namespace App\Command;
 
-use App\Service\clusterService;
+use App\Service\ClusterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
