@@ -31,85 +31,80 @@ class ClusterService
     {
         $kubeconfig = $this->writeKubeconfig($cluster);
 
-        var_dump($cluster->getKubeconfig());
+//        var_dump($cluster->getKubeconfig());
 
-        $process = new Process(['helm', 'repo', 'add', "stable", ""]);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            $this->removeKubeconfig($kubeconfig);
-
-            throw new ProcessFailedException($process);
-        }
 
         echo "Installing kubernetes dashboard\n";
-        $process4 = new Process(['kubectl', 'create', '-f','https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml', "--kubeconfig={$kubeconfig}"]);
-        $process4->run();
-        if (!$process4->isSuccessful()) {
-            $this->removeKubeconfig($kubeconfig);
-
-            throw new ProcessFailedException($process4);
-        }
-
-        echo "Add Stable Repo\n";
-        $process5 = new Process(['helm', 'repo', 'loadbalancer', 'stable/nginx-ingress', "--kubeconfig=$kubeconfig"]);
+        $process1 = new Process(['kubectl', 'create', '-f','https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml', "--kubeconfig={$kubeconfig}"]);
+        $process1->run();
 
         echo "Installing Ingress\n";
-        $process5 = new Process(["helm", "repo","add","stable","https://kubernetes-charts.storage.googleapis.com"]);
+        $process2 = new Process(["helm", "repo","add","stable","https://kubernetes-charts.storage.googleapis.com"]);
+        $process2->run();
+
+
+        $process3 = new Process(["helm", "install","loadbalancer","stable/nginx-ingress","--kubeconfig=$kubeconfig"]);
+        $process3->run();
+
+
+        $process4 = new Process(['helm', 'upgrade', 'loadbalancer', 'stable/nginx-ingress', "--kubeconfig=$kubeconfig"]);
+        $process4->run();
+
+        echo "Installing Cert Manager\n";
+        $process5 = new Process(['helm', 'repo', 'add', 'jetstack', 'https://charts.jetstack.io']);
         $process5->run();
-        if(!$process5->isSuccessful()){
-            $this->removeKubeconfig($kubeconfig);
-            throw new ProcessFailedException($process5);
-        }
 
-        $process5 = new Process(["helm", "install","loadbalancer","stable/nginx-ingress","--kubeconfig=$kubeconfig"]);
-        $process5->run();
-        if (!$process5->isSuccessful()) {
-            $this->removeKubeconfig($kubeconfig);
-
-            throw new ProcessFailedException($process5);
-        }
-
-        $process6 = new Process(['helm', 'upgrade', 'loadbalancer', 'stable/nginx-ingress', "--kubeconfig=$kubeconfig"]);
-        $process6->run();
-        if (!$process6->isSuccessful()) {
-            $this->removeKubeconfig($kubeconfig);
-
-            throw new ProcessFailedException($process6);
-        }
-
-        $process9 = new Process(['helm', 'repo', 'add', 'jetstack', 'https://charts.jetstack.io']);
-        $process9->run();
-        if (!$process9->isSuccessful()) {
-            $this->removeKubeconfig($kubeconfig);
-
-            throw new ProcessFailedException($process9);
-        }
 
         // Creating the name space for the cert manager
-        $process11 = new Process(['kubectl', 'create', 'namespace', 'cert-manager', "--kubeconfig=$kubeconfig"]);
-        $process11->run();
-        if (!$process11->isSuccessful()) {
-            $this->removeKubeconfig($kubeconfig);
+        $process6 = new Process(['kubectl', 'create', 'namespace', 'cert-manager', "--kubeconfig=$kubeconfig"]);
+        $process6->run();
 
-            throw new ProcessFailedException($process11);
-        }
 
         // Installing the cert manager
-        $process10 = new Process(["helm","install","cert-manager","--namespace=cert-manager","--version=v0.15.0","jetstack/cert-manager","--set","installCRDs=true","--kubeconfig=$kubeconfig"]);
-        $process10->run();
-        if (!$process10->isSuccessful()) {
-            $this->removeKubeconfig($kubeconfig);
+        $process7 = new Process(["helm","install","cert-manager","--namespace=cert-manager","--version=v0.15.0","jetstack/cert-manager","--set","installCRDs=true","--kubeconfig=$kubeconfig"]);
+        $process7->run();
 
-            throw new ProcessFailedException($process10);
-        }
+        echo "Give Cert Manager some time\n";
+        sleep(10);
 
+        echo "Install the general cluster cert issuer";
         // Installing the general cluster cert issuer
-        $process11 = new Process(['kubectl', 'create', '-f https://raw.githubusercontent.com/ConductionNL/environment-component/resources/cert-issuer.yaml', "--kubeconfig=$kubeconfig"]);
-        $process11->run();
-        if (!$process11->isSuccessful()) {
+        $process8 = new Process(['kubectl', 'create', '-f','https://raw.githubusercontent.com/ConductionNL/environment-component/dev-ruben/resources/cert-issuer.yaml', "--kubeconfig=$kubeconfig"]);
+        $process8->run();
+
+
+        if (!$process1->isSuccessful()) {
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process1);
+        }
+        if(!$process2->isSuccessful()){
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process2);
+        }
+        if (!$process3->isSuccessful()) {
             $this->removeKubeconfig($kubeconfig);
 
-            throw new ProcessFailedException($process10);
+            throw new ProcessFailedException($process3);
+        }
+        if (!$process4->isSuccessful()) {
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process4);
+        }
+        if (!$process5->isSuccessful()) {
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process5);
+        }
+        if (!$process6->isSuccessful()) {
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process6);
+        }
+        if (!$process7->isSuccessful()) {
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process7);
+        }
+        if (!$process8->isSuccessful()) {
+            $this->removeKubeconfig($kubeconfig);
+            throw new ProcessFailedException($process8);
         }
         $this->removeKubeconfig($kubeconfig);
 
@@ -289,10 +284,11 @@ class ClusterService
 
             throw new ProcessFailedException($process);
         }
+        sleep(25);
         if ($installation->hasDeploymentName()) {
-            $name = "{$installation->getDeploymentName()}-{$installation->getEnvironment()->getName()}-cert";
+            $name = "{$installation->getDeploymentName()}-{$installation->getEnvironment()->getName()}-{$installation->getDeploymentName()}";
         } else {
-            $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}-cert";
+            $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}-{$installation->getComponent()->getCode()}";
         }
         $process = new Process([
             'kubectl',

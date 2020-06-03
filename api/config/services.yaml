@@ -29,6 +29,9 @@ services:
     App\Subscriber\K8ClusterDoctrineSubscriber:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+    App\Subscriber\InstallationSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
 
     'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter': ~
 

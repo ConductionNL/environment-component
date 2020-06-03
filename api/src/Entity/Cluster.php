@@ -92,14 +92,13 @@ class Cluster
      * @example running
      *
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $status;
+    private $status = "requested";
 
     /**
      * @var string The id of this cluster with its provide e.g. digital ocean
@@ -107,14 +106,13 @@ class Cluster
      * @example e2984465-190a-4562-829e-a8cca81aa35d
      *
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $providerId;
+    private $providerId = "";
 
     /**
      * @var string the description of this cluster

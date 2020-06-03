@@ -4,8 +4,10 @@ namespace App\Subscriber;
 
 use App\Entity\Installation;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class InstallationSubscriber implements EventSubscriber
@@ -17,17 +19,16 @@ class InstallationSubscriber implements EventSubscriber
     {
         return [
             Events::postPersist,
-            Events::postRemove,
+            Events::preRemove,
             Events::postUpdate,
         ];
     }
-
     public function postPersist(LifecycleEventArgs $args)
     {
         $this->installation('persist', $args);
     }
 
-    public function postRemove(LifecycleEventArgs $args)
+    public function preRemove(LifecycleEventArgs $args)
     {
         $this->installation('remove', $args);
     }
@@ -46,12 +47,15 @@ class InstallationSubscriber implements EventSubscriber
         }
 
         if($action == 'remove'){
-            $process = new Process(['bin/console', 'app:component:delete', $installation->getId()]);
-            $process->start();
+            $process = new Process(['../bin/console', 'app:component:delete', $installation->getId()]);
+            $process->run();
+            if(!$process->isSuccessful()){
+                throw new ProcessFailedException($process);
+            }
         }
-        else{
-            $process = new Process(['bin/console', 'app:component:update', $installation->getId()]);
-            $process->start();
-        }
+//        else{
+//            $process = new Process(['../bin/console', 'app:component:update', $installation->getId()]);
+//            $process->start();
+//        }
     }
 }
