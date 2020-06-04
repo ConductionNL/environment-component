@@ -167,9 +167,6 @@ spec:
                     configMapKeyRef:
                         name: {{ template "fullname" . }}
                         key: cors-allow-origin
-            -   name: VARNISH_URL
-                value: {{ include "name" . }}-varnish
-
             -   name: APP_SECRET
                 valueFrom:
                     secretKeyRef:
@@ -235,4 +232,6 @@ spec:
                     secretKeyRef:
                         name: {{ template "fullname" . }}
                         key: auth_provider_application
+            -   name: VARNISH_URL
+                value: {{ include "name" . }}-varnish
           restartPolicy: OnFailure
