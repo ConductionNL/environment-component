@@ -175,6 +175,7 @@ spec:
                     secretKeyRef:
                         name: {{ template "fullname" . }}
                         key: secret
+
             -   name: DATABASE_URL
                 valueFrom:
                     secretKeyRef:
