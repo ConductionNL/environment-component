@@ -2029,6 +2029,24 @@ paths:
               - asc
               - desc
         -
+          name: 'order[status]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[providerId]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'order[description]'
           in: query
           required: false
@@ -2075,6 +2093,15 @@ paths:
               - desc
         -
           name: 'order[dateModified]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[dateConfigured]'
           in: query
           required: false
           schema:
@@ -2135,6 +2162,30 @@ paths:
             type: string
         -
           name: 'dateModified[strictly_after]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateConfigured[before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateConfigured[strictly_before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateConfigured[after]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateConfigured[strictly_after]'
           in: query
           required: false
           schema:
@@ -9543,7 +9594,7 @@ components:
           type: string
     Cluster-read:
       type: object
-      description: 'This entity holds the information about a kubernetes cluster'
+      description: 'This entity holds the information about a kubernetes cluster.'
       properties:
         id:
           readOnly: true
@@ -9554,6 +9605,12 @@ components:
           format: uuid
         name:
           description: 'The name of this cluster'
+          type: string
+        status:
+          description: 'The status of this cluster'
+          type: string
+        providerId:
+          description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
         description:
           description: 'the description of this cluster'
@@ -9577,6 +9634,11 @@ components:
           type: string
           format: date-time
           nullable: true
+        dateConfigured:
+          description: 'The moment this cluster was configured'
+          type: string
+          format: date-time
+          nullable: true
         releases:
           description: 'Installed releases on this cluster'
           type: array
@@ -9587,12 +9649,18 @@ components:
         - name
     Cluster-write:
       type: object
-      description: 'This entity holds the information about a kubernetes cluster'
+      description: 'This entity holds the information about a kubernetes cluster.'
       required:
         - name
       properties:
         name:
           description: 'The name of this cluster'
+          type: string
+        status:
+          description: 'The status of this cluster'
+          type: string
+        providerId:
+          description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
         description:
           description: 'the description of this cluster'
@@ -9626,7 +9694,7 @@ components:
           nullable: true
     'Cluster:jsonld-read':
       type: object
-      description: 'This entity holds the information about a kubernetes cluster'
+      description: 'This entity holds the information about a kubernetes cluster.'
       properties:
         '@context':
           readOnly: true
@@ -9646,6 +9714,12 @@ components:
           format: uuid
         name:
           description: 'The name of this cluster'
+          type: string
+        status:
+          description: 'The status of this cluster'
+          type: string
+        providerId:
+          description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
         description:
           description: 'the description of this cluster'
@@ -9669,6 +9743,11 @@ components:
           type: string
           format: date-time
           nullable: true
+        dateConfigured:
+          description: 'The moment this cluster was configured'
+          type: string
+          format: date-time
+          nullable: true
         releases:
           description: 'Installed releases on this cluster'
           type: array
@@ -9679,7 +9758,7 @@ components:
         - name
     'Cluster:jsonld-write':
       type: object
-      description: 'This entity holds the information about a kubernetes cluster'
+      description: 'This entity holds the information about a kubernetes cluster.'
       required:
         - name
       properties:
@@ -9694,6 +9773,12 @@ components:
           type: string
         name:
           description: 'The name of this cluster'
+          type: string
+        status:
+          description: 'The status of this cluster'
+          type: string
+        providerId:
+          description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
         description:
           description: 'the description of this cluster'
@@ -10762,6 +10847,16 @@ definitions:
         type: string
         example: 'conduction cluster'
         maxLength: 255
+      status:
+        description: 'The status of this cluster'
+        type: string
+        example: running
+        maxLength: 255
+      providerId:
+        description: 'The id of this cluster with its provide e.g. digital ocean'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        maxLength: 255
       description:
         description: 'the description of this cluster'
         type: string
@@ -10776,6 +10871,9 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
+      dateConfigured:
+        description: 'The moment this cluster was configured'
+        type: \Datetime
       releases:
         description: 'Installed releases on this cluster'
         type: array
@@ -10788,6 +10886,16 @@ definitions:
         description: 'The name of this cluster'
         type: string
         example: 'conduction cluster'
+        maxLength: 255
+      status:
+        description: 'The status of this cluster'
+        type: string
+        example: running
+        maxLength: 255
+      providerId:
+        description: 'The id of this cluster with its provide e.g. digital ocean'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
         maxLength: 255
       description:
         description: 'the description of this cluster'
@@ -11213,12 +11321,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-05-22 12:19:49'
+        example: '2020-06-03 08:39:34'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-05-22 12:19:49'
+        example: '2020-06-03 08:39:34'
     required: []
   ChangeLog-write:
     properties:
@@ -11332,12 +11440,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-05-22 12:19:49'
+        example: '2020-06-03 08:39:34'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-05-22 12:19:49'
+        example: '2020-06-03 08:39:34'
     required: []
   AuditTrail-write:
     properties:
@@ -11351,7 +11459,7 @@ tags:
   -
     name: Cluster
     description: |
-      This entity holds the information about a kubernetes cluster
+      This entity holds the information about a kubernetes cluster.
       
       
   -

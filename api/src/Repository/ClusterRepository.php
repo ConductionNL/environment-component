@@ -19,6 +19,21 @@ class ClusterRepository extends ServiceEntityRepository
         parent::__construct($registry, Cluster::class);
     }
 
+    /*
+     * Get the clusters that are up for configuration
+     *
+     * @param integer $maxResults
+     */
+    public function findConfigurable($maxResults = 100)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.dateConfigured IS NULL')
+            ->orderBy('c.dateConfigured', 'ASC')
+            ->setMaxResults($maxResults)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Cluster[] Returns an array of Cluster objects
     //  */
