@@ -4,6 +4,7 @@
 
 namespace App\Command;
 
+use App\Entity\Installation;
 use App\Service\InstallService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -59,9 +60,10 @@ class InstallInstalationsCommand extends Command
         foreach ($results as $key=>$result) {
             $io->progressAdvance();
             $io->text("Installing {$result->getComponent()->getName()} on {$result->getDomain()->getCluster()->getName()}");
-
-            $processes[$key] = new Process(['bin/console','app:component:update', "{$result->getId()}"]);
-            $processes[$key]->start();
+            if($result instanceof Installation && $result->getDateInstalled()->diff($result->getDateModified())->d != 0){
+                $processes[$key] = new Process(['bin/console','app:component:update', "{$result->getId()}"]);
+                $processes[$key]->start();
+            }
 
             //$io->warning('Lorem ipsum dolor sit amet');
             //$io->success('Lorem ipsum dolor sit amet');
