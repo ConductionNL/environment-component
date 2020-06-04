@@ -1,26 +1,29 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "name" . }}-php
+  name: {{ .Values.settings.name }}-php
   labels:
-    app.kubernetes.io/name: {{ include "name" . }}-php
-    app.kubernetes.io/part-of: {{ include "name" . }}
+    app.kubernetes.io/name: {{ .Values.settings.name }}-php
+    app.kubernetes.io/part-of: {{ .Values.settings.name }}
     helm.sh/chart: {{ include "chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.settings.name }}-php
+  replicas: {{ .Values.php.replicaCount }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "name" . }}-php
-        app.kubernetes.io/part-of: {{ include "name" . }}
+        app.kubernetes.io/name: {{ .Values.settings.name }}-php
+        app.kubernetes.io/part-of: {{ .Values.settings.name }}
         helm.sh/chart: {{ include "chart" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
       containers:
-        - name: {{ include "name" . }}-php
+        - name: {{ .Values.settings.name }}-php
           image: "{{ .Values.settings.registryBase }}/{{ .Values.settings.projectName }}-php:{{ .Values.settings.env }}"
           imagePullPolicy: {{ .Values.settings.pullPolicy }}
           ports:
@@ -77,11 +80,13 @@ spec:
                   configMapKeyRef:
                       name: {{ template "fullname" . }}
                       key: app-type
+            {{ if .Values.settings.id }}
             - name: APP_ID
               valueFrom:
                     configMapKeyRef:
                         name: {{ template "fullname" . }}
                         key: app-id
+            {{ end }}
             - name: APP_DEMO
               valueFrom:
                 configMapKeyRef:
@@ -178,16 +183,16 @@ spec:
                   name: {{ template "fullname" . }}
                   key: cors-allow-origin
             - name: VARNISH_URL
-              value: {{ include "name" . }}-varnish
+              value: {{ .Values.settings.name }}-varnish
             - name: APP_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fullname" . }}-secret
+                  name: {{ template "fullname" . }}
                   key: secret
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fullname" . }}-secret
+                  name: {{ template "fullname" . }}
                   key: database-url
             - name: MERCURE_PUBLISH_URL
               valueFrom:
@@ -202,47 +207,47 @@ spec:
             - name: MERCURE_JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fullname" . }}-secret
+                  name: {{ template "fullname" . }}
                   key: mercure-jwt-secret
             - name: APP_COMMONGROUND_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fullname" . }}-secret
+                  name: {{ template "fullname" . }}
                   key: app_commonground_id
             - name: APP_COMMONGROUND_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fullname" . }}-secret
+                  name: {{ template "fullname" . }}
                   key: app_commonground_key
             - name: APP_APPLICATION_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fullname" . }}-secret
+                  name: {{ template "fullname" . }}
                   key: app_application_key
             - name: APP_USER_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fullname" . }}-secret
+                  name: {{ template "fullname" . }}
                   key: app_user_key
             - name: APP_DIGITALOCEAN_KEY
               valueFrom:
                   secretKeyRef:
-                      name: {{ template "fullname" . }}-secret
+                      name: {{ template "fullname" . }}
                       key: app_digitalocean_key
             - name: APP_GITHUB_KEY
               valueFrom:
                   secretKeyRef:
-                      name: {{ template "fullname" . }}-secret
+                      name: {{ template "fullname" . }}
                       key: app_github_key
             - name: AUTH_PROVIDER_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fullname" . }}-secret
+                  name: {{ template "fullname" . }}
                   key: auth_provider_user
             - name: AUTH_PROVIDER_APPLICATION
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fullname" . }}-secret
+                  name: {{ template "fullname" . }}
                   key: auth_provider_application
           resources:
 {{ toYaml .Values.resources | indent 12 }}
