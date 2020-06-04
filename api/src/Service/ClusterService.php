@@ -43,11 +43,11 @@ class ClusterService
         $process2->run();
 
 
-        $process3 = new Process(["helm", "install","loadbalancer","stable/nginx-ingress","--kubeconfig=$kubeconfig"]);
+        $process3 = new Process(["helm", "install","loadbalancer","stable/nginx-ingress","--kubeconfig=$kubeconfig","--namespace=default"]);
         $process3->run();
 
 
-        $process4 = new Process(['helm', 'upgrade', 'loadbalancer', 'stable/nginx-ingress', "--kubeconfig=$kubeconfig"]);
+        $process4 = new Process(['helm', 'upgrade', 'loadbalancer', 'stable/nginx-ingress', "--kubeconfig=$kubeconfig","--namespace=default"]);
         $process4->run();
 
         echo "Installing Cert Manager\n";
@@ -69,7 +69,7 @@ class ClusterService
 
         echo "Install the general cluster cert issuer";
         // Installing the general cluster cert issuer
-        $process8 = new Process(['kubectl', 'create', '-f','https://raw.githubusercontent.com/ConductionNL/environment-component/dev-ruben/resources/cert-issuer.yaml', "--kubeconfig=$kubeconfig"]);
+        $process8 = new Process(['kubectl', 'create', '-f','https://raw.githubusercontent.com/ConductionNL/environment-component/dev-ruben/resources/cert-issuer.yaml', "--kubeconfig=$kubeconfig", "--namespace=default"]);
         $process8->run();
 
 
