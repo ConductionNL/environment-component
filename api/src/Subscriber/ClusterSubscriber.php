@@ -6,7 +6,6 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Cluster;
 use App\Service\ClusterService;
 use App\Service\DigitalOceanService;
-use App\Service\InstallService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,7 +16,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class ClusterSubscriber implements EventSubscriberInterface
 {
-
     private $params;
     private $em;
     private $serializer;
@@ -55,7 +53,6 @@ class ClusterSubscriber implements EventSubscriberInterface
         if ($method != 'GET' || !($result instanceof Cluster)) {
             return;
         }
-
 
         switch ($contentType) {
             case 'application/json':

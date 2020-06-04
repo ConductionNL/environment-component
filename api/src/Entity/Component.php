@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -167,9 +166,8 @@ class Component
      */
     private $helmRepository;
 
-
     /**
-     * @var boolean Is the component a core component
+     * @var bool Is the component a core component
      *
      * @Groups({"read","write"})
      * @Gedmo\Versioned
@@ -349,10 +347,12 @@ class Component
 
         return $this;
     }
-    public function hasInstallationInEnvironment(Environment $environment):bool
+
+    public function hasInstallationInEnvironment(Environment $environment): bool
     {
         $criteria = Criteria::create()
             ->andWhere(Criteria::expr()->eq('environment', $environment));
-        return count($this->getInstallations()->matching($criteria))>0;
+
+        return count($this->getInstallations()->matching($criteria)) > 0;
     }
 }
