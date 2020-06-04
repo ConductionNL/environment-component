@@ -233,5 +233,5 @@ spec:
                         name: {{ template "fullname" . }}
                         key: auth_provider_application
             -   name: VARNISH_URL
-            value: {{ include "name" . }}-varnish
+                value: {{ include "name" . }}-varnish
           restartPolicy: OnFailure
