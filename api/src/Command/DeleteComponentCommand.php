@@ -51,7 +51,9 @@ class DeleteComponentCommand extends Command
 
         $installation = $this->em->getRepository('App\Entity\Installation')->find( $input->getArgument('component'));
         $io->title('Deleting '.$installation->getName().' ('.$installation->getId().')');
-        $this->installService->delete($installation);
+        if($installation->getDateInstalled()){
+            $this->installService->delete($installation);
+        }
 
     }
 }
