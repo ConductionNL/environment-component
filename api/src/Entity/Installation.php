@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -267,7 +266,7 @@ class Installation
      * @var Property additional properties that are required for this installation, i.e. external API keys
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade="persist")
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade={"persist","remove"})
      */
     private $properties;
 
@@ -488,6 +487,7 @@ class Installation
     {
         $this->component = $component;
         $component->addInstallation($this);
+
         return $this;
     }
 
@@ -500,6 +500,7 @@ class Installation
     {
         $this->domain = $domain;
         $domain->addInstallation($this);
+
         return $this;
     }
 
@@ -536,10 +537,9 @@ class Installation
 
     public function getDeploymentName(): ?string
     {
-        if($this->deploymentName){
+        if ($this->deploymentName) {
             return $this->deploymentName;
-        }
-        else{
+        } else {
             return "{$this->getComponent()->getCode()}-{$this->getEnvironment()->getName()}";
         }
     }
@@ -548,21 +548,23 @@ class Installation
     {
         $this->deploymentName = $deploymentName;
         $subdomain = new Property();
-        $subdomain->setName("settings.subdomain");
+        $subdomain->setName('settings.subdomain');
         $subdomain->setValue($deploymentName);
         $this->addProperty($subdomain);
 
-        $name= new Property();
-        $name->setName("settings.name");
+        $name = new Property();
+        $name->setName('settings.name');
         $name->setValue($deploymentName);
         $this->addProperty($name);
 
         return $this;
     }
-    public function hasDeploymentName():bool{
-        if($this->deploymentName){
+
+    public function hasDeploymentName(): bool
+    {
+        if ($this->deploymentName) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

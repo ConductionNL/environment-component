@@ -41,7 +41,7 @@ class InstallationRepository extends ServiceEntityRepository
      *
      * @param integer $maxResults
      */
-    public function findInstallable($maxResults = 100)
+    public function findInstallable($maxResults = 200)
     {
         return $this->createQueryBuilder('i')
             ->where('i.dateInstalled IS NULL')
@@ -49,7 +49,6 @@ class InstallationRepository extends ServiceEntityRepository
             ->orderBy('i.dateModified', 'ASC')
             ->setMaxResults($maxResults)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 }

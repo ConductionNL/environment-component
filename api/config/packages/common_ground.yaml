@@ -509,8 +509,8 @@ twig:
         app_container: '%env(APP_CONTAINER)%'
         app_repro: '%env(APP_REPRO)%'
 
-        app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)'
-        app_github_key: '%env(APP_GITHUB_KEY)'
+        app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)%'
+        app_github_key: '%env(APP_GITHUB_KEY)%'
             
         # Security Details
         app_commonground_id: '%env(APP_COMMONGROUND_ID)%'

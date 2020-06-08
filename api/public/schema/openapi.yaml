@@ -2029,6 +2029,24 @@ paths:
               - asc
               - desc
         -
+          name: 'order[status]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[providerId]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'order[description]'
           in: query
           required: false
@@ -2075,6 +2093,15 @@ paths:
               - desc
         -
           name: 'order[dateModified]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[dateConfigured]'
           in: query
           required: false
           schema:
@@ -2135,6 +2162,30 @@ paths:
             type: string
         -
           name: 'dateModified[strictly_after]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateConfigured[before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateConfigured[strictly_before]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateConfigured[after]'
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'dateConfigured[strictly_after]'
           in: query
           required: false
           schema:
@@ -9543,7 +9594,7 @@ components:
           type: string
     Cluster-read:
       type: object
-      description: 'This entity holds the information about a kubernetes cluster'
+      description: 'This entity holds the information about a kubernetes cluster.'
       properties:
         id:
           readOnly: true
@@ -9554,6 +9605,12 @@ components:
           format: uuid
         name:
           description: 'The name of this cluster'
+          type: string
+        status:
+          description: 'The status of this cluster'
+          type: string
+        providerId:
+          description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
         description:
           description: 'the description of this cluster'
@@ -9577,6 +9634,11 @@ components:
           type: string
           format: date-time
           nullable: true
+        dateConfigured:
+          description: 'The moment this cluster was configured'
+          type: string
+          format: date-time
+          nullable: true
         releases:
           description: 'Installed releases on this cluster'
           type: array
@@ -9587,12 +9649,18 @@ components:
         - name
     Cluster-write:
       type: object
-      description: 'This entity holds the information about a kubernetes cluster'
+      description: 'This entity holds the information about a kubernetes cluster.'
       required:
         - name
       properties:
         name:
           description: 'The name of this cluster'
+          type: string
+        status:
+          description: 'The status of this cluster'
+          type: string
+        providerId:
+          description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
         description:
           description: 'the description of this cluster'
@@ -9626,7 +9694,7 @@ components:
           nullable: true
     'Cluster:jsonld-read':
       type: object
-      description: 'This entity holds the information about a kubernetes cluster'
+      description: 'This entity holds the information about a kubernetes cluster.'
       properties:
         '@context':
           readOnly: true
@@ -9646,6 +9714,12 @@ components:
           format: uuid
         name:
           description: 'The name of this cluster'
+          type: string
+        status:
+          description: 'The status of this cluster'
+          type: string
+        providerId:
+          description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
         description:
           description: 'the description of this cluster'
@@ -9669,6 +9743,11 @@ components:
           type: string
           format: date-time
           nullable: true
+        dateConfigured:
+          description: 'The moment this cluster was configured'
+          type: string
+          format: date-time
+          nullable: true
         releases:
           description: 'Installed releases on this cluster'
           type: array
@@ -9679,7 +9758,7 @@ components:
         - name
     'Cluster:jsonld-write':
       type: object
-      description: 'This entity holds the information about a kubernetes cluster'
+      description: 'This entity holds the information about a kubernetes cluster.'
       required:
         - name
       properties:
@@ -9694,6 +9773,12 @@ components:
           type: string
         name:
           description: 'The name of this cluster'
+          type: string
+        status:
+          description: 'The status of this cluster'
+          type: string
+        providerId:
+          description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
         description:
           description: 'the description of this cluster'
@@ -10762,6 +10847,16 @@ definitions:
         type: string
         example: 'conduction cluster'
         maxLength: 255
+      status:
+        description: 'The status of this cluster'
+        type: string
+        example: running
+        maxLength: 255
+      providerId:
+        description: 'The id of this cluster with its provide e.g. digital ocean'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        maxLength: 255
       description:
         description: 'the description of this cluster'
         type: string
@@ -10776,6 +10871,9 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
+      dateConfigured:
+        description: 'The moment this cluster was configured'
+        type: \Datetime
       releases:
         description: 'Installed releases on this cluster'
         type: array
@@ -10788,6 +10886,16 @@ definitions:
         description: 'The name of this cluster'
         type: string
         example: 'conduction cluster'
+        maxLength: 255
+      status:
+        description: 'The status of this cluster'
+        type: string
+        example: running
+        maxLength: 255
+      providerId:
+        description: 'The id of this cluster with its provide e.g. digital ocean'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
         maxLength: 255
       description:
         description: 'the description of this cluster'
@@ -11175,6 +11283,215 @@ definitions:
     required:
       - name
       - helmVersion
+  Component-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  Component-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      githubToken:
+        description: 'A personal access token for github that can be used to trigger actions on this component'
+        type: string
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  Environment-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      cache:
+        description: 'Should components be deployed to this environment with caching on or off?'
+        type: int
+        example: '1'
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - authorization
+      - cache
+  Environment-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
+      authorization:
+        description: 'The authentication token that is needed to access this token'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      cache:
+        description: 'Should components be deployed to this environment with caching on or off?'
+        type: int
+        example: '1'
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - authorization
+      - cache
+  ChangeLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+      action:
+        description: ''
+        type: string
+      objectId:
+        description: ''
+        type: string
+      objectClass:
+        description: ''
+        type: string
+      version:
+        description: ''
+        type: int
+      data:
+        description: ''
+        type: array
+      username:
+        description: ''
+        type: string
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      dateCreated:
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-06-04 15:18:00'
+      dateModified:
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-06-04 15:18:00'
+    required: []
+  ChangeLog-write:
+    properties:
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+    required: []
   AuditTrail-read:
     properties:
       id:
@@ -11279,12 +11596,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-05-26 17:32:10'
+        example: '2020-06-04 15:18:00'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-05-26 17:32:10'
+        example: '2020-06-04 15:18:00'
     required: []
   AuditTrail-write:
     properties:
@@ -11332,12 +11649,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-05-26 17:32:10'
+        example: '2020-06-04 13:02:33'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-05-26 17:32:10'
+        example: '2020-06-04 13:02:33'
     required: []
   ChangeLog-write:
     properties:
@@ -11351,7 +11668,7 @@ tags:
   -
     name: Cluster
     description: |
-      This entity holds the information about a kubernetes cluster
+      This entity holds the information about a kubernetes cluster.
       
       
   -
