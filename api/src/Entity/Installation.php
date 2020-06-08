@@ -266,7 +266,7 @@ class Installation
      * @var Property additional properties that are required for this installation, i.e. external API keys
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade="persist")
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade={"persist","remove"})
      */
     private $properties;
 
