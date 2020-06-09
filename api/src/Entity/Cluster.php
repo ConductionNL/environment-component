@@ -191,7 +191,7 @@ class Cluster
     /**
      * @var Datetime The moment this cluster was configured
      *
-     * @Groups({"read"})
+     * @Groups({"read","write"})
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateConfigured;

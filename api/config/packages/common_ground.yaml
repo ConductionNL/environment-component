@@ -4,19 +4,20 @@ parameters:
   # environment variables are not available yet. 
   # You should not need to change this value.
 
-    app_commonground_id: '%env(APP_COMMONGROUND_ID)%'
-    app_commonground_key: '%env(APP_COMMONGROUND_KEY)%'
-    app_commonground_secret: '%env(APP_COMMONGROUND_SECRET)%'
-    
-    app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)%'
-    app_github_key: '%env(APP_GITHUB_KEY)%'
-
+  # Security Details
+  env(APP_COMMONGROUND_ID): ""
+  env(APP_COMMONGROUND_KEY): ""
+  env(APP_COMMONGROUND_SECRET): ""
+  
   common_ground.app.id: "%env(APP_COMMONGROUND_ID)%"
   app_commonground_id: "%env(APP_COMMONGROUND_ID)%"
   app_commonground_key: "%env(APP_COMMONGROUND_KEY)%"
   app_commonground_secret: "%env(APP_COMMONGROUND_SECRET)%"
 
-  # Application Parameters
+  app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)%'
+  app_github_key: '%env(APP_GITHUB_KEY)%'
+  
+    # Application Parameters
   env(APP_ENV): "prod"
   env(APP_DEBUG): false
   env(APP_CACHE): false
@@ -516,34 +517,29 @@ twig:
         app_commonground_id: '%env(APP_COMMONGROUND_ID)%'
         app_commonground_key: '%env(APP_COMMONGROUND_KEY)%'
         app_commonground_secret: '%env(APP_COMMONGROUND_SECRET)%'
-
-    # Security Details
-    app_commonground_id: "%env(APP_COMMONGROUND_ID)%"
-    app_commonground_key: "%env(APP_COMMONGROUND_KEY)%"
-    app_commonground_secret: "%env(APP_COMMONGROUND_SECRET)%"
-
-    # Organisations Parameters
-    google_tag_manager_id: "%env(GOOGLE_TAG_MANAGER_ID)%"
-    hubspot_embed_code: "%env(HUBSPOT_EMBED_CODE)%"
-
-    container_registry_base: "%env(CONTAINER_REGISTRY_BASE)%"
-    container_project_name: "%env(CONTAINER_PROJECT_NAME)%"
-
-    organization_name: "%env(ORGANIZATION_NAME)%"
-    organization_email: "%env(ORGANIZATION_EMAIL_ADDRESS)%"
-    organization_country: "%env(ORGANIZATION_COUNTRY_NAME)%"
-    organization_state: "%env(ORGANIZATION_STATE)%"
-    organization_locality: "%env(ORGANIZATION_LOCALITY)%"
-    organization_unit: "%env(ORGANIZATION_UNIT_NAME)%"
-
-    # Dit is hieronder nu anders geregeld (ofwel aanpassen)
-    auth_provider_user: "%env(AUTH_PROVIDER_USER)%"
-    auth_provider_application: "%env(AUTH_PROVIDER_APPLICATION)%"
-    app_application_key: "%env(APP_APPLICATION_KEY)%"
-    app_user_key: "%env(APP_USER_KEY)%"
-
-    trusted_hosts: "%env(TRUSTED_HOSTS)%"
-    trusted_proxies: "%env(TRUSTED_PROXIES)%"
-
-    nlx_outway: "%env(NLX_OUTWAY)%"
-    nlx_inway: "%env(NLX_INWAY)%"
+    
+        # Organisations Parameters
+        google_tag_manager_id: "%env(GOOGLE_TAG_MANAGER_ID)%"
+        hubspot_embed_code: "%env(HUBSPOT_EMBED_CODE)%"
+    
+        container_registry_base: "%env(CONTAINER_REGISTRY_BASE)%"
+        container_project_name: "%env(CONTAINER_PROJECT_NAME)%"
+    
+        organization_name: "%env(ORGANIZATION_NAME)%"
+        organization_email: "%env(ORGANIZATION_EMAIL_ADDRESS)%"
+        organization_country: "%env(ORGANIZATION_COUNTRY_NAME)%"
+        organization_state: "%env(ORGANIZATION_STATE)%"
+        organization_locality: "%env(ORGANIZATION_LOCALITY)%"
+        organization_unit: "%env(ORGANIZATION_UNIT_NAME)%"
+    
+        # Dit is hieronder nu anders geregeld (ofwel aanpassen)
+        auth_provider_user: "%env(AUTH_PROVIDER_USER)%"
+        auth_provider_application: "%env(AUTH_PROVIDER_APPLICATION)%"
+        app_application_key: "%env(APP_APPLICATION_KEY)%"
+        app_user_key: "%env(APP_USER_KEY)%"
+    
+        trusted_hosts: "%env(TRUSTED_HOSTS)%"
+        trusted_proxies: "%env(TRUSTED_PROXIES)%"
+    
+        nlx_outway: "%env(NLX_OUTWAY)%"
+        nlx_inway: "%env(NLX_INWAY)%"
