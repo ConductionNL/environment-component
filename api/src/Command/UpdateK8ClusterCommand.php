@@ -7,9 +7,8 @@ namespace App\Command;
 use App\Service\ClusterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -49,13 +48,12 @@ class UpdateK8ClusterCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $cluster = $this->em->getRepository('App\Entity\Cluster')->find( $input->getArgument('cluster'));
+        $cluster = $this->em->getRepository('App\Entity\Cluster')->find($input->getArgument('cluster'));
 
-        if($cluster->getDateInstalled() != null){
+        if ($cluster->getDateInstalled() != null) {
             $io->title('Updating  K8 cluster'.$cluster->getName().' ('.$cluster->getId().')');
             $this->clusterService->update($cluster, 'prod');
-        }
-        else{
+        } else {
             $io->title('Installing K8 cluster'.$cluster->getName().' ('.$cluster->getId().')');
             $this->clusterService->install($cluster, 'prod');
         }

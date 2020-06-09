@@ -4,7 +4,6 @@ namespace App\Subscriber;
 
 use App\Entity\Installation;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -12,7 +11,6 @@ use Symfony\Component\Process\Process;
 
 class InstallationSubscriber implements EventSubscriber
 {
-
     // this method can only return the event names; you cannot define a
     // custom method name to execute when each event triggers
     public function getSubscribedEvents()
@@ -23,6 +21,7 @@ class InstallationSubscriber implements EventSubscriber
             Events::postUpdate,
         ];
     }
+
     public function postPersist(LifecycleEventArgs $args)
     {
         $this->installation('persist', $args);
@@ -46,10 +45,10 @@ class InstallationSubscriber implements EventSubscriber
             return;
         }
 
-        if($action == 'remove'){
+        if ($action == 'remove') {
             $process = new Process(['../bin/console', 'app:component:delete', $installation->getId()]);
             $process->run();
-            if(!$process->isSuccessful()){
+            if (!$process->isSuccessful()) {
                 throw new ProcessFailedException($process);
             }
         }

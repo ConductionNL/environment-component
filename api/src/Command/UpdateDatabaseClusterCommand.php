@@ -7,9 +7,8 @@ namespace App\Command;
 use App\Service\DatabaseClusterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -49,13 +48,12 @@ class UpdateDatabaseClusterCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $databaseCluster = $this->em->getRepository('App\Entity\Cluster')->find( $input->getArgument('cluster'));
+        $databaseCluster = $this->em->getRepository('App\Entity\Cluster')->find($input->getArgument('cluster'));
 
-        if($databaseCluster->getDateInstalled() != null){
+        if ($databaseCluster->getDateInstalled() != null) {
             $io->title('Updating  database cluster'.$databaseCluster->getName().' ('.$databaseCluster->getId().')');
             $this->clusterService->update($databaseCluster);
-        }
-        else{
+        } else {
             $io->title('Installing database cluster'.$databaseCluster->getName().' ('.$databaseCluster->getId().')');
             $this->clusterService->install($databaseCluster);
         }
