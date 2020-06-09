@@ -7,9 +7,8 @@ namespace App\Command;
 use App\Service\InstallService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -49,16 +48,14 @@ class UpdateComponentCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $installation = $this->em->getRepository('App\Entity\Installation')->find( $input->getArgument('component'));
+        $installation = $this->em->getRepository('App\Entity\Installation')->find($input->getArgument('component'));
 
-        if($installation->getDateInstalled() != null){
+        if ($installation->getDateInstalled() != null) {
             $io->title('Updating '.$installation->getName().' ('.$installation->getId().')');
             $this->installService->update($installation);
-        }
-        else{
+        } else {
             $io->title('Installing '.$installation->getName().' ('.$installation->getId().')');
             $this->installService->install($installation);
         }
-
     }
 }

@@ -3,19 +3,15 @@
 namespace App\Command;
 
 use App\Entity\Cluster;
-use App\Service\ClusterService;
 use App\Service\DigitalOceanService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class K8clusterCreateCommand extends Command
 {
-
     private $doService;
     private $em;
 
@@ -26,6 +22,7 @@ class K8clusterCreateCommand extends Command
 
         parent::__construct();
     }
+
     protected function configure()
     {
         $this
@@ -35,8 +32,7 @@ class K8clusterCreateCommand extends Command
 
             // the full command description shown when running the command with
             // the "--help" option
-            ->setHelp('This command wil create a complete cluster if it does not exist yet')
-        ;
+            ->setHelp('This command wil create a complete cluster if it does not exist yet');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -44,12 +40,11 @@ class K8clusterCreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('Looking for clusters');
         $clusters = $this->em->getRepository('App\Entity\Cluster')->findBy(['status'=>'requested']);
-        foreach($clusters as $cluster){
-            if($cluster instanceof Cluster){
+        foreach ($clusters as $cluster) {
+            if ($cluster instanceof Cluster) {
                 $io->title('Creating '.$cluster->getName().' ('.$cluster->getId().')');
                 $this->doService->createKubernetesCluster($cluster);
             }
         }
-
     }
 }
