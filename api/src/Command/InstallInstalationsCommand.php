@@ -60,17 +60,17 @@ class InstallInstalationsCommand extends Command
         foreach ($results as $key=>$result) {
             $io->progressAdvance();
             $io->text("Installing {$result->getComponent()->getName()} on {$result->getDomain()->getCluster()->getName()}");
-            if($result instanceof Installation && $result->getDateInstalled() == null || $result->getDateInstalled()->diff($result->getDateModified())->d != 0){
-                $processes[$key] = new Process(['bin/console','app:component:update', "{$result->getId()}"]);
+            if ($result instanceof Installation && $result->getDateInstalled() == null || $result->getDateInstalled()->diff($result->getDateModified())->d != 0) {
+                $processes[$key] = new Process(['bin/console', 'app:component:update', "{$result->getId()}"]);
                 $processes[$key]->start();
             }
 
             //$io->warning('Lorem ipsum dolor sit amet');
             //$io->success('Lorem ipsum dolor sit amet');
         }
-        foreach($processes as $process){
+        foreach ($processes as $process) {
             $process->wait();
-            if(!$process->isSuccessful()){
+            if (!$process->isSuccessful()) {
                 throw new ProcessFailedException($process);
             }
         }

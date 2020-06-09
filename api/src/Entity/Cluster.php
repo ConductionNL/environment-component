@@ -98,7 +98,7 @@ class Cluster
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $status = "requested";
+    private $status = 'requested';
 
     /**
      * @var string The id of this cluster with its provide e.g. digital ocean
@@ -112,7 +112,7 @@ class Cluster
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $providerId = "";
+    private $providerId = '';
 
     /**
      * @var string the description of this cluster
