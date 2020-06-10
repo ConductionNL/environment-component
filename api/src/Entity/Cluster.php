@@ -87,6 +87,34 @@ class Cluster
     private $name;
 
     /**
+     * @var string The status of this cluster
+     *
+     * @example running
+     *
+     * @Gedmo\Versioned
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $status = 'requested';
+
+    /**
+     * @var string The id of this cluster with its provide e.g. digital ocean
+     *
+     * @example e2984465-190a-4562-829e-a8cca81aa35d
+     *
+     * @Gedmo\Versioned
+     * @Assert\Length(
+     *      max = 255
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $providerId = '';
+
+    /**
      * @var string the description of this cluster
      *
      * @example This cluster is for conduction's own systems
@@ -161,6 +189,14 @@ class Cluster
     private $dateModified;
 
     /**
+     * @var Datetime The moment this cluster was configured
+     *
+     * @Groups({"read"})
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateConfigured;
+
+    /**
      * @var array Installed releases on this cluster
      *
      * @Groups({"read","write"})
@@ -187,6 +223,30 @@ class Cluster
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getProviderId(): ?string
+    {
+        return $this->providerId;
+    }
+
+    public function setProviderId(string $providerId): self
+    {
+        $this->providerId = $providerId;
 
         return $this;
     }
@@ -290,6 +350,18 @@ class Cluster
     public function setDateModified(?\DateTimeInterface $dateModified): self
     {
         $this->dateModified = $dateModified;
+
+        return $this;
+    }
+
+    public function getDateConfigured(): ?\DateTimeInterface
+    {
+        return $this->dateConfigured;
+    }
+
+    public function setDateConfigured(?\DateTimeInterface $dateConfigured): self
+    {
+        $this->dateConfigured = $dateConfigured;
 
         return $this;
     }
