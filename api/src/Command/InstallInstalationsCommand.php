@@ -65,6 +65,9 @@ class InstallInstalationsCommand extends Command
                 $processes[$key]->start();
             }
 
+            $processes[$key] = new Process(['bin/console', 'app:component:update', "{$result->getId()}"]);
+            $processes[$key]->start();
+
             //$io->warning('Lorem ipsum dolor sit amet');
             //$io->success('Lorem ipsum dolor sit amet');
         }
