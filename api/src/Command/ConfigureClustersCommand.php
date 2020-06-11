@@ -56,14 +56,28 @@ class ConfigureClustersCommand extends Command
         foreach ($results as $cluster) {
 
             $io->text("checking {$cluster->getName()}");
+
+            if($cluster->getProvider() == "Digital Ocean")
+            {
             $cluster->setStatus( $this->digitalOceanService->getStatus($cluster));
+            }
+            else
+                {
+                $io->text('Not a Digital Ocean cluster');
+            }
+
             // check if the cluster is running
             if($cluster->getStatus() == 'running'){
                 $io->text("configuring {$cluster->getName()}");
-                $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                if($cluster->getProvider() == "Digital Ocean")
+                {
+                    $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                }
+                else
+                {
+                    $io->text('Not a Digital Ocean cluster');
+                }
                 $this->clusterService->configureCluster($cluster);
-                $now = New \DateTime();
-                $cluster->setDateConfigured($now);
             }
             else{
                 $io->text("{$cluster->getName()} not yet ready....");

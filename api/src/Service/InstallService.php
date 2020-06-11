@@ -92,8 +92,18 @@ class InstallService
         }
 
         // Altijd een nieuwe kubeconfig ophalen
-        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
-        if (!in_array($installation->getEnvironment()->getName(), $this->clusterService->getNamespaces($installation->getEnvironment()->getCluster()))) {
+        //TODO: wanneer er een CYSO oplossing is hier ook de database providerafhankelijk maken
+        $cluster = $installation->getEnvironment()->getCluster();
+        switch ($cluster->getProvider()){
+            case 'Digital Ocean':
+                $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                break;
+            case 'CYSO':
+                break;
+            default:
+                break;
+        }
+        if (!in_array($installation->getEnvironment()->getName(), $this->clusterService->getNamespaces($cluster))) {
             $this->clusterService->createNamespace($installation->getEnvironment());
         }
 

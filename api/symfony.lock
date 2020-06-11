@@ -154,6 +154,12 @@
     "maennchen/zipstream-php": {
         "version": "2.1.0"
     },
+    "markbaker/complex": {
+        "version": "1.4.8"
+    },
+    "markbaker/matrix": {
+        "version": "1.2.0"
+    },
     "michelf/php-markdown": {
         "version": "1.9.0"
     },

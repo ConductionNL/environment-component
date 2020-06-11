@@ -2038,6 +2038,24 @@ paths:
               - asc
               - desc
         -
+          name: 'order[provider]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[configurations]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'order[providerId]'
           in: query
           required: false
@@ -9609,6 +9627,16 @@ components:
         status:
           description: 'The status of this cluster'
           type: string
+        provider:
+          description: 'The cloud provider where the cluster should be'
+          type: string
+          nullable: true
+        configurations:
+          description: 'The standard applications that have been installed'
+          type: array
+          items:
+            type: string
+          nullable: true
         providerId:
           description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
@@ -9659,6 +9687,10 @@ components:
         status:
           description: 'The status of this cluster'
           type: string
+        provider:
+          description: 'The cloud provider where the cluster should be'
+          type: string
+          nullable: true
         providerId:
           description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
@@ -9686,6 +9718,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Environment-write'
+        dateConfigured:
+          description: 'The moment this cluster was configured'
+          type: string
+          format: date-time
+          nullable: true
         releases:
           description: 'Installed releases on this cluster'
           type: array
@@ -9718,6 +9755,16 @@ components:
         status:
           description: 'The status of this cluster'
           type: string
+        provider:
+          description: 'The cloud provider where the cluster should be'
+          type: string
+          nullable: true
+        configurations:
+          description: 'The standard applications that have been installed'
+          type: array
+          items:
+            type: string
+          nullable: true
         providerId:
           description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
@@ -9777,6 +9824,10 @@ components:
         status:
           description: 'The status of this cluster'
           type: string
+        provider:
+          description: 'The cloud provider where the cluster should be'
+          type: string
+          nullable: true
         providerId:
           description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
@@ -9804,6 +9855,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Environment:jsonld-write'
+        dateConfigured:
+          description: 'The moment this cluster was configured'
+          type: string
+          format: date-time
+          nullable: true
         releases:
           description: 'Installed releases on this cluster'
           type: array
@@ -10852,6 +10908,13 @@ definitions:
         type: string
         example: running
         maxLength: 255
+      provider:
+        description: 'The cloud provider where the cluster should be'
+        type: string
+        example: running
+      configurations:
+        description: 'The standard applications that have been installed'
+        type: array
       providerId:
         description: 'The id of this cluster with its provide e.g. digital ocean'
         type: string
@@ -10892,6 +10955,10 @@ definitions:
         type: string
         example: running
         maxLength: 255
+      provider:
+        description: 'The cloud provider where the cluster should be'
+        type: string
+        example: running
       providerId:
         description: 'The id of this cluster with its provide e.g. digital ocean'
         type: string
@@ -10911,6 +10978,9 @@ definitions:
       token:
         description: 'the Tiller token of this cluster'
         type: string
+      dateConfigured:
+        description: 'The moment this cluster was configured'
+        type: \Datetime
       releases:
         description: 'Installed releases on this cluster'
         type: array
@@ -11387,12 +11457,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-06-09 13:54:58'
+        example: '2020-06-11 13:54:38'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-06-09 13:54:58'
+        example: '2020-06-11 13:54:38'
     required: []
   AuditTrail-write:
     properties:
@@ -11440,12 +11510,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-06-09 13:54:58'
+        example: '2020-06-11 13:54:38'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-06-09 13:54:58'
+        example: '2020-06-11 13:54:38'
     required: []
   ChangeLog-write:
     properties:

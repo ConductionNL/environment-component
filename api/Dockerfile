@@ -6,13 +6,6 @@
 # The base stage for all our stages
 
 FROM conduction/pc-php:prod AS api_platform_php
-# Note: Latest version of kubectl may be found at:
-# https://github.com/kubernetes/kubernetes/releases
-ENV KUBE_LATEST_VERSION="v1.17.5"
-# Note: Latest version of helm may be found at:
-# https://github.com/kubernetes/helm/releases
-ENV HELM_VERSION="v3.2.1"
-
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
