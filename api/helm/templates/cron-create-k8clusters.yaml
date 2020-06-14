@@ -1,9 +1,9 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "name" . }}-cron-install-installations
+  name: {{ include "name" . }}-cron-create-k8clusters
   labels:
-    app.kubernetes.io/name: {{ include "name" . }}-cron-install-installations
+    app.kubernetes.io/name: {{ include "name" . }}-cron-configure-k8clusters
     app.kubernetes.io/part-of: {{ include "name" . }}
     helm.sh/chart: {{ include "chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -20,7 +20,7 @@ spec:
             image: "{{ .Values.settings.registryBase }}/{{ .Values.settings.projectName }}-php:{{ .Values.settings.env }}"
             args:
             - bin/console 
-            - app:installations:install
+            - app:k8clusters:create
             env:
             -   name: JWT_SECRET_KEY
                 value: '%kernel.project_dir%/config/jwt/private.pem'
