@@ -6738,7 +6738,7 @@ paths:
           in: query
           required: false
           schema:
-            type: integer
+            type: string
         -
           name: 'id[]'
           in: query
@@ -6746,7 +6746,7 @@ paths:
           schema:
             type: array
             items:
-              type: integer
+              type: string
           style: form
           explode: true
         -
@@ -10356,6 +10356,15 @@ components:
       type: object
       description: ''
       properties:
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        name:
+          type: string
         description:
           description: 'the description of this health log'
           type: string
@@ -10387,6 +10396,8 @@ components:
       type: object
       description: ''
       properties:
+        name:
+          type: string
         description:
           description: 'the description of this health log'
           type: string
@@ -10416,6 +10427,15 @@ components:
           type: string
         '@type':
           readOnly: true
+          type: string
+        id:
+          readOnly: true
+          description: 'The UUID identifier of this resource'
+          externalDocs:
+            url: 'http://schema.org/identifier'
+          type: string
+          format: uuid
+        name:
           type: string
         description:
           description: 'the description of this health log'
@@ -10456,6 +10476,8 @@ components:
           type: string
         '@type':
           readOnly: true
+          type: string
+        name:
           type: string
         description:
           description: 'the description of this health log'
@@ -11147,6 +11169,12 @@ definitions:
       - cache
   HealthLog-read:
     properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name: []
       description:
         description: 'the description of this health log'
         type: string
@@ -11166,6 +11194,7 @@ definitions:
     required: []
   HealthLog-write:
     properties:
+      name: []
       description:
         description: 'the description of this health log'
         type: string
@@ -11387,12 +11416,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-06-08 13:01:21'
+        example: '2020-06-10 12:44:54'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-06-08 13:01:21'
+        example: '2020-06-10 12:44:54'
     required: []
   AuditTrail-write:
     properties:
@@ -11440,12 +11469,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-06-08 13:01:21'
+        example: '2020-06-10 12:44:54'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-06-08 13:01:21'
+        example: '2020-06-10 12:44:54'
     required: []
   ChangeLog-write:
     properties:
