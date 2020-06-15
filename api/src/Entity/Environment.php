@@ -118,6 +118,19 @@ class Environment
     private $debug = 0;
 
     /**
+     * @var string Should components be deployed to this environment with debuggin on or off?
+     *
+     * @example 1
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
+     * @Assert\NotNull
+     * @Assert\Choice({0, 1})
+     * @ORM\Column(type="integer")
+     */
+    private $web = 1;
+
+    /**
      * @var string The authentication token that is needed to access this token
      *
      * @example evc-dev
@@ -312,6 +325,18 @@ class Environment
     public function setCache(int $cache): self
     {
         $this->cache = $cache;
+
+        return $this;
+    }
+
+    public function getWeb(): ?int
+    {
+        return $this->web;
+    }
+
+    public function setWeb(?int $web): self
+    {
+        $this->web = $web;
 
         return $this;
     }

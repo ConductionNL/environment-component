@@ -16,58 +16,58 @@ jobs:
 
     build:
 
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v1
-            - name: Setting APP_NAME
-              run: |
-                  export NAME=$(grep APP_NAME= .env | cut -d '=' -f2)
-                  echo ::set-env name=APP_NAME::$NAME
-            - name: Print app name
-              run: echo "APP_NAME = $APP_NAME"
-            - name: Setting APP_ENV to dev
-              run: |
-                  echo ::set-env name=APP_ENV::dev
-                  echo ::set-env name=APP_BUILD::dev
-                  echo "set APP_ENV to $APP_ENV"
-            - name: Setting APP_ENV to prod
-              if: contains( github.ref, 'master' ) || contains( github.base_ref, 'master' )
-              run: |
-                  echo ::set-env name=APP_ENV::prod
-                  echo ::set-env name=APP_BUILD::prod
-                  echo "set APP_ENV to $APP_ENV"
-            - name: Set APP_BUILD to APP_VERSION
-              if: contains( github.ref, 'master' )
-              run: |
-                  export VERSION=$(grep APP_VERSION= .env | cut -d '=' -f2)
-                  echo ::set-env name=APP_BUILD::$VERSION
-                  echo "set APP_BUILD to $APP_BUILD"
-            - name: Setting APP_ENV to stag
-              if: contains( github.ref, 'staging' ) || contains( github.base_ref, 'staging' )
-              run: |
-                  echo ::set-env name=APP_ENV::stag
-                  echo ::set-env name=APP_BUILD::stag
-                  echo "set APP_ENV to $APP_ENV" 
-            - name: Print definitive APP_ENV
-              run: echo "APP_ENV is now $APP_ENV"
-            - name: Build the Docker image
-              run: docker-compose build --pull --build-arg APP_ENV=$APP_ENV --build-arg APP_BUILD=$APP_BUILD
-            - name: Run the docker image
-              run: docker-compose up -d
-            - name: Taking some sleep (for containers to come up)
-              run: sleep 20
-            - name: Check if all containers are running
-              run: docker ps
-            - name: Dumping the logs
-              run: docker-compose logs
-            - name: Database Update
-              run: docker-compose exec -T php bin/console doctrine:schema:update --force
-            #- name: Taking some more sleep (for database to be updated)
-            #  run: sleep 20
-            #- name: Database Check
-            #  run: docker-compose exec -T php bin/console doctrine:schema:validate
-            - name: Security Checks
-              run: docker-compose exec -T php composer req sensiolabs/security-checker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setting APP_NAME
+        run: | 
+            export NAME=$(grep APP_NAME= .env | cut -d '=' -f2)
+            echo ::set-env name=APP_NAME::$NAME
+      - name: Print app name
+        run: echo "APP_NAME = $APP_NAME"
+      - name: Setting APP_ENV to dev
+        run: | 
+          echo ::set-env name=APP_ENV::dev
+          echo ::set-env name=APP_BUILD::dev
+          echo "set APP_ENV to $APP_ENV"
+      - name: Setting APP_ENV to prod
+        if: contains( github.ref, 'master' ) || contains( github.base_ref, 'master' )
+        run: |
+            echo ::set-env name=APP_ENV::prod
+            echo ::set-env name=APP_BUILD::prod
+            echo "set APP_ENV to $APP_ENV"
+      - name: Set APP_BUILD to APP_VERSION
+        if: contains( github.ref, 'master' )
+        run: |
+          export VERSION=$(grep APP_VERSION= .env | cut -d '=' -f2)
+          echo ::set-env name=APP_BUILD::$VERSION
+          echo "set APP_BUILD to $APP_BUILD"
+      - name: Setting APP_ENV to stag
+        if: contains( github.ref, 'staging' ) || contains( github.base_ref, 'staging' )
+        run: |
+            echo ::set-env name=APP_ENV::stag
+            echo ::set-env name=APP_BUILD::stag
+            echo "set APP_ENV to $APP_ENV" 
+      - name: Print definitive APP_ENV
+        run: echo "APP_ENV is now $APP_ENV"
+      - name: Build the Docker image
+        run: docker-compose build --build-arg APP_ENV=$APP_ENV --build-arg APP_BUILD=$APP_BUILD
+      - name: Run the docker image
+        run: docker-compose up -d
+      - name: Taking some sleep (for containers to come up)
+        run: sleep 20
+      - name: Check if all containers are running
+        run: docker ps
+      - name: Dumping the logs
+        run: docker-compose logs
+      - name: Database Update
+        run: docker-compose exec -T php bin/console doctrine:schema:update --force
+      #- name: Taking some more sleep (for database to be updated)
+      #  run: sleep 20
+      #- name: Database Check
+      #  run: docker-compose exec -T php bin/console doctrine:schema:validate
+      - name: Security Checks
+        run: docker-compose exec -T php composer req sensiolabs/security-checker
 
             - name: Chores
               run: docker-compose down
