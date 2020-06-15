@@ -243,7 +243,7 @@ class ClusterService
             "{$installation->getComponent()->getCode()}-repository/{$installation->getComponent()->getCode()}",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
-            '--set', "settings.env={$installation->getEnvironment()->getName()},settings.debug={$installation->getEnvironment()->getDebug()},settings.domain={$installation->getDomain()->getName()},settings.cache={$installation->getEnvironment()->getCache()},settings.web=$web,security.commongroundKey={$installation->getEnvironment()->getAuthorization()},security.applicationKey={$installation->getEnvironment()->getAuthorization()},security.authorisationProviderUser=https://uc.{$installation->getDomain()->getName()},security.authorisationProviderApplication=https://uc.{$installation->getDomain()->getName()},postgresql.enabled=false,postgresql.url={$installation->getDbUrl()}$additionalSettings",
+            '--set', "settings.env={$installation->getEnvironment()->getName()},settings.debug={$installation->getEnvironment()->getDebug()},settings.domain={$installation->getDomain()->getName()},settings.cache={$installation->getEnvironment()->getCache()},settings.web={$installation->getEnvironment()->getWeb()},security.commongroundKey={$installation->getEnvironment()->getAuthorization()},security.applicationKey={$installation->getEnvironment()->getAuthorization()},security.authorisationProviderUser=https://uc.{$installation->getDomain()->getName()},security.authorisationProviderApplication=https://uc.{$installation->getDomain()->getName()},postgresql.enabled=false,postgresql.url={$installation->getDbUrl()}$additionalSettings",
         ]);
         $process->run();
         if (!$process->isSuccessful()) {
