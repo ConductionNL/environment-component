@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * This entity holds the information about a kubernetes cluster.
  *
  * @ApiResource(
+ *     attributes={"pagination_items_per_page"=30},
  *     	normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     	denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
  *     itemOperations={
@@ -136,7 +137,7 @@ class Cluster
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $providerId = "";
+    private $providerId = '';
 
     /**
      * @var string the description of this cluster

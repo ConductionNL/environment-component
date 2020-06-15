@@ -7,18 +7,18 @@ namespace App\Command;
 use App\Service\ClusterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ConfigureK8ClusterCommand  extends Command
+class ConfigureK8ClusterCommand extends Command
 {
     private $installService;
     private $em;
 
     private $clusterService;
+
     public function __construct(ClusterService $clusterService, EntityManagerInterface $em)
     {
         $this->clusterService = $clusterService;
@@ -50,9 +50,8 @@ class ConfigureK8ClusterCommand  extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $cluster = $this->em->getRepository('App\Entity\Cluster')->find( $input->getArgument('cluster'));
+        $cluster = $this->em->getRepository('App\Entity\Cluster')->find($input->getArgument('cluster'));
         $io->title('Deleting '.$cluster->getName().' ('.$cluster->getId().')');
         $this->clusterService->configureCluster($cluster);
-
     }
 }

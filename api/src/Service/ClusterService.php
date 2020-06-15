@@ -24,7 +24,6 @@ class ClusterService
 
     public function createCluster(Cluster $cluster)
     {
-
     }
 
     public function configureCluster(Cluster $cluster)
@@ -256,11 +255,12 @@ class ClusterService
 
         return $process->isSuccessful();
     }
-    public function getStatus(Cluster $cluster){
+
+    public function getStatus(Cluster $cluster)
+    {
         //TODO: make this dynamic based on provider
-
-
     }
+
     public function upgradeComponent(Installation $installation): bool
     {
         $additionalSettings = '';

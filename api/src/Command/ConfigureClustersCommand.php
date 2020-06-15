@@ -9,7 +9,6 @@ use App\Service\DigitalOceanService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -54,7 +53,6 @@ class ConfigureClustersCommand extends Command
         $io->progressStart(count($results));
 
         foreach ($results as $cluster) {
-
             $io->text("checking {$cluster->getName()}");
 
             if($cluster->getProvider() == "Digital Ocean")
@@ -67,7 +65,7 @@ class ConfigureClustersCommand extends Command
             }
 
             // check if the cluster is running
-            if($cluster->getStatus() == 'running'){
+            if ($cluster->getStatus() == 'running') {
                 $io->text("configuring {$cluster->getName()}");
                 if($cluster->getProvider() == "Digital Ocean")
                 {
@@ -85,7 +83,6 @@ class ConfigureClustersCommand extends Command
 
             $this->em->persist($cluster);
             $io->progressAdvance();
-
         }
 
         $this->em->flush();
