@@ -71,11 +71,15 @@ class InstallInstalationsCommand extends Command
             //$io->warning('Lorem ipsum dolor sit amet');
             //$io->success('Lorem ipsum dolor sit amet');
         }
-        foreach ($processes as $process) {
+        $errors = [];
+        foreach($processes as $key=>$process){
             $process->wait();
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
+            if(!$process->isSuccessful()){
+                $errors[$key] =  new ProcessFailedException($process);
             }
+        }
+        foreach($errors as $error){
+            echo $error->getMessage();
         }
 
         $io->progressFinish();

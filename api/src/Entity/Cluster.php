@@ -98,8 +98,32 @@ class Cluster
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $status = 'requested';
+    private $status = "requested";
+    /**
+     * @var string The cloud provider where the cluster should be
+     *
+     * @example running
+     *
+     * @Gedmo\Versioned
+     * @Assert\Choice(
+     * {
+     *     "CYSO",
+     *     "Digital Ocean"
+     * }
+     * )
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $provider;
 
+    /**
+     * @var array The standard applications that have been installed
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read"})
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $configurations = [];
     /**
      * @var string The id of this cluster with its provide e.g. digital ocean
      *
@@ -191,7 +215,7 @@ class Cluster
     /**
      * @var Datetime The moment this cluster was configured
      *
-     * @Groups({"read"})
+     * @Groups({"read","write"})
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateConfigured;
@@ -203,6 +227,8 @@ class Cluster
      * @ORM\Column(type="array", nullable=true)
      */
     private $releases = [];
+
+
 
     public function __construct()
     {
@@ -413,6 +439,30 @@ class Cluster
     public function setReleases(?array $releases): self
     {
         $this->releases = $releases;
+
+        return $this;
+    }
+
+    public function getProvider(): ?string
+    {
+        return $this->provider;
+    }
+
+    public function setProvider(?string $provider): self
+    {
+        $this->provider = $provider;
+
+        return $this;
+    }
+
+    public function getConfigurations(): ?array
+    {
+        return $this->configurations;
+    }
+
+    public function setConfigurations(?array $configurations): self
+    {
+        $this->configurations = $configurations;
 
         return $this;
     }

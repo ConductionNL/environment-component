@@ -9,7 +9,7 @@ settings:
   title: Environment Component
   version: V.0.1
   id: 
-  description: 'Dit is een component om andere componenten uit te rollen'
+  description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.&#039;'
   type: component
   repro: https://github.com/ConductionNL/proto-component
   demo: evc.zaakonline.nl
@@ -27,7 +27,7 @@ settings:
   cache: 1
   replicaCount: 1
   corsAllowOrigin: ['*']
-  trustedHosts: 'localhost$|^(.+\.)127.0.0.1$|^(.+\.)?conduction\.nl$'
+  trustedHosts: '^.+$'
   pullPolicy: Always
   # You will need these proxies on kubernetes
   trustedProxies:
@@ -63,12 +63,13 @@ php:
     jwtSecret: ""
   env: prod
   secret: ""
+  replicaCount: 2
 
 nginx:
   repository: docker.io/conduction/protocomponent-nginx
   tag: latest
   pullPolicy: Always
-  replicaCount: 1
+  replicaCount: 2
 
 varnish:
   enabled: true
