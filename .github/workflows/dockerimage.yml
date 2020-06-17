@@ -69,41 +69,41 @@ jobs:
       - name: Security Checks
         run: docker-compose exec -T php composer req sensiolabs/security-checker
 
-            - name: Chores
-              run: docker-compose down
-            - name: Login to DockerHub Registry
-              id: dockerhub-login
-              run: |
-                  if [ "${{ secrets.DOCKERHUB_PASSWORD }}" != "" ] && [ "${{ secrets.DOCKERHUB_USERNAME }}" != "" ]; then
-                    echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-                    echo "##[set-output name=success;]true"
-                  else
-                    echo "##[set-output name=success;]false"
-                  fi
-            - if: steps.dockerhub-login.outputs.success == 'true' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/development')
-              name: Push to docker hub
-              run: docker-compose push
+      - name: Chores
+        run: docker-compose down
+      - name: Login to DockerHub Registry
+        id: dockerhub-login
+        run: |
+          if [ "${{ secrets.DOCKERHUB_PASSWORD }}" != "" ] && [ "${{ secrets.DOCKERHUB_USERNAME }}" != "" ]; then
+            echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+            echo "##[set-output name=success;]true"
+          else
+            echo "##[set-output name=success;]false"
+          fi
+      - if: steps.dockerhub-login.outputs.success == 'true' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/development')
+        name: Push to docker hub
+        run: docker-compose push
 
-            - name: Export release code
-              if: (success() || failure())
-              id: releasecode
-              run: |
-                  export RELEASE=$APP_BUILD-$(git rev-parse --short $GITHUB_SHA)
-                  echo "##[set-output name=releasename]$RELEASE"
-            - name: Print release name
-              if: (success() || failure())
-              run: echo $RELEASENAME
-              env:
-                  RELEASENAME: ${{ steps.releasecode.outputs.releasename }}
-            - name: Create Release
-              if: contains( github.ref, 'master' ) && steps.kubeconfig.outputs.success == 'true' && ( success() || failure() )
-              id: create_release
-              uses: actions/create-release@v1
-              continue-on-error: true
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-              with:
-                  tag_name: ${{ steps.releasecode.outputs.releasename }}
-                  release_name: ${{ steps.releasecode.outputs.releasename }}
-                  draft: false
-                  prerelease: false
+      - name: Export release code
+        if: (success() || failure())
+        id: releasecode
+        run: |
+          export RELEASE=$APP_BUILD-$(git rev-parse --short $GITHUB_SHA)
+          echo "##[set-output name=releasename]$RELEASE"
+      - name: Print release name
+        if: (success() || failure())
+        run: echo $RELEASENAME
+        env:
+          RELEASENAME: ${{ steps.releasecode.outputs.releasename }}
+      - name: Create Release
+        if: contains( github.ref, 'master' ) && steps.kubeconfig.outputs.success == 'true' && ( success() || failure() )
+        id: create_release
+        uses: actions/create-release@v1
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ steps.releasecode.outputs.releasename }}
+          release_name: ${{ steps.releasecode.outputs.releasename }}
+          draft: false
+          prerelease: false
