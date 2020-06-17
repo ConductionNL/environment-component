@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Cluster;
 use App\Entity\Environment;
 use App\Entity\Installation;
+use DateTime;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -12,9 +13,10 @@ class ClusterService
 {
     public function writeKubeconfig(Cluster $cluster)
     {
-        file_put_contents(dirname(__FILE__, 3).'/var/kubeconfig.yaml', $cluster->getKubeconfig());
+        $hash = hash('sha256',new DateTime("now"));
+        file_put_contents(dirname(__FILE__, 3).'/var/kubeconfig-'.$hash.'.yaml', $cluster->getKubeconfig());
 
-        return dirname(__FILE__, 3).'/var/kubeconfig.yaml';
+        return dirname(__FILE__, 3).'/var/kubeconfig-'.$hash.'.yaml';
     }
 
     public function removeKubeconfig(string $filename)
