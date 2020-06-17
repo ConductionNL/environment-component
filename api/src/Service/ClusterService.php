@@ -13,8 +13,7 @@ class ClusterService
 {
     public function writeKubeconfig(Cluster $cluster)
     {
-        $date = new DateTime("now");
-        $stamp = $date->getTimestamp();
+        $stamp = microtime();
         file_put_contents(dirname(__FILE__, 3).'/var/kubeconfig-'.$stamp.'.yaml', $cluster->getKubeconfig());
 
         return dirname(__FILE__, 3).'/var/kubeconfig-'.$stamp.'.yaml';
