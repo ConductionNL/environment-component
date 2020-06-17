@@ -93,7 +93,16 @@ class InstallService
 
     public function rollingUpdate(Installation $installation)
     {
-        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        $cluster = $installation->getEnvironment()->getCluster();
+        switch ($cluster->getProvider()){
+            case 'Digital Ocean':
+                $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                break;
+            case 'CYSO':
+                break;
+            default:
+                break;
+        }
 
         try {
             return $this->clusterService->restartComponent($installation);
