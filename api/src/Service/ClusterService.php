@@ -14,10 +14,10 @@ class ClusterService
     public function writeKubeconfig(Cluster $cluster)
     {
         $date = new DateTime("now");
-        $hash = hash('sha256',$date->getTimestamp());
-        file_put_contents(dirname(__FILE__, 3).'/var/kubeconfig-'.$hash.'.yaml', $cluster->getKubeconfig());
+        $stamp = $date->getTimestamp();
+        file_put_contents(dirname(__FILE__, 3).'/var/kubeconfig-'.$stamp.'.yaml', $cluster->getKubeconfig());
 
-        return dirname(__FILE__, 3).'/var/kubeconfig-'.$hash.'.yaml';
+        return dirname(__FILE__, 3).'/var/kubeconfig-'.$stamp.'.yaml';
     }
 
     public function removeKubeconfig(string $filename)
