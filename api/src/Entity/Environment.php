@@ -125,7 +125,7 @@ class Environment
      * @Groups({"read", "write"})
      * @Assert\NotNull
      * @Assert\Choice({0, 1})
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $web = 1;
 
