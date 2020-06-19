@@ -40,8 +40,8 @@ class K8clusterCreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('Looking for clusters');
         $clusters = $this->em->getRepository('App\Entity\Cluster')->findBy(['status'=>'requested']);
-        foreach ($clusters as $cluster) {
-            if ($cluster instanceof Cluster) {
+        foreach($clusters as $cluster){
+            if($cluster instanceof Cluster && $cluster->getProvider() == "Digital Ocean"){
                 $io->title('Creating '.$cluster->getName().' ('.$cluster->getId().')');
                 $this->doService->createKubernetesCluster($cluster);
             }

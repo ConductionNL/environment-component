@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
+ *     attributes={"pagination_items_per_page"=30},
  *     	normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     	denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
  *     itemOperations={
@@ -266,7 +267,7 @@ class Installation
      * @var Property additional properties that are required for this installation, i.e. external API keys
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade="persist")
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade={"persist","remove"})
      */
     private $properties;
 

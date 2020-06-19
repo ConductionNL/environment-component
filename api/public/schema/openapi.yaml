@@ -10,7 +10,7 @@ info:
     - Version: V.0.1
     - Repository: [online](https://github.com/ConductionNL/proto-component) / [zip](https://github.com/ConductionNL/proto-component/archive/master.zip)
     - Docker Image: [online](https://hub.docker.com/repository/docker/conduction/evc-php) 
-    - Datamodel: [postman](/schema/evc.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [mwb](/schema/datamodel.mwb) 
+    - Datamodel: [postman](/schema/evc.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [modelio (zip)](/schema/Datamodel_Modelio.zip) 
     
     'Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.'         
     
@@ -2030,6 +2030,24 @@ paths:
               - desc
         -
           name: 'order[status]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[provider]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[configurations]'
           in: query
           required: false
           schema:
@@ -5527,6 +5545,15 @@ paths:
               - desc
         -
           name: 'order[debug]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[web]'
           in: query
           required: false
           schema:
@@ -9609,6 +9636,16 @@ components:
         status:
           description: 'The status of this cluster'
           type: string
+        provider:
+          description: 'The cloud provider where the cluster should be'
+          type: string
+          nullable: true
+        configurations:
+          description: 'The standard applications that have been installed'
+          type: array
+          items:
+            type: string
+          nullable: true
         providerId:
           description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
@@ -9659,6 +9696,10 @@ components:
         status:
           description: 'The status of this cluster'
           type: string
+        provider:
+          description: 'The cloud provider where the cluster should be'
+          type: string
+          nullable: true
         providerId:
           description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
@@ -9686,6 +9727,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Environment-write'
+        dateConfigured:
+          description: 'The moment this cluster was configured'
+          type: string
+          format: date-time
+          nullable: true
         releases:
           description: 'Installed releases on this cluster'
           type: array
@@ -9718,6 +9764,16 @@ components:
         status:
           description: 'The status of this cluster'
           type: string
+        provider:
+          description: 'The cloud provider where the cluster should be'
+          type: string
+          nullable: true
+        configurations:
+          description: 'The standard applications that have been installed'
+          type: array
+          items:
+            type: string
+          nullable: true
         providerId:
           description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
@@ -9777,6 +9833,10 @@ components:
         status:
           description: 'The status of this cluster'
           type: string
+        provider:
+          description: 'The cloud provider where the cluster should be'
+          type: string
+          nullable: true
         providerId:
           description: 'The id of this cluster with its provide e.g. digital ocean'
           type: string
@@ -9804,6 +9864,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Environment:jsonld-write'
+        dateConfigured:
+          description: 'The moment this cluster was configured'
+          type: string
+          format: date-time
+          nullable: true
         releases:
           description: 'Installed releases on this cluster'
           type: array
@@ -10199,6 +10264,9 @@ components:
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
+        web:
+          description: 'Should components be deployed to this environment with debuggin on or off?'
+          type: integer
         cluster:
           $ref: '#/components/schemas/Cluster-read'
         installations:
@@ -10222,6 +10290,7 @@ components:
       required:
         - name
         - debug
+        - web
         - cache
     Environment-write:
       type: object
@@ -10229,6 +10298,7 @@ components:
       required:
         - name
         - debug
+        - web
         - authorization
         - cache
       properties:
@@ -10240,6 +10310,9 @@ components:
           type: string
           nullable: true
         debug:
+          description: 'Should components be deployed to this environment with debuggin on or off?'
+          type: integer
+        web:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
         authorization:
@@ -10286,6 +10359,9 @@ components:
         debug:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
+        web:
+          description: 'Should components be deployed to this environment with debuggin on or off?'
+          type: integer
         cluster:
           $ref: '#/components/schemas/Cluster:jsonld-read'
         installations:
@@ -10309,6 +10385,7 @@ components:
       required:
         - name
         - debug
+        - web
         - cache
     'Environment:jsonld-write':
       type: object
@@ -10316,6 +10393,7 @@ components:
       required:
         - name
         - debug
+        - web
         - authorization
         - cache
       properties:
@@ -10336,6 +10414,9 @@ components:
           type: string
           nullable: true
         debug:
+          description: 'Should components be deployed to this environment with debuggin on or off?'
+          type: integer
+        web:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
         authorization:
@@ -10874,6 +10955,13 @@ definitions:
         type: string
         example: running
         maxLength: 255
+      provider:
+        description: 'The cloud provider where the cluster should be'
+        type: string
+        example: running
+      configurations:
+        description: 'The standard applications that have been installed'
+        type: array
       providerId:
         description: 'The id of this cluster with its provide e.g. digital ocean'
         type: string
@@ -10914,6 +11002,10 @@ definitions:
         type: string
         example: running
         maxLength: 255
+      provider:
+        description: 'The cloud provider where the cluster should be'
+        type: string
+        example: running
       providerId:
         description: 'The id of this cluster with its provide e.g. digital ocean'
         type: string
@@ -10933,6 +11025,9 @@ definitions:
       token:
         description: 'the Tiller token of this cluster'
         type: string
+      dateConfigured:
+        description: 'The moment this cluster was configured'
+        type: \Datetime
       releases:
         description: 'Installed releases on this cluster'
         type: array
@@ -11115,6 +11210,10 @@ definitions:
         description: 'Should components be deployed to this environment with debuggin on or off?'
         type: string
         example: '1'
+      web:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
@@ -11132,6 +11231,7 @@ definitions:
     required:
       - name
       - debug
+      - web
       - authorization
       - cache
   Environment-write:
@@ -11146,6 +11246,10 @@ definitions:
         type: string
         example: 'This common ground component describes common ground components'
       debug:
+        description: 'Should components be deployed to this environment with debuggin on or off?'
+        type: string
+        example: '1'
+      web:
         description: 'Should components be deployed to this environment with debuggin on or off?'
         type: string
         example: '1'
@@ -11165,6 +11269,7 @@ definitions:
     required:
       - name
       - debug
+      - web
       - authorization
       - cache
   HealthLog-read:
@@ -11416,12 +11521,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-06-10 12:44:54'
+        example: '2020-06-15 10:25:21'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-06-10 12:44:54'
+        example: '2020-06-15 10:25:21'
     required: []
   AuditTrail-write:
     properties:
@@ -11469,12 +11574,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-06-10 12:44:54'
+        example: '2020-06-15 10:25:21'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-06-10 12:44:54'
+        example: '2020-06-15 10:25:21'
     required: []
   ChangeLog-write:
     properties:
@@ -11565,7 +11670,7 @@ x-commonground:
       url: 'https://github.com/ConductionNL'
       email: info@conduction.nl
     -
-      name: 'Gemeente ''s-Hertogenbosch'
+      name: 'Gemeente "s-Hertogenbosch'
       url: 'https://github.com/gemeenteshertogenbosch'
       email: info@s-hertogenbosch.nl/
     -

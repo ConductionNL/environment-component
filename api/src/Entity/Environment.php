@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
+ *     attributes={"pagination_items_per_page"=30},
  *     	normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     	denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
  *     itemOperations={
@@ -115,6 +116,19 @@ class Environment
      * @ORM\Column(type="integer")
      */
     private $debug = 0;
+
+    /**
+     * @var string Should components be deployed to this environment with debuggin on or off?
+     *
+     * @example 1
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
+     * @Assert\NotNull
+     * @Assert\Choice({0, 1})
+     * @ORM\Column(type="integer")
+     */
+    private $web = 1;
 
     /**
      * @var string The authentication token that is needed to access this token
@@ -311,6 +325,18 @@ class Environment
     public function setCache(int $cache): self
     {
         $this->cache = $cache;
+
+        return $this;
+    }
+
+    public function getWeb(): ?int
+    {
+        return $this->web;
+    }
+
+    public function setWeb(?int $web): self
+    {
+        $this->web = $web;
 
         return $this;
     }
