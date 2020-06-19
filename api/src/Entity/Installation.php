@@ -239,7 +239,7 @@ class Installation
     /**
      * @var Datetime The moment this entity was last installed
      *
-     * @Groups({"read"})
+     * @Groups({"read", "write"})
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateInstalled;

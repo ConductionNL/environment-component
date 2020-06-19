@@ -68,6 +68,9 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
         }
         if (strpos($route, '_helm_upgrade')) {
             $results = $this->installService->update($component);
+            if($component instanceof Installation){
+                $component->setDateInstalled(new \DateTime("now"));
+            }
         }
         if (strpos($route, '_helm_update')) {
             if ($component instanceof Installation) {
