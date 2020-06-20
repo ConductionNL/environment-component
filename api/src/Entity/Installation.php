@@ -239,7 +239,7 @@ class Installation
     /**
      * @var Datetime The moment this entity was last installed
      *
-     * @Groups({"read"})
+     * @Groups({"read", "write"})
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateInstalled;
@@ -266,7 +266,7 @@ class Installation
      * @var Property additional properties that are required for this installation, i.e. external API keys
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade={"persist","remove"})
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $properties;
 

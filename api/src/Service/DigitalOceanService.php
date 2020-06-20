@@ -325,6 +325,8 @@ class DigitalOceanService
     public function createKubeConfig(Cluster $cluster)
     {
         $cluster = $this->getKubernetesClusterByName($cluster);
+        $this->em->persist($cluster);
+        $this->em->flush();
 
         return $cluster;
     }
