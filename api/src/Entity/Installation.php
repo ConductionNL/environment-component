@@ -205,7 +205,7 @@ class Installation
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $helmVersion;
+    private $helmVersion = "2.16.6";
 
     /**
      * @Groups({"read","write"})
