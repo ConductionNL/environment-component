@@ -120,10 +120,10 @@ class Environment
      * @var string Should components be deployed to this environment with debuggin on or off?
      *
      * @example 1
+     * @default 1
      *
      * @Gedmo\Versioned
      * @Groups({"read", "write"})
-     * @Assert\NotNull
      * @Assert\Choice({0, 1})
      * @ORM\Column(type="integer", nullable=true)
      */

@@ -195,11 +195,10 @@ class Installation
     private $dbUrl;
 
     /**
-     * @var string the Github Repository that contains this component
+     * @var string the helm version of the helm instalaltion files
      *
      * @example https://github.com/ConductionNL/environment-component
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
