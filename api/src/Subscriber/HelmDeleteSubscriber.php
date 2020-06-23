@@ -70,7 +70,8 @@ class HelmDeleteSubscriber implements EventSubscriberInterface
         if($component instanceof Installation){
             $results = $this->installService->delete($component);
             $component->setDateInstalled(null);
-
+            $this->em->persist($component);
+            $this->em->flush();
         }
         //$component['message'] = $results;
         $response = $this->serializer->serialize(

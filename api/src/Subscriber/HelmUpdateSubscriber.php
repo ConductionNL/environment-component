@@ -71,16 +71,25 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
             $results = $this->installService->update($component);
             if($component instanceof Installation){
                 $component->setDateInstalled(new \DateTime("now"));
+
+                $this->em->persist($component);
+                $this->em->flush();
             }
         }
         if (strpos($route, '_helm_update')) {
             if ($component instanceof Installation) {
                 $results = $this->installService->rollingUpdate($component);
                 $component->setDateInstalled(new \DateTime("now"));
+
+                $this->em->persist($component);
+                $this->em->flush();
             } elseif ($component instanceof Environment) {
                 foreach ($component->getInstallations() as $installation) {
                     if ($installation->getDateInstalled() != null) {
-                        $results = $this->installService->rollingUpdate($installation);
+                        $result = $this->installService->rollingUpdate($installation);
+
+                        $this->em->persist($installation);
+                        $this->em->flush();
                     }
                 }
             }
