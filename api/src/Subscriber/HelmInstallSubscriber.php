@@ -68,6 +68,10 @@ class HelmInstallSubscriber implements EventSubscriberInterface
         }
 
         $results = $this->installService->install($component);
+        $component->setDateInstalled(new \DateTime("now"));
+
+        $this->em->persist($component);
+        $this->em->flush();
         //$component['message'] = $results;
         $response = $this->serializer->serialize(
             $component,

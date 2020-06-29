@@ -4,6 +4,7 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Component;
+use App\Entity\Installation;
 use App\Service\InstallService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -66,8 +67,12 @@ class HelmDeleteSubscriber implements EventSubscriberInterface
                 $contentType = 'application/json';
                 $renderType = 'json';
         }
-
-        $results = $this->installService->delete($component);
+        if($component instanceof Installation){
+            $results = $this->installService->delete($component);
+            $component->setDateInstalled(null);
+            $this->em->persist($component);
+            $this->em->flush();
+        }
         //$component['message'] = $results;
         $response = $this->serializer->serialize(
             $component,

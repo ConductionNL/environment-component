@@ -40,7 +40,7 @@ class Property
 
     /**
      * @var string the value of the property
-     * @Groups({"write"})
+     * @Groups({"read","write"})
      *
      * @ORM\Column(type="text")
      */

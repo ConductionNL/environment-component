@@ -34,7 +34,7 @@ api_platform:
         - Version: %env(APP_VERSION)%
         - Repository: [online](%env(APP_REPRO)%) / [zip](%env(APP_REPRO)%/archive/master.zip)
         - Docker Image: [online](%env(APP_CONTAINER)%) 
-        - Datamodel: [postman](/schema/%env(APP_NAME)%.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [mwb](/schema/datamodel.mwb) 
+        - Datamodel: [postman](/schema/%env(APP_NAME)%.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [modelio (zip)](/schema/Datamodel_Modelio.zip) 
         
         %env(APP_DESCRIPTION)%         
     
@@ -44,6 +44,12 @@ api_platform:
     show_webby: false
     enable_swagger_ui: false
     enable_re_doc: true
+
+    # We need pagination for very long tables
+    collection:
+        pagination:
+            client_items_per_page: true # Disabled by default
+            items_per_page_parameter_name: limit # Default value
     
     # In the NL api strategie we use snake case for naming
     # name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'

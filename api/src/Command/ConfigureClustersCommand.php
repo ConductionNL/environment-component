@@ -5,21 +5,23 @@
 namespace App\Command;
 
 use App\Service\ClusterService;
+use App\Service\DigitalOceanService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ConfigureClustersCommand extends Command
 {
     private $clusterService;
+    private $digitalOceanService;
     private $em;
 
-    public function __construct(ClusterService $clusterService, EntityManagerInterface $em)
+    public function __construct(ClusterService $clusterService, EntityManagerInterface $em, DigitalOceanService $digitalOceanService)
     {
         $this->clusterService = $clusterService;
+        $this->digitalOceanService = $digitalOceanService;
         $this->em = $em;
 
         parent::__construct();
@@ -51,15 +53,29 @@ class ConfigureClustersCommand extends Command
         $io->progressStart(count($results));
 
         foreach ($results as $cluster) {
-
             $io->text("checking {$cluster->getName()}");
-            $cluster->setStatus( $this->clusterService->getStatus($cluster));
+
+            if($cluster->getProvider() == "Digital Ocean")
+            {
+            $cluster->setStatus( $this->digitalOceanService->getStatus($cluster));
+            }
+            else
+                {
+                $io->text('Not a Digital Ocean cluster');
+            }
+
             // check if the cluster is running
-            if($cluster->getStatus() == 'running'){
+            if ($cluster->getStatus() == 'running') {
                 $io->text("configuring {$cluster->getName()}");
-                $this->clusterService->configure($cluster);
-                $now = New \DateTime();
-                $cluster->setDateConfigured($now);
+                if($cluster->getProvider() == "Digital Ocean")
+                {
+                    $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                }
+                else
+                {
+                    $io->text('Not a Digital Ocean cluster');
+                }
+                $this->clusterService->configureCluster($cluster);
             }
             else{
                 $io->text("{$cluster->getName()} not yet ready....");
@@ -67,7 +83,6 @@ class ConfigureClustersCommand extends Command
 
             $this->em->persist($cluster);
             $io->progressAdvance();
-
         }
 
         $this->em->flush();

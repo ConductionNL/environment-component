@@ -195,18 +195,17 @@ class Installation
     private $dbUrl;
 
     /**
-     * @var string the Github Repository that contains this component
+     * @var string the helm version of the helm instalaltion files
      *
      * @example https://github.com/ConductionNL/environment-component
      * @Gedmo\Versioned
-     * @Assert\NotNull
      * @Assert\Length(
      *      max = 255
      * )
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $helmVersion;
+    private $helmVersion = "2.16.6";
 
     /**
      * @Groups({"read","write"})
@@ -239,7 +238,7 @@ class Installation
     /**
      * @var Datetime The moment this entity was last installed
      *
-     * @Groups({"read"})
+     * @Groups({"read", "write"})
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateInstalled;
@@ -266,7 +265,7 @@ class Installation
      * @var Property additional properties that are required for this installation, i.e. external API keys
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade="persist")
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $properties;
 
