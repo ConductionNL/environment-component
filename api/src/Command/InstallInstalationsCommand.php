@@ -61,15 +61,12 @@ class InstallInstalationsCommand extends Command
             $io->progressAdvance();
             $io->text("Installing {$result->getComponent()->getName()} on {$result->getDomain()->getCluster()->getName()}");
             if ($result instanceof Installation && $result->getDateInstalled() == null || $result->getDateInstalled()->diff($result->getDateModified())->d != 0) {
+
                 $processes[$key] = new Process(['bin/console', 'app:component:update', "{$result->getId()}"]);
+
+                $processes[$key]->setTimeout(3600);
                 $processes[$key]->start();
             }
-
-            $processes[$key] = new Process(['bin/console', 'app:component:update', "{$result->getId()}"]);
-            $processes[$key]->start();
-
-            //$io->warning('Lorem ipsum dolor sit amet');
-            //$io->success('Lorem ipsum dolor sit amet');
         }
         $errors = [];
         foreach($processes as $key=>$process){

@@ -31,7 +31,18 @@ class InstallService
 
     public function delete(Installation $installation)
     {
-        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        // Altijd een nieuwe kubeconfig ophalen
+        //TODO: wanneer er een CYSO oplossing is hier ook de database providerafhankelijk maken
+        $cluster = $installation->getEnvironment()->getCluster();
+        switch ($cluster->getProvider()){
+            case 'Digital Ocean':
+                $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                break;
+            case 'CYSO':
+                break;
+            default:
+                break;
+        }
 
         try {
             $result = $this->clusterService->deleteComponent($installation);
@@ -55,7 +66,17 @@ class InstallService
         }
 
         // Altijd een nieuwe kubeconfig ophalen
-        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        //TODO: wanneer er een CYSO oplossing is hier ook de database providerafhankelijk maken
+        $cluster = $installation->getEnvironment()->getCluster();
+        switch ($cluster->getProvider()){
+            case 'Digital Ocean':
+                $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                break;
+            case 'CYSO':
+                break;
+            default:
+                break;
+        }
 
         try {
             $result = $this->clusterService->upgradeComponent($installation);
@@ -72,7 +93,16 @@ class InstallService
 
     public function rollingUpdate(Installation $installation)
     {
-        $this->digitalOceanService->createKubeConfig($installation->getEnvironment()->getCluster());
+        $cluster = $installation->getEnvironment()->getCluster();
+        switch ($cluster->getProvider()){
+            case 'Digital Ocean':
+                $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                break;
+            case 'CYSO':
+                break;
+            default:
+                break;
+        }
 
         try {
             return $this->clusterService->restartComponent($installation);

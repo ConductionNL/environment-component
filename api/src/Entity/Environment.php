@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     attributes={"pagination_items_per_page"=30},
  *     	normalizationContext={"groups"={"read"}, "enable_max_depth"=true},
  *     	denormalizationContext={"groups"={"write"}, "enable_max_depth"=true},
  *     itemOperations={
@@ -124,9 +123,8 @@ class Environment
      *
      * @Gedmo\Versioned
      * @Groups({"read", "write"})
-     * @Assert\NotNull
      * @Assert\Choice({0, 1})
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $web = 1;
 
