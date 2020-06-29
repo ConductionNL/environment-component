@@ -538,8 +538,6 @@ class Installation
     {
         if ($this->deploymentName) {
             return $this->deploymentName;
-        } else {
-            return "{$this->getComponent()->getCode()}-{$this->getEnvironment()->getName()}";
         }
     }
 

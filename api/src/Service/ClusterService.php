@@ -237,11 +237,18 @@ class ClusterService
         }
         $this->addRepo($installation);
 
+        if($name = $installation->getDeploymentName()){
+
+        }else{
+            $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
+        }
+
+
         //Install
         $process = new Process([
             'helm',
             'install',
-            "{$installation->getDeploymentName()}",
+            "{$name}",
             "{$installation->getComponent()->getCode()}-repository/{$installation->getComponent()->getCode()}",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
@@ -271,12 +278,17 @@ class ClusterService
         }
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
         $this->addRepo($installation);
+        if($name = $installation->getDeploymentName()){
+
+        }else{
+            $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
+        }
 
         //Install
         $process = new Process([
             'helm',
             'upgrade',
-            "{$installation->getDeploymentName()}",
+            "{$name}",
             "{$installation->getComponent()->getCode()}-repository/{$installation->getComponent()->getCode()}",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
@@ -296,12 +308,16 @@ class ClusterService
     public function deleteComponent(Installation $installation): bool
     {
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
+        if($name = $installation->getDeploymentName()){
 
+        }else{
+            $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
+        }
         //Install
         $process = new Process([
             'helm',
             'delete',
-            "{$installation->getDeploymentName()}",
+            "{$name}",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
         ]);
@@ -312,7 +328,7 @@ class ClusterService
             throw new ProcessFailedException($process);
         }
         sleep(25);
-        if ($installation->hasDeploymentName()) {
+        if ($installation->getDeploymentName()) {
             $name = "{$installation->getDeploymentName()}-{$installation->getEnvironment()->getName()}-{$installation->getDeploymentName()}";
         } else {
             $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}-{$installation->getComponent()->getCode()}";
