@@ -67,7 +67,7 @@ class HelmDeleteSubscriber implements EventSubscriberInterface
                 $contentType = 'application/json';
                 $renderType = 'json';
         }
-        if($component instanceof Installation){
+        if ($component instanceof Installation) {
             $results = $this->installService->delete($component);
             $component->setDateInstalled(null);
             $this->em->persist($component);
