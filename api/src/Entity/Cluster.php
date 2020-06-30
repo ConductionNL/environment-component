@@ -98,7 +98,7 @@ class Cluster
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $status = "requested";
+    private $status = 'requested';
     /**
      * @var string The cloud provider where the cluster should be
      *
@@ -227,8 +227,6 @@ class Cluster
      * @ORM\Column(type="array", nullable=true)
      */
     private $releases = [];
-
-
 
     public function __construct()
     {
