@@ -61,7 +61,6 @@ class InstallInstalationsCommand extends Command
             $io->progressAdvance();
             $io->text("Installing {$result->getComponent()->getName()} on {$result->getDomain()->getCluster()->getName()}");
             if ($result instanceof Installation && $result->getDateInstalled() == null || $result->getDateInstalled()->diff($result->getDateModified())->d != 0) {
-
                 $processes[$key] = new Process(['bin/console', 'app:component:update', "{$result->getId()}"]);
 
                 $processes[$key]->setTimeout(3600);
@@ -69,13 +68,13 @@ class InstallInstalationsCommand extends Command
             }
         }
         $errors = [];
-        foreach($processes as $key=>$process){
+        foreach ($processes as $key=>$process) {
             $process->wait();
-            if(!$process->isSuccessful()){
-                $errors[$key] =  new ProcessFailedException($process);
+            if (!$process->isSuccessful()) {
+                $errors[$key] = new ProcessFailedException($process);
             }
         }
-        foreach($errors as $error){
+        foreach ($errors as $error) {
             echo $error->getMessage();
         }
 

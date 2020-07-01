@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Entity\Cluster;
 use App\Entity\Environment;
 use App\Entity\Installation;
-use DateTime;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -38,50 +37,47 @@ class ClusterService
         $processes = [];
         $errors = [];
 
-        if(!in_array('kubernetes-dashboard', $configurations)){
+        if (!in_array('kubernetes-dashboard', $configurations)) {
             echo "Installing kubernetes dashboard\n";
-            $process = new Process(['kubectl', 'create', '-f','https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml', "--kubeconfig={$kubeconfig}"]);
+            $process = new Process(['kubectl', 'create', '-f', 'https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml', "--kubeconfig={$kubeconfig}"]);
             $process->run();
 
-            if($process->isSuccessful()){
+            if ($process->isSuccessful()) {
                 $configurations[] = 'kubernetes-dashboard';
-            }
-            else{
+            } else {
                 $error = new ProcessFailedException($process);
             }
         }
-        if(in_array('kubernetes-dashboard', $configurations) && !in_array('ingress', $configurations)){
+        if (in_array('kubernetes-dashboard', $configurations) && !in_array('ingress', $configurations)) {
             echo "Installing Ingress\n";
-            $process = new Process(["helm", "repo","add","stable","https://kubernetes-charts.storage.googleapis.com"]);
+            $process = new Process(['helm', 'repo', 'add', 'stable', 'https://kubernetes-charts.storage.googleapis.com']);
             $process->run();
 
-            if(!$process->isSuccessful()){
+            if (!$process->isSuccessful()) {
                 $errors[] = new ProcessFailedException($process);
             }
 
-            $process = new Process(["helm", "install","loadbalancer","stable/nginx-ingress","--kubeconfig=$kubeconfig","--namespace=default"]);
+            $process = new Process(['helm', 'install', 'loadbalancer', 'stable/nginx-ingress', "--kubeconfig=$kubeconfig", '--namespace=default']);
             $process->run();
 
-            if(!$process->isSuccessful()){
+            if (!$process->isSuccessful()) {
                 $errors[] = new ProcessFailedException($process);
             }
 
-            $process = new Process(['helm', 'upgrade', 'loadbalancer', 'stable/nginx-ingress', "--kubeconfig=$kubeconfig","--namespace=default"]);
+            $process = new Process(['helm', 'upgrade', 'loadbalancer', 'stable/nginx-ingress', "--kubeconfig=$kubeconfig", '--namespace=default']);
             $process->run();
-            if($process->isSuccessful()){
+            if ($process->isSuccessful()) {
                 $configurations[] = 'ingress';
-            }
-            else{
+            } else {
                 $error[] = new ProcessFailedException($process);
             }
-
         }
-        if(in_array('ingress', $configurations) && !in_array('cert-manager', $configurations)){
+        if (in_array('ingress', $configurations) && !in_array('cert-manager', $configurations)) {
             echo "Installing Cert Manager\n";
             $process = new Process(['helm', 'repo', 'add', 'jetstack', 'https://charts.jetstack.io']);
             $process->run();
 
-            if(!$process->isSuccessful()){
+            if (!$process->isSuccessful()) {
                 $errors[] = new ProcessFailedException($process);
             }
 
@@ -89,18 +85,17 @@ class ClusterService
             $process = new Process(['kubectl', 'create', 'namespace', 'cert-manager', "--kubeconfig=$kubeconfig"]);
             $process->run();
 
-            if(!$process->isSuccessful()){
+            if (!$process->isSuccessful()) {
                 $errors[] = new ProcessFailedException($process);
             }
 
             // Installing the cert manager
-            $process = new Process(["helm","install","cert-manager","--namespace=cert-manager","--version=v0.15.0","jetstack/cert-manager","--set","installCRDs=true","--kubeconfig=$kubeconfig"]);
+            $process = new Process(['helm', 'install', 'cert-manager', '--namespace=cert-manager', '--version=v0.15.0', 'jetstack/cert-manager', '--set', 'installCRDs=true', "--kubeconfig=$kubeconfig"]);
             $process->run();
 
-            if($process->isSuccessful()){
+            if ($process->isSuccessful()) {
                 $configurations[] = 'cert-manager';
-            }
-            else{
+            } else {
                 $errors[] = new ProcessFailedException($process);
             }
 
@@ -108,33 +103,30 @@ class ClusterService
             sleep(20);
         }
 
-        if(in_array('cert-manager', $configurations) &&!in_array('cert-issuer', $configurations)){
-            echo "Install the general cluster cert issuer";
-            $process = new Process(['kubectl', 'create', '-f','https://raw.githubusercontent.com/ConductionNL/environment-component/master/resources/cert-issuer.yaml', "--kubeconfig=$kubeconfig", "--namespace=default"]);
+        if (in_array('cert-manager', $configurations) && !in_array('cert-issuer', $configurations)) {
+            echo 'Install the general cluster cert issuer';
+            $process = new Process(['kubectl', 'create', '-f', 'https://raw.githubusercontent.com/ConductionNL/environment-component/master/resources/cert-issuer.yaml', "--kubeconfig=$kubeconfig", '--namespace=default']);
             $process->run();
 
-            if($process->isSuccessful()){
+            if ($process->isSuccessful()) {
                 $configurations[] = 'cert-issuer';
-            }
-            else{
+            } else {
                 $errors[] = new ProcessFailedException($process);
             }
         }
         $cluster->setStatus('running');
         $cluster->setConfigurations($configurations);
 
-        if(count($errors)>0)
-        {
-            foreach($errors as $error){
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
                 echo $error->getMessage();
             }
-        }
-        else
-        {
-            $now = New \DateTime();
+        } else {
+            $now = new \DateTime();
             $cluster->setDateConfigured($now);
         }
         $this->removeKubeconfig($kubeconfig);
+
         return $cluster;
     }
 
