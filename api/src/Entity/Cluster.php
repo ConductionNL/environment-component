@@ -98,7 +98,7 @@ class Cluster
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $status = 'requested';
+    private $status = "requested";
     /**
      * @var string The cloud provider where the cluster should be
      *
@@ -187,12 +187,19 @@ class Cluster
     private $domains;
 
     /**
-     * @Groups({"write"})
+     * @Groups({"read","write"})
      * @MaxDepth(1)
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")
      */
     private $environments;
+
+    /**
+     * @Groups({"read"})
+     * @MaxDepth(1)
+     *
+     */
+    private $installations;
 
     /**
      * @var Datetime The moment this entity was created
@@ -228,10 +235,13 @@ class Cluster
      */
     private $releases = [];
 
+
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
         $this->environments = new ArrayCollection();
+        $this->installations = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -419,6 +429,23 @@ class Cluster
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Environment[]
+     */
+    public function getInstallations(): Collection
+    {
+        // Lets use the enviroments to get all the installations for this cluster
+        foreach($this->environments as $environment){
+            foreach($environment->getInstallations() as $installation){
+                if (!$this->installations->contains($installation)) {
+                    $this->installations[] = $installation;
+                }
+            }
+        }
+
+        return $this->installations;
     }
 
     public function hasEnvironment(string $name)

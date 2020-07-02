@@ -67,34 +67,23 @@ class HealthLog
     private $id;
 
     /**
-     * @name string the name of this health log
-     * @TODO: Shouldn't this be a reference
-     * @Groups({"read", "write"})
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    /**
-     * @var string the description of this health log
-     *
-     * @example This health logs contains the health logs for x
-     *
-     * @Gedmo\Versioned
-     * @Groups({"read", "write"})
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
      * @var string The status of the checked resource
      *
      * @example OK
      * @Assert\Choice({"OK","WARNING","DANGER"})
-     * @Gedmo\Versioned
-     * @Groups({"read", "write"})
+     * @Groups({"read"})
      * @ORM\Column(type="string", length=255)
      */
     private $status;
+
+    /**
+     * @var integer The status code of the checked resource
+     *
+     * @example OK
+     * @Groups({"read"})
+     * @ORM\Column(type="integer", length=3)
+     */
+    private $code;
 
     /**
      * @Groups({"read","write"})
@@ -133,30 +122,6 @@ class HealthLog
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
     public function getStatus(): ?string
     {
         return $this->status;
@@ -165,6 +130,18 @@ class HealthLog
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCode(): ?integer
+    {
+        return $this->code;
+    }
+
+    public function setCode(integer $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }
