@@ -317,7 +317,7 @@ class ClusterService
         $process = new Process([
             'helm',
             'delete',
-            "{$name}",
+            "$name",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
         ]);
@@ -329,7 +329,7 @@ class ClusterService
         }
         sleep(25);
         if ($installation->getDeploymentName()) {
-            $name = "{$installation->getDeploymentName()}-{$installation->getEnvironment()->getName()}-{$installation->getDeploymentName()}";
+            $name = "{$installation->getDeploymentName()}-{$installation->getComponent()->getCode()}";
         } else {
             $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}-{$installation->getComponent()->getCode()}";
         }
@@ -357,13 +357,17 @@ class ClusterService
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
 
         $this->addRepo($installation);
-
+        if(!$installation->getDeploymentName()){
+            $name = $installation->getComponent()->getCode();
+        } else {
+            $name = $installation->getDeploymentName();
+        }
         //Rolling Update
         $process = new Process([
             'kubectl',
             'rollout',
             'restart',
-            "deployment/{$installation->getComponent()->getCode()}-php",
+            "deployment/$name-php",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
         ]);
@@ -377,7 +381,7 @@ class ClusterService
             'kubectl',
             'rollout',
             'restart',
-            "deployment/{$installation->getComponent()->getCode()}-nginx",
+            "deployment/$name-nginx",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
         ]);
@@ -391,7 +395,7 @@ class ClusterService
             'kubectl',
             'rollout',
             'restart',
-            "deployment/{$installation->getComponent()->getCode()}-varnish",
+            "deployment/$name-varnish",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
         ]);
