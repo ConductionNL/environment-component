@@ -434,6 +434,8 @@ class Cluster
      */
     public function getInstallations(): Collection
     {
+        $this->installations  = new ArrayCollection();
+        
         // Lets use the enviroments to get all the installations for this cluster
         foreach($this->environments as $environment){
             foreach($environment->getInstallations() as $installation){
