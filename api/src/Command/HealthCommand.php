@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class HealthCommand extends Command
 {
@@ -25,9 +26,9 @@ class HealthCommand extends Command
 
         // the full command description shown when running the command with
         // the "--help" option
-        ->setHelp('This command will perform a health check on all or a single domain')
-        ->setDescription('Perform health check on domain')
-        ->addOption('domain', null, InputOption::VALUE_OPTIONAL, 'the component that you want to health check');
+        ->setHelp('This command will perform a health check on all or a single cluster')
+        ->setDescription('Perform health check on cluster')
+        ->addOption('cluster', null, InputOption::VALUE_OPTIONAL, 'the cluster that you want to health check');
     }
 
     /**
@@ -39,12 +40,47 @@ class HealthCommand extends Command
         /** @var string $version */
         $componentId = $input->getOption('component');
 
-        // get component
+        if(){
+            $clusters = $this->em->getRepository('App\Entity\Clusters')->findBy();
+        }
+        else{
+            $clusters = $this->em->getRepository('App\Entity\Clusters')->getAll();
 
-//        if (!$component) {
-//        	throw new InvalidOptionException(sprintf('A component with given id could not be found ("%s" given).', $componentId));
-//        }
+        }
 
-        // do some magic
+        if (!$clusters || count($clusters) < 1 ) {
+        	throw new InvalidOptionException(sprintf('No installable clusters could be found'));
+        }
+
+        $io->title('Starting health checks');
+
+        $installations = new ArrayCollection();
+        foreach($cluster as $clusters){
+            $installations = new ArrayCollection(
+                array_merge($installations->toArray(), $cluster->getInstallations())
+            );
+        }
+
+        $io->text('Found '.count($clusters).' clusters to check');
+        $io->text('Found '.count($installations).' installations to check');
+
+        if (count($installations) > 0) {
+            $io->progressStart(count($installations));
+        }
+
+        $results = [];
+        foreach ($installations as $installation) {
+            $health = $this->healthService->check($installation);
+            $results[] = [$health->getDomain()->getName(), $health->getInstallation()->getEnviroment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()]
+
+            $io->progressAdvance();
+        }
+
+        $io->text('All done')
+
+        $io->table(
+            ['Cluster', 'Enviroment','Installation','Endpoint','Status'],
+            $results
+        );
     }
 }

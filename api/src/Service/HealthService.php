@@ -91,6 +91,8 @@ class HealthService
         $this->em->persist($health);
         $this->em->persist($installation);
         $this->em->flush();
+
+        return $health;
     }
 
 
