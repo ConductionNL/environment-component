@@ -6740,6 +6740,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[endpoint]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'order[dateCreated]'
           in: query
           required: false
@@ -6851,6 +6860,22 @@ paths:
             type: array
             items:
               type: integer
+          style: form
+          explode: true
+        -
+          name: endpoint
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'endpoint[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
           style: form
           explode: true
         -
@@ -10544,6 +10569,9 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/Installation-read'
+        endpoint:
+          description: 'The endpoint that was checked'
+          type: string
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10604,6 +10632,9 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/Installation:jsonld-read'
+        endpoint:
+          description: 'The endpoint that was checked'
+          type: string
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -11366,6 +11397,10 @@ definitions:
         description: 'The status code of the checked resource'
         type: int
         example: OK
+      endpoint:
+        description: 'The endpoint that was checked'
+        type: string
+        example: 'https://www.zuid-drecht.nl'
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
@@ -11596,12 +11631,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-02 07:59:16'
+        example: '2020-07-02 08:36:08'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-02 07:59:16'
+        example: '2020-07-02 08:36:08'
     required: []
   AuditTrail-write:
     properties:
@@ -11649,12 +11684,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-02 07:59:16'
+        example: '2020-07-02 08:36:08'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-02 07:59:16'
+        example: '2020-07-02 08:36:08'
     required: []
   ChangeLog-write:
     properties:

@@ -4,6 +4,7 @@
 
 namespace App\Command;
 
+use App\Service\HealthService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,6 +15,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class HealthCommand extends Command
 {
+    private $em;    private $healthService;
+
+    public function __construct(HealthService $healthService)
+    {
+        $this->healthService = $healthService;
+
+        parent::__construct();
+    }
     /**
      * {@inheritdoc}
      */
@@ -37,10 +46,11 @@ class HealthCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
+
         /** @var string $version */
         $componentId = $input->getOption('component');
 
-        if(){
+        if($componentId){
             $clusters = $this->em->getRepository('App\Entity\Clusters')->findBy();
         }
         else{
@@ -71,12 +81,12 @@ class HealthCommand extends Command
         $results = [];
         foreach ($installations as $installation) {
             $health = $this->healthService->check($installation);
-            $results[] = [$health->getDomain()->getName(), $health->getInstallation()->getEnviroment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()]
+            $results[] = [$health->getDomain()->getName(), $health->getInstallation()->getEnviroment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
 
             $io->progressAdvance();
         }
 
-        $io->text('All done')
+        $io->text('All done');
 
         $io->table(
             ['Cluster', 'Enviroment','Installation','Endpoint','Status'],
