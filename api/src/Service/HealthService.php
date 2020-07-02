@@ -73,18 +73,21 @@ class HealthService
         // let establisch the domain
         $domain = $installation->getDomain()->getLocation();
 
+        // lets detirmine a path for our healt check
         if($installation->getEnvironment()->getName()== 'prod'){
             $url = 'https://'.$name.$domain;
         }
         else{
             $url = 'https://'.$name.$domain;
         }
+        // Lets actually do a health check
 
-        // adqadsa
-        
+        // Lets save the results
+        $installation->setStatus($health->getStatus());
 
-        $this->em->persist($health)
-        $this->em->flush()
+        $this->em->persist($health);
+        $this->em->persist($installation);
+        $this->em->flush();
     }
 
 

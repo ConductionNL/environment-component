@@ -127,6 +127,20 @@ class Installation
     private $description;
 
     /**
+     * @var string The stastus of this installation
+     *
+     * @example ok
+     *
+     * @Gedmo\Versioned
+     * @Assert\Length(
+     *      max = 25
+     * )
+     * @Groups({"read"})
+     * @ORM\Column(type="string", length=25, nullable=true)
+     */
+    private $status;
+
+    /**
      * @var string The username that is needed to log into the cluster database
      *
      * @example evc-dev
@@ -310,6 +324,18 @@ class Installation
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
