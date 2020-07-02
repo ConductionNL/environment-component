@@ -59,7 +59,7 @@ class HealthService
         $health->setInstallation($installation);
         $health->setDomain($installation);
         $health->setStatus('OK');
-        $health->setcode(200);
+        $health->setCode(200);
 
         // lets get the name
         if($installation->getDeploymentName() && $installation->getDeploymentName() != '')
@@ -80,7 +80,10 @@ class HealthService
         else{
             $url = 'https://'.$name.$domain;
         }
+        $health->setEndpoint($url);
+
         // Lets actually do a health check
+
 
         // Lets save the results
         $installation->setStatus($health->getStatus());

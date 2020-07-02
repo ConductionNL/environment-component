@@ -100,6 +100,15 @@ class HealthLog
     private $installation;
 
     /**
+     * @var string The endpoint that was checked
+     *
+     * @example https://www.zuid-drecht.nl
+     * @Groups({"read"})
+     * @ORM\Column(type="string", length=255)
+     */
+    private $endpoint;
+
+    /**
      * @var Datetime The moment this entity was created
      *
      * @Groups({"read"})
@@ -166,6 +175,18 @@ class HealthLog
     public function setInstallation(?Installation $installation): self
     {
         $this->installation = $installation;
+
+        return $this;
+    }
+
+    public function getEndpoint(): ?string
+    {
+        return $this->endpoint;
+    }
+
+    public function setEndpoint(string $endpoint): self
+    {
+        $this->endpoint = $endpoint;
 
         return $this;
     }
