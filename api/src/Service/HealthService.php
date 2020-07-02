@@ -57,7 +57,7 @@ class HealthService
         // save the result
         $health = New HealthLog();
         $health->setInstallation($installation);
-        $health->setDomain($installation);
+        $health->setDomain($installation->getDomain());
 
         // lets get the name
         if($installation->getDeploymentName() && $installation->getDeploymentName() != '')
