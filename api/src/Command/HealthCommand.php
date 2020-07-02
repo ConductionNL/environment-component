@@ -5,6 +5,7 @@
 namespace App\Command;
 
 use App\Service\HealthService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,14 +16,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class HealthCommand extends Command
 {
-    private $em;    private $healthService;
+    private $em;
+    private $queueService;
 
-    public function __construct(HealthService $healthService)
+    public function __construct(EntityManagerInterface $em, HealthService $healthService)
     {
+        $this->em = $em;
         $this->healthService = $healthService;
 
         parent::__construct();
     }
+
     /**
      * {@inheritdoc}
      */
@@ -51,10 +55,10 @@ class HealthCommand extends Command
         $componentId = $input->getOption('cluster');
 
         if($componentId){
-            $clusters = $this->em->getRepository('App\Entity\Clusters')->findBy();
+            $clusters = $this->em->getRepository('App\Entity\Cluster')->findBy();
         }
         else{
-            $clusters = $this->em->getRepository('App\Entity\Clusters')->getAll();
+            $clusters = $this->em->getRepository('App\Entity\Cluster')->findAll();
 
         }
 
@@ -65,7 +69,7 @@ class HealthCommand extends Command
         $io->title('Starting health checks');
 
         $installations = new ArrayCollection();
-        foreach($cluster as $clusters){
+        foreach($clusters as $cluster){
             $installations = new ArrayCollection(
                 array_merge($installations->toArray(), $cluster->getInstallations())
             );
