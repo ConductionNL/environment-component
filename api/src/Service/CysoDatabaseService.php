@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\Installation;
 use Doctrine\ORM\EntityManagerInterface;
 
-class CysoDatabaseServer
+class CysoDatabaseService
 {
     private $dbUrl;
     private $dbUser;
@@ -24,16 +24,16 @@ class CysoDatabaseServer
     }
     public function createDatabase(Installation $installation)
     {
-        $dbName = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
-        $password = hash('md5', random_bytes(10));
-
-        $sql = '
-            create user "'.$dbName.'" with encrypted password '.$password.';
-            create database '.$dbName.' with owner '.$dbName.';
-        ';
-        $stmt = $this->manager->getConnection()->prepare($sql);
-        $stmt->execute();
-        $installation->setDbUrl("pgsql://$dbName:$password@{$this->dbUrl}:{$this->dbPort}/$dbName?sslmode=require&serverVersion=10")
+//        $dbName = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
+//        $password = hash('md5', random_bytes(10));
+//
+//        $sql = '
+//            create user "'.$dbName.'" with encrypted password '.$password.';
+//            create database '.$dbName.' with owner '.$dbName.';
+//        ';
+//        $stmt = $this->manager->getConnection()->prepare($sql);
+//        $stmt->execute();
+//        $installation->setDbUrl("pgsql://$dbName:$password@{$this->dbUrl}:{$this->dbPort}/$dbName?sslmode=require&serverVersion=10");
     }
 
 }
