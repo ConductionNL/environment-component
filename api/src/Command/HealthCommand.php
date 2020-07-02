@@ -68,11 +68,10 @@ class HealthCommand extends Command
 
         $io->title('Starting health checks');
 
-        $installations = new ArrayCollection();
+        $installations = [];
+
         foreach($clusters as $cluster){
-            $installations = new ArrayCollection(
-                array_merge($installations->toArray(), $cluster->getInstallations())
-            );
+            $installations = array_merge($installations, $cluster->getInstallations()->toArray())
         }
 
         $io->text('Found '.count($clusters).' clusters to check');
