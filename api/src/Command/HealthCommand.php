@@ -48,7 +48,7 @@ class HealthCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         /** @var string $version */
-        $componentId = $input->getOption('component');
+        $componentId = $input->getOption('cluster');
 
         if($componentId){
             $clusters = $this->em->getRepository('App\Entity\Clusters')->findBy();
