@@ -82,7 +82,7 @@ class HealthService
 
         // Lets actually do a health check
         $headers = $this->headers;
-        $headers['Authorization'] = $installation->getEnviroment()->getAuthorization();
+        $headers['Authorization'] = $installation->getEnvironment()->getAuthorization();
 
         $response = $this->client->request('GET', $url, ['headers' => $headers]);
         $health->setCode($response->getStatusCode());
