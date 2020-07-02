@@ -58,8 +58,6 @@ class HealthService
         $health = New HealthLog();
         $health->setInstallation($installation);
         $health->setDomain($installation);
-        $health->setStatus('OK');
-        $health->setCode(200);
 
         // lets get the name
         if($installation->getDeploymentName() && $installation->getDeploymentName() != '')
@@ -83,6 +81,12 @@ class HealthService
         $health->setEndpoint($url);
 
         // Lets actually do a health check
+        $headers = $this->headers;
+        $headers['Authorization'] = $installation->getEnviroment()->getAuthorization();
+
+        $response = $this->client->request('GET', $url, ['headers' => $headers]);
+        $health->setCode($response->getStatusCode());
+        $health->setCode($response->getReasonPhrase());
 
 
         // Lets save the results
