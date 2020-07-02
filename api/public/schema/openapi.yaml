@@ -6722,25 +6722,25 @@ paths:
               - asc
               - desc
         -
-          name: 'order[name]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[description]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
           name: 'order[status]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[code]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[endpoint]'
           in: query
           required: false
           schema:
@@ -6831,38 +6831,6 @@ paths:
           style: form
           explode: true
         -
-          name: name
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'name[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
-          name: description
-          in: query
-          required: false
-          schema:
-            type: string
-        -
-          name: 'description[]'
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-        -
           name: status
           in: query
           required: false
@@ -6870,6 +6838,38 @@ paths:
             type: string
         -
           name: 'status[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        -
+          name: code
+          in: query
+          required: false
+          schema:
+            type: integer
+        -
+          name: 'code[]'
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+          style: form
+          explode: true
+        -
+          name: endpoint
+          in: query
+          required: false
+          schema:
+            type: string
+        -
+          name: 'endpoint[]'
           in: query
           required: false
           schema:
@@ -7797,6 +7797,15 @@ paths:
               - desc
         -
           name: 'order[description]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[status]'
           in: query
           required: false
           schema:
@@ -9733,6 +9742,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Domain-read'
+        environments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Environment-read'
+        installations:
+          readOnly: true
+          $ref: '#/components/schemas/Collection-read'
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -9861,6 +9877,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Domain:jsonld-read'
+        environments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Environment:jsonld-read'
+        installations:
+          readOnly: true
+          $ref: '#/components/schemas/Collection:jsonld-read'
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -9947,6 +9970,20 @@ components:
           items:
             type: string
           nullable: true
+    Collection-read:
+      type: object
+    'Collection:jsonld-read':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
     Component-read:
       type: object
       description: ''
@@ -10339,6 +10376,7 @@ components:
         web:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
+          nullable: true
         cluster:
           $ref: '#/components/schemas/Cluster-read'
         installations:
@@ -10362,7 +10400,6 @@ components:
       required:
         - name
         - debug
-        - web
         - cache
     Environment-write:
       type: object
@@ -10370,7 +10407,6 @@ components:
       required:
         - name
         - debug
-        - web
         - authorization
         - cache
       properties:
@@ -10387,6 +10423,7 @@ components:
         web:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
+          nullable: true
         authorization:
           description: 'The authentication token that is needed to access this token'
           type: string
@@ -10434,6 +10471,7 @@ components:
         web:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
+          nullable: true
         cluster:
           $ref: '#/components/schemas/Cluster:jsonld-read'
         installations:
@@ -10457,7 +10495,6 @@ components:
       required:
         - name
         - debug
-        - web
         - cache
     'Environment:jsonld-write':
       type: object
@@ -10465,7 +10502,6 @@ components:
       required:
         - name
         - debug
-        - web
         - authorization
         - cache
       properties:
@@ -10491,6 +10527,7 @@ components:
         web:
           description: 'Should components be deployed to this environment with debuggin on or off?'
           type: integer
+          nullable: true
         authorization:
           description: 'The authentication token that is needed to access this token'
           type: string
@@ -10516,15 +10553,12 @@ components:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
-        name:
-          type: string
-        description:
-          description: 'the description of this health log'
-          type: string
-          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
+        code:
+          description: 'The status code of the checked resource'
+          type: integer
         domain:
           nullable: true
           anyOf:
@@ -10535,6 +10569,9 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/Installation-read'
+        endpoint:
+          description: 'The endpoint that was checked'
+          type: string
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10549,15 +10586,6 @@ components:
       type: object
       description: ''
       properties:
-        name:
-          type: string
-        description:
-          description: 'the description of this health log'
-          type: string
-          nullable: true
-        status:
-          description: 'The status of the checked resource'
-          type: string
         domain:
           nullable: true
           anyOf:
@@ -10588,15 +10616,12 @@ components:
             url: 'http://schema.org/identifier'
           type: string
           format: uuid
-        name:
-          type: string
-        description:
-          description: 'the description of this health log'
-          type: string
-          nullable: true
         status:
           description: 'The status of the checked resource'
           type: string
+        code:
+          description: 'The status code of the checked resource'
+          type: integer
         domain:
           nullable: true
           anyOf:
@@ -10607,6 +10632,9 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/Installation:jsonld-read'
+        endpoint:
+          description: 'The endpoint that was checked'
+          type: string
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10629,15 +10657,6 @@ components:
           type: string
         '@type':
           readOnly: true
-          type: string
-        name:
-          type: string
-        description:
-          description: 'the description of this health log'
-          type: string
-          nullable: true
-        status:
-          description: 'The status of the checked resource'
           type: string
         domain:
           nullable: true
@@ -10667,6 +10686,10 @@ components:
           description: 'the description of this component'
           type: string
           nullable: true
+        status:
+          description: 'The stastus of this installation'
+          type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
@@ -10676,7 +10699,7 @@ components:
           type: string
           nullable: true
         helmVersion:
-          description: 'the Github Repository that contains this component'
+          description: 'the helm version of the helm instalaltion files'
           type: string
         component:
           nullable: true
@@ -10723,13 +10746,11 @@ components:
           nullable: true
       required:
         - name
-        - helmVersion
     Installation-write:
       type: object
       description: ''
       required:
         - name
-        - helmVersion
       properties:
         name:
           description: 'The name of this component'
@@ -10759,7 +10780,7 @@ components:
           type: string
           nullable: true
         helmVersion:
-          description: 'the Github Repository that contains this component'
+          description: 'the helm version of the helm instalaltion files'
           type: string
         component:
           nullable: true
@@ -10780,6 +10801,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-write'
+        dateInstalled:
+          description: 'The moment this entity was last installed'
+          type: string
+          format: date-time
+          nullable: true
         properties:
           description: 'additional properties that are required for this installation, i.e. external API keys'
           type: array
@@ -10816,6 +10842,10 @@ components:
           description: 'the description of this component'
           type: string
           nullable: true
+        status:
+          description: 'The stastus of this installation'
+          type: string
+          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
@@ -10825,7 +10855,7 @@ components:
           type: string
           nullable: true
         helmVersion:
-          description: 'the Github Repository that contains this component'
+          description: 'the helm version of the helm instalaltion files'
           type: string
         component:
           nullable: true
@@ -10872,13 +10902,11 @@ components:
           nullable: true
       required:
         - name
-        - helmVersion
     'Installation:jsonld-write':
       type: object
       description: ''
       required:
         - name
-        - helmVersion
       properties:
         '@context':
           readOnly: true
@@ -10917,7 +10945,7 @@ components:
           type: string
           nullable: true
         helmVersion:
-          description: 'the Github Repository that contains this component'
+          description: 'the helm version of the helm instalaltion files'
           type: string
         component:
           nullable: true
@@ -10938,6 +10966,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-write'
+        dateInstalled:
+          description: 'The moment this entity was last installed'
+          type: string
+          format: date-time
+          nullable: true
         properties:
           description: 'additional properties that are required for this installation, i.e. external API keys'
           type: array
@@ -10959,6 +10992,9 @@ components:
           format: uuid
         name:
           description: 'the name of the property'
+          type: string
+        value:
+          description: 'the value of the property'
           type: string
     Property-write:
       type: object
@@ -10990,6 +11026,9 @@ components:
           format: uuid
         name:
           description: 'the name of the property'
+          type: string
+        value:
+          description: 'the value of the property'
           type: string
     'Property:jsonld-write':
       type: object
@@ -11060,6 +11099,7 @@ definitions:
         description: 'Installed releases on this cluster'
         type: array
       domains: []
+      environments: []
     required:
       - name
   Cluster-write:
@@ -11105,6 +11145,222 @@ definitions:
         type: array
       domains: []
       environments: []
+    required:
+      - name
+  Domain-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this domain'
+        type: string
+        example: conduction.nl
+        maxLength: 255
+      description:
+        description: 'the description of this domain'
+        type: string
+        example: 'This domain contains the conduction website'
+      location:
+        description: 'the base route of this domain'
+        type: string
+        example: conduction.nl
+        format: url
+        maxLength: 255
+      ip:
+        description: 'the IP Address of this domain'
+        type: string
+        example: 255.255.255.0
+      databaseUrl:
+        description: 'the base url for the managed database that this domain uses'
+        type: string
+        example: 'pgsql://db-cluster.vuga.com:25060/'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      healthLogs: []
+    required:
+      - name
+      - location
+  Domain-write:
+    properties:
+      name:
+        description: 'The name of this domain'
+        type: string
+        example: conduction.nl
+        maxLength: 255
+      description:
+        description: 'the description of this domain'
+        type: string
+        example: 'This domain contains the conduction website'
+      location:
+        description: 'the base route of this domain'
+        type: string
+        example: conduction.nl
+        format: url
+        maxLength: 255
+      ip:
+        description: 'the IP Address of this domain'
+        type: string
+        example: 255.255.255.0
+      databaseUrl:
+        description: 'the base url for the managed database that this domain uses'
+        type: string
+        example: 'pgsql://db-cluster.vuga.com:25060/'
+      cluster: []
+      installations: []
+      healthLogs: []
+    required:
+      - name
+      - location
+  HealthLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      status:
+        description: 'The status of the checked resource'
+        type: string
+        example: OK
+      code:
+        description: 'The status code of the checked resource'
+        type: int
+        example: OK
+      endpoint:
+        description: 'The endpoint that was checked'
+        type: string
+        example: 'https://www.zuid-drecht.nl'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      domain: []
+      installation: []
+    required: []
+  HealthLog-write:
+    properties:
+      domain: []
+      installation: []
+    required: []
+  Installation-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      status:
+        description: 'The stastus of this installation'
+        type: string
+        example: ok
+        maxLength: 25
+      dbUsername:
+        description: 'The username that is needed to log into the cluster database'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      dbName:
+        description: 'The name of the database this component uses'
+        type: string
+        maxLength: 255
+      helmVersion:
+        description: 'the helm version of the helm instalaltion files'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      dateInstalled:
+        description: 'The moment this entity was last installed'
+        type: \Datetime
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      deploymentName:
+        description: 'The name of the deployment on the kubernetes cluster'
+        type: string
+        example: pc-dev
+      component: []
+      domain: []
+      environment: []
+      healthLogs: []
+      properties:
+        description: 'additional properties that are required for this installation, i.e. external API keys'
+        type: \Property
+    required:
+      - name
+  Installation-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      dbUsername:
+        description: 'The username that is needed to log into the cluster database'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      dbPassword:
+        description: 'The password that is needed to log into the cluster database'
+        type: string
+        maxLength: 255
+      dbName:
+        description: 'The name of the database this component uses'
+        type: string
+        maxLength: 255
+      authorization:
+        description: 'The authentication token that is needed to access this token'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      dbUrl:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmVersion:
+        description: 'the helm version of the helm instalaltion files'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      dateInstalled:
+        description: 'The moment this entity was last installed'
+        type: \Datetime
+      deploymentName:
+        description: 'The name of the deployment on the kubernetes cluster'
+        type: string
+        example: pc-dev
+      component: []
+      domain: []
+      environment: []
+      healthLogs: []
+      properties:
+        description: 'additional properties that are required for this installation, i.e. external API keys'
+        type: \Property
     required:
       - name
   Component-read:
@@ -11191,77 +11447,6 @@ definitions:
       - code
       - githubRepository
       - helmRepository
-  Domain-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this domain'
-        type: string
-        example: conduction.nl
-        maxLength: 255
-      description:
-        description: 'the description of this domain'
-        type: string
-        example: 'This domain contains the conduction website'
-      location:
-        description: 'the base route of this domain'
-        type: string
-        example: conduction.nl
-        format: url
-        maxLength: 255
-      ip:
-        description: 'the IP Address of this domain'
-        type: string
-        example: 255.255.255.0
-      databaseUrl:
-        description: 'the base url for the managed database that this domain uses'
-        type: string
-        example: 'pgsql://db-cluster.vuga.com:25060/'
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      healthLogs: []
-    required:
-      - name
-      - location
-  Domain-write:
-    properties:
-      name:
-        description: 'The name of this domain'
-        type: string
-        example: conduction.nl
-        maxLength: 255
-      description:
-        description: 'the description of this domain'
-        type: string
-        example: 'This domain contains the conduction website'
-      location:
-        description: 'the base route of this domain'
-        type: string
-        example: conduction.nl
-        format: url
-        maxLength: 255
-      ip:
-        description: 'the IP Address of this domain'
-        type: string
-        example: 255.255.255.0
-      databaseUrl:
-        description: 'the base url for the managed database that this domain uses'
-        type: string
-        example: 'pgsql://db-cluster.vuga.com:25060/'
-      cluster: []
-      installations: []
-      healthLogs: []
-    required:
-      - name
-      - location
   Environment-read:
     properties:
       id:
@@ -11303,7 +11488,6 @@ definitions:
     required:
       - name
       - debug
-      - web
       - authorization
       - cache
   Environment-write:
@@ -11341,154 +11525,61 @@ definitions:
     required:
       - name
       - debug
-      - web
       - authorization
       - cache
-  HealthLog-read:
+  ChangeLog-read:
     properties:
       id:
-        description: 'The UUID identifier of this resource'
+        description: 'The UUID identifier of this object'
         type: string
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
-      name: []
-      description:
-        description: 'the description of this health log'
+      note:
+        description: 'A note conserning this log lin'
         type: string
-        example: 'This health logs contains the health logs for x'
-      status:
-        description: 'The status of the checked resource'
+        example: 'This log line is suspicius'
+        maxLength: 2555
+      action:
+        description: ''
         type: string
-        example: OK
+      objectId:
+        description: ''
+        type: string
+      objectClass:
+        description: ''
+        type: string
+      version:
+        description: ''
+        type: int
+      data:
+        description: ''
+        type: array
+      username:
+        description: ''
+        type: string
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
       dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-07-02 09:10:22'
       dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      domain: []
-      installation: []
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-07-02 09:10:22'
     required: []
-  HealthLog-write:
+  ChangeLog-write:
     properties:
-      name: []
-      description:
-        description: 'the description of this health log'
+      note:
+        description: 'A note conserning this log lin'
         type: string
-        example: 'This health logs contains the health logs for x'
-      status:
-        description: 'The status of the checked resource'
-        type: string
-        example: OK
-      domain: []
-      installation: []
+        example: 'This log line is suspicius'
+        maxLength: 2555
     required: []
-  Installation-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      dbUsername:
-        description: 'The username that is needed to log into the cluster database'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      dbName:
-        description: 'The name of the database this component uses'
-        type: string
-        maxLength: 255
-      helmVersion:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      dateInstalled:
-        description: 'The moment this entity was last installed'
-        type: \Datetime
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      deploymentName:
-        description: 'The name of the deployment on the kubernetes cluster'
-        type: string
-        example: pc-dev
-      component: []
-      domain: []
-      environment: []
-      healthLogs: []
-      properties:
-        description: 'additional properties that are required for this installation, i.e. external API keys'
-        type: \Property
-    required:
-      - name
-      - helmVersion
-  Installation-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      dbUsername:
-        description: 'The username that is needed to log into the cluster database'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      dbPassword:
-        description: 'The password that is needed to log into the cluster database'
-        type: string
-        maxLength: 255
-      dbName:
-        description: 'The name of the database this component uses'
-        type: string
-        maxLength: 255
-      authorization:
-        description: 'The authentication token that is needed to access this token'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      dbUrl:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmVersion:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      deploymentName:
-        description: 'The name of the deployment on the kubernetes cluster'
-        type: string
-        example: pc-dev
-      component: []
-      domain: []
-      environment: []
-      healthLogs: []
-      properties:
-        description: 'additional properties that are required for this installation, i.e. external API keys'
-        type: \Property
-    required:
-      - name
-      - helmVersion
   AuditTrail-read:
     properties:
       id:
@@ -11593,12 +11684,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-06-17 12:19:48'
+        example: '2020-07-02 09:10:22'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-06-17 12:19:48'
+        example: '2020-07-02 09:10:22'
     required: []
   AuditTrail-write:
     properties:
@@ -11606,59 +11697,6 @@ definitions:
         description: 'A note conserning this log lin'
         type: string
         example: 'This log line looks suspicius'
-        maxLength: 2555
-    required: []
-  ChangeLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this object'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-      action:
-        description: ''
-        type: string
-      objectId:
-        description: ''
-        type: string
-      objectClass:
-        description: ''
-        type: string
-      version:
-        description: ''
-        type: int
-      data:
-        description: ''
-        type: array
-      username:
-        description: ''
-        type: string
-      session:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this request was created'
-        type: string
-        format: date-time
-        example: '2020-06-17 12:19:48'
-      dateModified:
-        description: 'The moment this request last Modified'
-        type: string
-        format: date-time
-        example: '2020-06-17 12:19:48'
-    required: []
-  ChangeLog-write:
-    properties:
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
         maxLength: 2555
     required: []
 tags:
@@ -11669,19 +11707,7 @@ tags:
       
       
   -
-    name: Component
-    description: |
-      
-      
-      
-  -
     name: Domain
-    description: |
-      
-      
-      
-  -
-    name: Environment
     description: |
       
       
@@ -11699,13 +11725,25 @@ tags:
       
       
   -
-    name: AuditTrail
+    name: Component
+    description: |
+      
+      
+      
+  -
+    name: Environment
+    description: |
+      
+      
+      
+  -
+    name: ChangeLog
     description: |
       An resource representing a log line.
       
       This entity represents a product that can be ordered via the OrderRegistratieComponent.
   -
-    name: ChangeLog
+    name: AuditTrail
     description: |
       An resource representing a log line.
       
@@ -11716,15 +11754,15 @@ securityDefinitions:
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
 host: irc.zaakonline.nl
 servers:
   -
