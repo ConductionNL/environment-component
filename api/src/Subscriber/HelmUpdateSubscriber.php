@@ -8,7 +8,6 @@ use App\Entity\Environment;
 use App\Entity\Installation;
 use App\Service\InstallService;
 use Doctrine\ORM\EntityManagerInterface;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,8 +68,8 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
         }
         if (strpos($route, '_helm_upgrade')) {
             $results = $this->installService->update($component);
-            if($component instanceof Installation){
-                $component->setDateInstalled(new \DateTime("now"));
+            if ($component instanceof Installation) {
+                $component->setDateInstalled(new \DateTime('now'));
 
                 $this->em->persist($component);
                 $this->em->flush();
@@ -79,7 +78,7 @@ class HelmUpdateSubscriber implements EventSubscriberInterface
         if (strpos($route, '_helm_update')) {
             if ($component instanceof Installation) {
                 $results = $this->installService->rollingUpdate($component);
-                $component->setDateInstalled(new \DateTime("now"));
+                $component->setDateInstalled(new \DateTime('now'));
 
                 $this->em->persist($component);
                 $this->em->flush();

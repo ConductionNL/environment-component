@@ -34,7 +34,7 @@ class InstallService
         // Altijd een nieuwe kubeconfig ophalen
         //TODO: wanneer er een CYSO oplossing is hier ook de database providerafhankelijk maken
         $cluster = $installation->getEnvironment()->getCluster();
-        switch ($cluster->getProvider()){
+        switch ($cluster->getProvider()) {
             case 'Digital Ocean':
                 $cluster = $this->digitalOceanService->createKubeConfig($cluster);
                 break;
@@ -68,7 +68,7 @@ class InstallService
         // Altijd een nieuwe kubeconfig ophalen
         //TODO: wanneer er een CYSO oplossing is hier ook de database providerafhankelijk maken
         $cluster = $installation->getEnvironment()->getCluster();
-        switch ($cluster->getProvider()){
+        switch ($cluster->getProvider()) {
             case 'Digital Ocean':
                 $cluster = $this->digitalOceanService->createKubeConfig($cluster);
                 break;
@@ -94,7 +94,7 @@ class InstallService
     public function rollingUpdate(Installation $installation)
     {
         $cluster = $installation->getEnvironment()->getCluster();
-        switch ($cluster->getProvider()){
+        switch ($cluster->getProvider()) {
             case 'Digital Ocean':
                 $cluster = $this->digitalOceanService->createKubeConfig($cluster);
                 break;
@@ -124,7 +124,7 @@ class InstallService
         // Altijd een nieuwe kubeconfig ophalen
         //TODO: wanneer er een CYSO oplossing is hier ook de database providerafhankelijk maken
         $cluster = $installation->getEnvironment()->getCluster();
-        switch ($cluster->getProvider()){
+        switch ($cluster->getProvider()) {
             case 'Digital Ocean':
                 $cluster = $this->digitalOceanService->createKubeConfig($cluster);
                 break;
