@@ -465,7 +465,7 @@ class Cluster
         $health = 0;
 
         foreach($this->getInstallations() as $installation){
-            if($installation->getStatus() == 'ok'{
+            if($installation->getStatus() == 'ok'){
                 $health++;
             }
         }

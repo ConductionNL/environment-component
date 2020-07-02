@@ -71,7 +71,7 @@ class HealthCommand extends Command
         $installations = [];
 
         foreach($clusters as $cluster){
-            $installations = array_merge($installations, $cluster->getInstallations()->toArray())
+            $installations = array_merge($installations, $cluster->getInstallations()->toArray());
         }
 
         $io->text('Found '.count($clusters).' clusters to check');
