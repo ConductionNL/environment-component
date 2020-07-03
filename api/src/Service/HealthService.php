@@ -71,7 +71,7 @@ class HealthService
         }
 
         // let establisch the domain
-        $domain = $installation->getDomain()->getLocation();
+        $domain = $installation->getDomain()->getName();
 
         // lets detirmine a path for our healt check
         if($installation->getEnvironment()->getName()== 'prod'){
