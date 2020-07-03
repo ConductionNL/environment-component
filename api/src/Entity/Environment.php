@@ -260,7 +260,7 @@ class Environment
     {
         if (!$this->installations->contains($installation)) {
             $this->installations[] = $installation;
-            $installation->setEnviroment($this);
+            $installation->setEnvironment($this);
         }
 
         return $this;
@@ -271,8 +271,8 @@ class Environment
         if ($this->installations->contains($installation)) {
             $this->installations->removeElement($installation);
             // set the owning side to null (unless already changed)
-            if ($installation->getEnviroment() === $this) {
-                $installation->setEnviroment(null);
+            if ($installation->getEnvironment() === $this) {
+                $installation->setEnvironment(null);
             }
         }
 
