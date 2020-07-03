@@ -8,6 +8,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -127,7 +128,7 @@ class Installation
     private $description;
 
     /**
-     * @var string The stastus of this installation
+     * @var string The status of this installation
      *
      * @example ok
      *
@@ -182,7 +183,7 @@ class Installation
     private $dbName;
 
     /**
-     * @var string The authentication token that is needed to access this token
+     * @var string The authorization token that is needed to access this token
      *
      * @example evc-dev
      *
@@ -196,7 +197,7 @@ class Installation
     private $authorization;
 
     /**
-     * @var string the Github Repository that contains this component
+     * @var string The database url for this installation
      *
      * @example https://github.com/ConductionNL/environment-component
      * @Gedmo\Versioned
@@ -219,9 +220,11 @@ class Installation
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $helmVersion = '2.16.6';
+    private $helmVersion = '3.2.1';
 
     /**
+     * @var Component the component that this installation contains
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Component", inversedBy="installations")
@@ -229,6 +232,8 @@ class Installation
     private $component;
 
     /**
+     * @var Domain the domain under which the installation is installed
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="installations")
@@ -236,6 +241,8 @@ class Installation
     private $domain;
 
     /**
+     * @var Environment the environment the installation is installed in
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="installations")
@@ -243,6 +250,8 @@ class Installation
     private $environment;
 
     /**
+     * @var ArrayCollection the Health logs for this installation
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installation")
@@ -250,7 +259,7 @@ class Installation
     private $healthLogs;
 
     /**
-     * @var Datetime The moment this entity was last installed
+     * @var Datetime The moment this installation was last installed
      *
      * @Groups({"read", "write"})
      * @ORM\Column(type="datetime", nullable=true)
@@ -277,6 +286,7 @@ class Installation
 
     /**
      * @var Property additional properties that are required for this installation, i.e. external API keys
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade={"persist","remove"}, orphanRemoval=true)
@@ -564,8 +574,6 @@ class Installation
     {
         if ($this->deploymentName) {
             return $this->deploymentName;
-        } else {
-            return "{$this->getComponent()->getCode()}-{$this->getEnvironment()->getName()}";
         }
     }
 
