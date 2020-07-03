@@ -199,18 +199,6 @@ class Domain
         return $this;
     }
 
-    public function getIp(): ?string
-    {
-        return $this->ip;
-    }
-
-    public function setIp(string $ip): self
-    {
-        $this->ip = $ip;
-
-        return $this;
-    }
-
     public function getDateCreated(): ?\DateTimeInterface
     {
         return $this->dateCreated;
@@ -243,18 +231,6 @@ class Domain
     public function setCluster(?Cluster $cluster): self
     {
         $this->cluster = $cluster;
-
-        return $this;
-    }
-
-    public function getDatabaseUrl(): ?string
-    {
-        return $this->databaseUrl;
-    }
-
-    public function setDatabaseUrl(?string $databaseUrl): self
-    {
-        $this->databaseUrl = $databaseUrl;
 
         return $this;
     }
