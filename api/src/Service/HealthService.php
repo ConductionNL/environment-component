@@ -58,6 +58,8 @@ class HealthService
         $health = New HealthLog();
         $health->setInstallation($installation);
         $health->setDomain($installation->getDomain());
+        $health->setCode(200);
+        $health->setStatus('ok');
 
         // lets get the name
         if($installation->getDeploymentName() && $installation->getDeploymentName() != '')
@@ -86,7 +88,7 @@ class HealthService
 
         //$response = $this->client->request('GET', $url, ['headers' => $headers]);
         //$health->setCode($response->getStatusCode());
-        //$health->setCode($response->getReasonPhrase());
+        //$health->setStatus($response->getReasonPhrase());
 
 
         // Lets save the results
