@@ -195,7 +195,7 @@ class Cluster
     private $environments;
 
     /**
-     * @var  The amount of installations on this cluster
+     * @var ArrayCollection The installations on this cluster
      *
      * @Groups({"read"})
      * @MaxDepth(1)
@@ -204,7 +204,7 @@ class Cluster
     private $installations;
 
     /**
-     * @var integer The amount of installations container on this cluster
+     * @var int The amount of installations container on this cluster
      *
      * @Groups({"read"})
      */
@@ -458,9 +458,9 @@ class Cluster
     }
 
     /**
-     * @return integer
+     * @return int
      */
-    public function getHealth(): integer
+    public function getHealth(): int
     {
         $health = 0;
 
