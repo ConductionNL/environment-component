@@ -358,6 +358,7 @@ class Installation
     public function setEnvironment(Environment $environment): self
     {
         $this->environment = $environment;
+        $environment->addInstallation($this);
 
         return $this;
     }
