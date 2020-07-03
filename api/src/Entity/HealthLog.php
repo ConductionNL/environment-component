@@ -136,7 +136,7 @@ class HealthLog
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus($status): self
     {
         $this->status = $status;
 
@@ -148,7 +148,7 @@ class HealthLog
         return $this->code;
     }
 
-    public function setCode(integer $code): self
+    public function setCode($code): self
     {
         $this->code = $code;
 
@@ -184,7 +184,7 @@ class HealthLog
         return $this->endpoint;
     }
 
-    public function setEndpoint(string $endpoint): self
+    public function setEndpoint($endpoint): self
     {
         $this->endpoint = $endpoint;
 
