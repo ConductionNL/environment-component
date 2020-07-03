@@ -131,7 +131,7 @@ class HealthLog
         return $this->id;
     }
 
-    public function getStatus(): ?string
+    public function getStatus()
     {
         return $this->status;
     }
@@ -143,7 +143,7 @@ class HealthLog
         return $this;
     }
 
-    public function getCode(): ?integer
+    public function getCode()
     {
         return $this->code;
     }
@@ -179,7 +179,7 @@ class HealthLog
         return $this;
     }
 
-    public function getEndpoint(): ?string
+    public function getEndpoint()
     {
         return $this->endpoint;
     }
