@@ -359,7 +359,7 @@ class ClusterService
             'kubectl',
             'rollout',
             'restart',
-            "deployment/$name-php",
+            "deployments/$name-php",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
         ]);
@@ -373,7 +373,7 @@ class ClusterService
             'kubectl',
             'rollout',
             'restart',
-            "deployment/$name-nginx",
+            "deployments/$name-nginx",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
         ]);
@@ -387,7 +387,7 @@ class ClusterService
             'kubectl',
             'rollout',
             'restart',
-            "deployment/$name-varnish",
+            "deployments/$name-varnish",
             "--namespace={$installation->getEnvironment()->getName()}",
             "--kubeconfig={$kubeconfig}",
         ]);
