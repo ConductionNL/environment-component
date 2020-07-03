@@ -572,9 +572,7 @@ class Installation
 
     public function getDeploymentName(): ?string
     {
-        if ($this->deploymentName) {
             return $this->deploymentName;
-        }
     }
 
     public function setDeploymentName(?string $deploymentName): self
