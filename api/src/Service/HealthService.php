@@ -75,10 +75,10 @@ class HealthService
 
         // lets detirmine a path for our healt check
         if($installation->getEnvironment()->getName()== 'prod'){
-            $url = 'https://'.$name.$domain;
+            $url = 'https://'.$name.'.'.$domain;
         }
         else{
-            $url = 'https://'.$name.$domain;
+            $url = 'https://'.$name.'.'.$installation->getEnvironment()->getName().'.'.$domain;
         }
         $health->setEndpoint($url);
 
