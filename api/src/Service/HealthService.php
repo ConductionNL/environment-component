@@ -84,9 +84,9 @@ class HealthService
         $headers = $this->headers;
         $headers['Authorization'] = $installation->getEnvironment()->getAuthorization();
 
-        $response = $this->client->request('GET', $url, ['headers' => $headers]);
-        $health->setCode($response->getStatusCode());
-        $health->setCode($response->getReasonPhrase());
+        //$response = $this->client->request('GET', $url, ['headers' => $headers]);
+        //$health->setCode($response->getStatusCode());
+        //$health->setCode($response->getReasonPhrase());
 
 
         // Lets save the results
