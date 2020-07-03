@@ -84,7 +84,7 @@ class HealthCommand extends Command
         $results = [];
         foreach ($installations as $installation) {
             $health = $this->healthService->check($installation);
-            $results[] = [$health->getDomain()->getName(), $health->getInstallation()->getEnviroment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
+            $results[] = [$health->getDomain()->getName(), $health->getInstallation()->getEnvironment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
 
             $io->progressAdvance();
         }
