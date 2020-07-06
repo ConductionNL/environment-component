@@ -45,7 +45,7 @@ class InstallationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('i')
             ->where('i.dateInstalled IS NULL')
-            ->orWhere('i.dateInstalled < i.dateModified')
+//            ->orWhere('i.dateInstalled < i.dateModified')
             ->orderBy('i.dateModified', 'ASC')
             ->setMaxResults($maxResults)
             ->getQuery()
