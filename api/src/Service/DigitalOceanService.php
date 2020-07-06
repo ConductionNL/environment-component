@@ -303,7 +303,7 @@ class DigitalOceanService
 //        var_dump($dbCluster['id']);
         //Check if there is a database with the same name as the installation, else create
 
-        if ($installation->hasDeploymentName()) {
+        if ($installation->getDeploymentName()) {
             $installationName = $installation->getDeploymentName().'-'.$installation->getEnvironment()->getName();
         } else {
             $installationName = $installation->getComponent()->getCode().'-'.$installation->getEnvironment()->getName();

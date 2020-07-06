@@ -146,7 +146,7 @@ class Domain
 
     /**
      * @var ArrayCollection the HealthLogs related to this domain
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="domain", orphanRemoval=true)
      */

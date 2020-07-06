@@ -252,7 +252,7 @@ class Installation
     /**
      * @var ArrayCollection the Health logs for this installation
      *
-     * @Groups({"read","write"})
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installation")
      */
@@ -447,7 +447,7 @@ class Installation
     {
         if (!$this->healthLogs->contains($healthLog)) {
             $this->healthLogs[] = $healthLog;
-            $healthLog->setComponent($this);
+            $healthLog->setInstallation($this);
         }
 
         return $this;
@@ -458,22 +458,10 @@ class Installation
         if ($this->healthLogs->contains($healthLog)) {
             $this->healthLogs->removeElement($healthLog);
             // set the owning side to null (unless already changed)
-            if ($healthLog->getComponent() === $this) {
-                $healthLog->setComponent(null);
+            if ($healthLog->getInstallation() === $this) {
+                $healthLog->setInstallation(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
 
         return $this;
     }
@@ -575,13 +563,10 @@ class Installation
     {
         return $this->deploymentName;
     }
-
-    public function hasDeploymentName(): bool
+    public function setDeploymentName(?string $deploymentName): self
     {
-        if ($this->deploymentName) {
-            return true;
-        } else {
-            return false;
-        }
+        $this->deploymentName = $deploymentName;
+
+        return $this;
     }
 }
