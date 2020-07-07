@@ -132,12 +132,7 @@ class Installation
      *
      * @example ok
      *
-     * @Gedmo\Versioned
-     * @Assert\Length(
-     *      max = 25
-     * )
      * @Groups({"read"})
-     * @ORM\Column(type="string", length=25, nullable=true)
      */
     private $status;
 
@@ -254,6 +249,7 @@ class Installation
      *
      * @Groups({"write"})
      * @MaxDepth(1)
+     * @ORM\OrderBy({"dateCreated" = "DESC"})
      * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installation")
      */
     private $healthLogs;
@@ -340,14 +336,10 @@ class Installation
 
     public function getStatus(): ?string
     {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
-
-        return $this;
+        if(count($this->getHealthLogs()) < 1){
+            return null;
+        }
+        return $this->getHealthLogs()->first()->getStatus();
     }
 
     public function getEnvironment(): ?Environment
