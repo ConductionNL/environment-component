@@ -7,6 +7,9 @@ use App\Entity\HealthLog;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\BadResponseException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -36,7 +39,7 @@ class HealthService
         // We might want to overwrite the guzle config, so we declare it as a separate array that we can then later adjust, merge or otherwise influence
         $this->guzzleConfig = [
             // Allow redirect
-            'allow_redirects' => true,
+            'allow_redirects' => false,
             // Base URI is used with relative requests
             'http_errors' => false,
             //'base_uri' => 'https://wrc.zaakonline.nl/applications/536bfb73-63a5-4719-b535-d835607b88b2/',
@@ -92,7 +95,7 @@ class HealthService
             $response = $this->client->request('GET', $url, ['headers' => $headers, 'http_errors' => false]);
             $health->setCode($response->getStatusCode());
             $health->setStatus($response->getReasonPhrase());
-        } catch (/Exception $e) {
+        } catch (\Exception $e) {
             $health->setStatus($e->getMessage());
         }
 
