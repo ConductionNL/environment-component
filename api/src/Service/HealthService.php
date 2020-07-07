@@ -44,7 +44,7 @@ class HealthService
             'http_errors' => false,
             //'base_uri' => 'https://wrc.zaakonline.nl/applications/536bfb73-63a5-4719-b535-d835607b88b2/',
             // You can set any number of default request options.
-            'timeout'  => 4000.0,
+            'timeout'  => 200.0,
             // To work with NLX we need a couple of default headers
             'headers' => $this->headers,
             // Do not check certificates
