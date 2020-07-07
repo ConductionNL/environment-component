@@ -36,13 +36,7 @@ class HealthService
         // We might want to overwrite the guzle config, so we declare it as a separate array that we can then later adjust, merge or otherwise influence
         $this->guzzleConfig = [
             // Allow redirect
-            'allow_redirects' => [
-                'max'             => 10,
-                'strict'          => false,
-                'referer'         => false,
-                'protocols'       => ['http', 'https'],
-                'track_redirects' => false
-            ],
+            'allow_redirects' => false,
             // Base URI is used with relative requests
             'http_errors' => false,
             //'base_uri' => 'https://wrc.zaakonline.nl/applications/536bfb73-63a5-4719-b535-d835607b88b2/',
@@ -94,9 +88,13 @@ class HealthService
         $headers = $this->headers;
         $headers['Authorization'] = $installation->getEnvironment()->getAuthorization();
 
-        $response = $this->client->request('GET', $url, ['headers' => $headers, 'http_errors' => false]);
-        $health->setCode($response->getStatusCode());
-        $health->setStatus($response->getReasonPhrase());
+        try {
+            $response = $this->client->request('GET', $url, ['headers' => $headers, 'http_errors' => false]);
+            $health->setCode($response->getStatusCode());
+            $health->setStatus($response->getReasonPhrase());
+        } catch (/Exception $e) {
+            $health->setStatus($e->getMessage());
+        }
 
         $this->em->persist($health);
         $this->em->flush();
