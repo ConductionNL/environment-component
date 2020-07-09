@@ -174,6 +174,13 @@ class Environment
     private $installations;
 
     /**
+     * @var int The amount of installations container on this cluster that are healthy
+     *
+     * @Groups({"read"})
+     */
+    private $health;
+
+    /**
      * @var Datetime The moment this entity was created
      *
      * @Groups({"read"})
@@ -277,6 +284,23 @@ class Environment
         }
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHealth(): int
+    {
+        $health = 0;
+
+        foreach($this->getInstallations() as $installation){
+            if($installation->getStatus() == 'ok'){
+                $health++;
+            }
+        }
+
+        return $health;
+
     }
 
     public function getDateCreated(): ?\DateTimeInterface

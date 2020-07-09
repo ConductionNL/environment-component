@@ -204,7 +204,7 @@ class Cluster
     private $installations;
 
     /**
-     * @var int The amount of installations container on this cluster
+     * @var int The amount of installations container on this cluster that are healthy
      *
      * @Groups({"read"})
      */
