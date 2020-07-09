@@ -244,6 +244,11 @@ class Cluster
      */
     private $releases = [];
 
+    /**
+     * @ORM\ManyToOne(targetEntity=OpenStackTemplate::class, inversedBy="clusters")
+     */
+    private $template;
+
     public function __construct()
     {
         $this->domains = new ArrayCollection();
@@ -514,6 +519,18 @@ class Cluster
     public function setConfigurations(?array $configurations): self
     {
         $this->configurations = $configurations;
+
+        return $this;
+    }
+
+    public function getTemplate(): ?OpenStackTemplate
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(?OpenStackTemplate $template): self
+    {
+        $this->template = $template;
 
         return $this;
     }
