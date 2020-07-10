@@ -5,17 +5,18 @@
 namespace App\Command;
 
 use App\Service\HealthService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class HealthCommand extends Command
 {
-    private $em;    private $healthService;
+    private $em;
+    private $healthService;
 
     public function __construct(HealthService $healthService)
     {
@@ -23,6 +24,7 @@ class HealthCommand extends Command
 
         parent::__construct();
     }
+
     /**
      * {@inheritdoc}
      */
@@ -50,22 +52,20 @@ class HealthCommand extends Command
         /** @var string $version */
         $componentId = $input->getOption('cluster');
 
-        if($componentId){
+        if ($componentId) {
             $clusters = $this->em->getRepository('App\Entity\Clusters')->findBy();
-        }
-        else{
+        } else {
             $clusters = $this->em->getRepository('App\Entity\Clusters')->getAll();
-
         }
 
-        if (!$clusters || count($clusters) < 1 ) {
-        	throw new InvalidOptionException(sprintf('No installable clusters could be found'));
+        if (!$clusters || count($clusters) < 1) {
+            throw new InvalidOptionException(sprintf('No installable clusters could be found'));
         }
 
         $io->title('Starting health checks');
 
         $installations = new ArrayCollection();
-        foreach($cluster as $clusters){
+        foreach ($cluster as $clusters) {
             $installations = new ArrayCollection(
                 array_merge($installations->toArray(), $cluster->getInstallations())
             );
@@ -89,7 +89,7 @@ class HealthCommand extends Command
         $io->text('All done');
 
         $io->table(
-            ['Cluster', 'Enviroment','Installation','Endpoint','Status'],
+            ['Cluster', 'Enviroment', 'Installation', 'Endpoint', 'Status'],
             $results
         );
     }
