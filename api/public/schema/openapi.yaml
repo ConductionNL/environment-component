@@ -7787,15 +7787,6 @@ paths:
               - asc
               - desc
         -
-          name: 'order[status]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
           name: 'order[dbUsername]'
           in: query
           required: false
@@ -9748,7 +9739,7 @@ components:
           $ref: '#/components/schemas/ArrayCollection-read'
         health:
           readOnly: true
-          description: 'The amount of installations container on this cluster'
+          description: 'The amount of installations container on this cluster that are healthy'
           type: integer
         dateCreated:
           description: 'The moment this entity was created'
@@ -9888,7 +9879,7 @@ components:
           $ref: '#/components/schemas/ArrayCollection:jsonld-read'
         health:
           readOnly: true
-          description: 'The amount of installations container on this cluster'
+          description: 'The amount of installations container on this cluster that are healthy'
           type: integer
         dateCreated:
           description: 'The moment this entity was created'
@@ -10189,11 +10180,6 @@ components:
           type: string
           format: date-time
           nullable: true
-        healthLogs:
-          description: 'the HealthLogs related to this domain'
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog-read'
       required:
         - name
         - location
@@ -10271,11 +10257,6 @@ components:
           type: string
           format: date-time
           nullable: true
-        healthLogs:
-          description: 'the HealthLogs related to this domain'
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog:jsonld-read'
       required:
         - name
         - location
@@ -10355,6 +10336,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation-read'
+        health:
+          readOnly: true
+          description: 'The amount of installations container on this cluster that are healthy'
+          type: integer
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10450,6 +10435,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-read'
+        health:
+          readOnly: true
+          description: 'The amount of installations container on this cluster that are healthy'
+          type: integer
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10655,9 +10644,9 @@ components:
           type: string
           nullable: true
         status:
+          readOnly: true
           description: 'The status of this installation'
           type: string
-          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
@@ -10687,11 +10676,6 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/Environment-read'
-        healthLogs:
-          description: 'the Health logs for this installation'
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog-read'
         dateInstalled:
           description: 'The moment this installation was last installed'
           type: string
@@ -10713,7 +10697,6 @@ components:
           items:
             $ref: '#/components/schemas/Property-read'
         deploymentName:
-          readOnly: true
           description: 'The name of the deployment on the kubernetes cluster'
           type: string
           nullable: true
@@ -10789,7 +10772,6 @@ components:
           items:
             $ref: '#/components/schemas/Property-write'
         deploymentName:
-          readOnly: true
           description: 'The name of the deployment on the kubernetes cluster'
           type: string
           nullable: true
@@ -10821,9 +10803,9 @@ components:
           type: string
           nullable: true
         status:
+          readOnly: true
           description: 'The status of this installation'
           type: string
-          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
@@ -10853,11 +10835,6 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/Environment:jsonld-read'
-        healthLogs:
-          description: 'the Health logs for this installation'
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog:jsonld-read'
         dateInstalled:
           description: 'The moment this installation was last installed'
           type: string
@@ -10879,7 +10856,6 @@ components:
           items:
             $ref: '#/components/schemas/Property:jsonld-read'
         deploymentName:
-          readOnly: true
           description: 'The name of the deployment on the kubernetes cluster'
           type: string
           nullable: true
@@ -10964,7 +10940,6 @@ components:
           items:
             $ref: '#/components/schemas/Property:jsonld-write'
         deploymentName:
-          readOnly: true
           description: 'The name of the deployment on the kubernetes cluster'
           type: string
           nullable: true
@@ -11247,9 +11222,6 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
-      healthLogs:
-        description: 'the HealthLogs related to this domain'
-        type: \ArrayCollection
     required:
       - name
       - location
@@ -11411,11 +11383,6 @@ definitions:
         description: 'the description of this component'
         type: string
         example: 'This common ground component describes common ground components'
-      status:
-        description: 'The status of this installation'
-        type: string
-        example: ok
-        maxLength: 25
       dbUsername:
         description: 'The username that is needed to log into the cluster database'
         type: string
@@ -11452,9 +11419,6 @@ definitions:
       environment:
         description: 'the environment the installation is installed in'
         type: \Environment
-      healthLogs:
-        description: 'the Health logs for this installation'
-        type: \ArrayCollection
       properties:
         description: 'additional properties that are required for this installation, i.e. external API keys'
         type: \Property
@@ -11627,12 +11591,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-03 12:13:10'
+        example: '2020-07-10 07:34:52'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-03 12:13:10'
+        example: '2020-07-10 07:34:52'
     required: []
   AuditTrail-write:
     properties:
@@ -11680,12 +11644,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-03 12:13:10'
+        example: '2020-07-10 07:34:52'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-03 12:13:10'
+        example: '2020-07-10 07:34:52'
     required: []
   ChangeLog-write:
     properties:
