@@ -77,7 +77,7 @@ class HealthLog
     private $status;
 
     /**
-     * @var integer The status code of the checked resource
+     * @var int The status code of the checked resource
      *
      * @example OK
      * @Groups({"read"})

@@ -229,12 +229,10 @@ class ClusterService
         }
         $this->addRepo($installation);
 
-        if($name = $installation->getDeploymentName()){
-
-        }else{
+        if ($name = $installation->getDeploymentName()) {
+        } else {
             $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
         }
-
 
         //Install
         $process = new Process([
@@ -270,9 +268,8 @@ class ClusterService
         }
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
         $this->addRepo($installation);
-        if($name = $installation->getDeploymentName()){
-
-        }else{
+        if ($name = $installation->getDeploymentName()) {
+        } else {
             $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
         }
 
@@ -300,9 +297,8 @@ class ClusterService
     public function deleteComponent(Installation $installation): bool
     {
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
-        if($name = $installation->getDeploymentName()){
-
-        }else{
+        if ($name = $installation->getDeploymentName()) {
+        } else {
             $name = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
         }
         //Install
@@ -349,7 +345,7 @@ class ClusterService
         $kubeconfig = $this->writeKubeconfig($installation->getEnvironment()->getCluster());
 
         $this->addRepo($installation);
-        if(!$installation->getDeploymentName()){
+        if (!$installation->getDeploymentName()) {
             $name = $installation->getComponent()->getCode();
         } else {
             $name = $installation->getDeploymentName();

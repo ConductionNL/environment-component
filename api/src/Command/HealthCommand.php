@@ -12,7 +12,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class HealthCommand extends Command
 {
@@ -54,23 +53,21 @@ class HealthCommand extends Command
         /** @var string $version */
         $componentId = $input->getOption('cluster');
 
-        if($componentId){
+        if ($componentId) {
             $clusters = $this->em->getRepository('App\Entity\Cluster')->findBy();
-        }
-        else{
+        } else {
             $clusters = $this->em->getRepository('App\Entity\Cluster')->findAll();
-
         }
 
-        if (!$clusters || count($clusters) < 1 ) {
-        	throw new InvalidOptionException(sprintf('No installable clusters could be found'));
+        if (!$clusters || count($clusters) < 1) {
+            throw new InvalidOptionException(sprintf('No installable clusters could be found'));
         }
 
         $io->title('Starting health checks');
 
         $installations = [];
 
-        foreach($clusters as $cluster){
+        foreach ($clusters as $cluster) {
             $installations = array_merge($installations, $cluster->getInstallations()->toArray());
         }
 
@@ -92,7 +89,7 @@ class HealthCommand extends Command
         $io->text('All done');
 
         $io->table(
-            ['Cluster', 'Enviroment','Installation','Endpoint','Status'],
+            ['Cluster', 'Enviroment', 'Installation', 'Endpoint', 'Status'],
             $results
         );
     }

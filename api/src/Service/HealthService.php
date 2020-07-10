@@ -2,17 +2,12 @@
 
 namespace App\Service;
 
-use App\Entity\Installation;
 use App\Entity\HealthLog;
+use App\Entity\Installation;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\BadResponseException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class HealthService
 {
@@ -20,7 +15,7 @@ class HealthService
     private $em;
     private $params;
 
-    public function __construct(ParameterBagInterface $params,  CommonGroundService $commonGroundService, EntityManagerInterface $em)
+    public function __construct(ParameterBagInterface $params, CommonGroundService $commonGroundService, EntityManagerInterface $em)
     {
         $this->commonGroundService = $commonGroundService;
         $this->em = $em;
@@ -62,18 +57,16 @@ class HealthService
         // Make the special health guzzle call
 
         // save the result
-        $health = New HealthLog();
+        $health = new HealthLog();
         $health->setInstallation($installation);
         $health->setDomain($installation->getDomain());
         $health->setCode(200);
         $health->setStatus('ok');
 
         // lets get the name
-        if($installation->getDeploymentName() && $installation->getDeploymentName() != '')
-        {
+        if ($installation->getDeploymentName() && $installation->getDeploymentName() != '') {
             $name = $installation->getDeploymentName();
-        }
-        else{
+        } else {
             $name = $installation->getComponent()->getCode();
         }
 
@@ -81,10 +74,9 @@ class HealthService
         $domain = $installation->getDomain()->getName();
 
         // lets detirmine a path for our healt check
-        if($installation->getEnvironment()->getName()== 'prod'){
+        if ($installation->getEnvironment()->getName() == 'prod') {
             $url = 'https://'.$name.'.'.$domain;
-        }
-        else{
+        } else {
             $url = 'https://'.$name.'.'.$installation->getEnvironment()->getName().'.'.$domain;
         }
         $health->setEndpoint($url);
@@ -106,7 +98,4 @@ class HealthService
 
         return $health;
     }
-
-
-
 }
