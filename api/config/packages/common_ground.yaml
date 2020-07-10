@@ -73,6 +73,15 @@ parameters:
   env(ORGANIZATION_STATE): ""
   env(ORGANIZATION_LOCALITY): ""
   env(ORGANIZATION_UNIT_NAME): ""
+  
+  env(OS_AUTH_URL): "https://identity.api.ams.fuga.cloud:443/v3"
+  env(OS_APPLICATION_CREDENTIAL_ID): "9607764f925e4e56ae7ff8800969cda3"
+  env(OS_APPLICATION_CREDENTIAL_SECRET_INPUT): "!changeMe!"
+  env(OS_REGION_NAME): "ams"
+  env(OS_AUTH_TYPE): "v3applicationcredential"
+  env(OS_IDENTITY_API_VERSION): 3
+  
+  
 
   google_tag_manager_id: "%env(GOOGLE_TAG_MANAGER_ID)%"
   hubspot_embed_code: "%env(HUBSPOT_EMBED_CODE)%"

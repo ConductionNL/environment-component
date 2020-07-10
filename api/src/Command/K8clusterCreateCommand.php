@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Cluster;
 use App\Service\DigitalOceanService;
+use App\Service\OpenStackService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,10 +15,12 @@ class K8clusterCreateCommand extends Command
 {
     private $doService;
     private $em;
+    private $osService;
 
-    public function __construct(DigitalOceanService $clusterService, EntityManagerInterface $em)
+    public function __construct(DigitalOceanService $clusterService, OpenStackService $osService, EntityManagerInterface $em)
     {
         $this->doService = $clusterService;
+        $this->osService = $osService;
         $this->em = $em;
 
         parent::__construct();
@@ -44,6 +47,10 @@ class K8clusterCreateCommand extends Command
             if ($cluster instanceof Cluster && $cluster->getProvider() == 'Digital Ocean') {
                 $io->title('Creating '.$cluster->getName().' ('.$cluster->getId().')');
                 $this->doService->createKubernetesCluster($cluster);
+            }
+            if ($cluster instanceof Cluster && $cluster->getProvider() == 'OpenStack') {
+                $io->title('Creating '.$cluster->getName().' ('.$cluster->getId().')');
+                $this->osService->createKubernetesCluster($cluster);
             }
         }
     }

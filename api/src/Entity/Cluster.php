@@ -108,7 +108,8 @@ class Cluster
      * @Assert\Choice(
      * {
      *     "CYSO",
-     *     "Digital Ocean"
+     *     "Digital Ocean",
+     *     "OpenStack"
      * }
      * )
      * @Groups({"read","write"})
@@ -245,9 +246,23 @@ class Cluster
     private $releases = [];
 
     /**
+     * @var OpenStackTemplate The template used to create this cluster, only used in OpenStack environments
+     *
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity=OpenStackTemplate::class, inversedBy="clusters")
      */
     private $template;
+
+    /**
+     * @var string The name of the used keypair. Only used in OpenStack environments
+     *
+     * @example Algemeen
+     *
+     * @Groups({"read","write"})
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $keyPair;
 
     public function __construct()
     {
@@ -531,6 +546,18 @@ class Cluster
     public function setTemplate(?OpenStackTemplate $template): self
     {
         $this->template = $template;
+
+        return $this;
+    }
+
+    public function getKeyPair(): ?string
+    {
+        return $this->keyPair;
+    }
+
+    public function setKeyPair(?string $keyPair): self
+    {
+        $this->keyPair = $keyPair;
 
         return $this;
     }

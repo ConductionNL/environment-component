@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Cluster;
 use App\Entity\OpenStackTemplate;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -24,8 +25,28 @@ class OpenStackService
 
     public function getKubernetesCredentials(string $name){
         $process = new Process(['openstack', 'coe', 'cluster', 'config', $name]);
+        $process->run();
+
+        return 'flubberwup';
+//        return $kubeconfig;
+    }
+    public function getTemplates():array{
+        echo "collecting templates\n";
+        $process = new Process(['openstack', 'coe', 'cluster', 'template', 'list']);
+        $process->run();
+        $templates = [];
+        $iterator = 0;
+        foreach(explode("\n", $process->getOutput()) as $template){
+            $template = explode('|', $template);
+            if($iterator > 2 && count($template)>1){
+                array_push($templates, trim($template[2]));
+            }
+            $iterator++;
+        }
+        return $templates;
     }
     public function createTemplate(OpenStackTemplate $template):bool{
+        echo "creating template \n";
         if(!$template->getNodeFlavour()){
             $nodeFlavour = $template->getMasterFlavour();
         }
@@ -55,8 +76,11 @@ class OpenStackService
     }
     public function createKubernetesCluster(Cluster $cluster):Cluster{
 
+        echo "creating Kubernetes Cluster ".$cluster->getName()."\n";
+
         $init = false;
         foreach ($this->getTemplates() as $template){
+            //echo $template;
             if($template == $cluster->getTemplate()->getName()){
                 $init = true;
                 break;
@@ -65,12 +89,18 @@ class OpenStackService
         if(!$init){
             $this->createTemplate($cluster->getTemplate());
         }
+        if(!$cluster->getKeyPair()){
+            $keypair = $cluster->getTemplate()->getDefaultKeyPair();
+        }else{
+            $keypair = $cluster->getKeyPair();
+        }
 
-        $process = new Process(['openstack','coe', 'create',
+        echo 'create cluster';
+        $process = new Process(['openstack','coe','cluster', 'create',
             '--cluster-template', $cluster->getTemplate()->getName(),
             '--master-count',1,
             '--node-count',$cluster->getTemplate()->getNodeCount(),
-            '--keypair', $cluster->getKeyPair(),
+            '--keypair', $keypair,
             $cluster->getName()
         ]);
 
@@ -79,6 +109,8 @@ class OpenStackService
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
+
+        return $cluster;
     }
     public function getKubernetesClusters():array{
         $process = new Process(['openstack', 'coe', 'cluster', 'list']);
@@ -126,18 +158,5 @@ class OpenStackService
         $this->em->flush();
 
         return $cluster;
-    }
-    public function getTemplates():array{
-        $process = new Process(['openstack', 'coe', 'template', 'list']);
-        $process->run();
-        $templates = [];
-        $iterator = 0;
-        foreach(explode("\n", $process->getOutput()) as $template){
-            if($iterator > 2){
-                array_push($templates, trim(explode('|', $template)[1]));
-            }
-            $iterator++;
-        }
-        return $templates;
     }
 }

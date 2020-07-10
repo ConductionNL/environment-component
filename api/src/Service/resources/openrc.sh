@@ -10,7 +10,7 @@ export OS_AUTH_URL="https://identity.api.ams.fuga.cloud:443/v3"
 
 # In addition to the owning entity (tenant), OpenStack stores the entity
 # performing the action as the **user**.
-export OS_APPLICATION_CREDENTIAL_ID="9607764f925e4e56ae7ff8800969cda3"
+export OS_APPLICATION_CREDENTIAL_ID="397cba51432c43e2a0e4d0a21ec59903"
 
 # With Keystone you pass the keystone application_credential_secret.
 echo "Enter application_credential_secret with ID $OS_APPLICATION_CREDENTIAL_ID: "
