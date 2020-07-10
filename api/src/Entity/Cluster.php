@@ -98,7 +98,7 @@ class Cluster
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $status = "requested";
+    private $status = 'requested';
     /**
      * @var string The cloud provider where the cluster should be
      *
@@ -197,7 +197,6 @@ class Cluster
     /**
      * @Groups({"read"})
      * @MaxDepth(1)
-     *
      */
     private $installations;
 
@@ -234,8 +233,6 @@ class Cluster
      * @ORM\Column(type="array", nullable=true)
      */
     private $releases = [];
-
-
 
     public function __construct()
     {
@@ -437,8 +434,8 @@ class Cluster
     public function getInstallations(): Collection
     {
         // Lets use the enviroments to get all the installations for this cluster
-        foreach($this->environments as $environment){
-            foreach($environment->getInstallations() as $installation){
+        foreach ($this->environments as $environment) {
+            foreach ($environment->getInstallations() as $installation) {
                 if (!$this->installations->contains($installation)) {
                     $this->installations[] = $installation;
                 }
