@@ -116,7 +116,6 @@ class Environment
      */
     private $debug = 0;
 
-
     /**
      * @var int Whether the components in this environment should run with caching on or off.
      *
@@ -293,14 +292,13 @@ class Environment
     {
         $health = 0;
 
-        foreach($this->getInstallations() as $installation){
-            if($installation->getStatus() == 'ok'){
+        foreach ($this->getInstallations() as $installation) {
+            if ($installation->getStatus() == 'ok') {
                 $health++;
             }
         }
 
         return $health;
-
     }
 
     public function getDateCreated(): ?\DateTimeInterface

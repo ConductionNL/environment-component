@@ -336,9 +336,10 @@ class Installation
 
     public function getStatus(): ?string
     {
-        if(count($this->getHealthLogs()) < 1){
+        if (count($this->getHealthLogs()) < 1) {
             return null;
         }
+
         return $this->getHealthLogs()->first()->getStatus();
     }
 
@@ -555,6 +556,7 @@ class Installation
     {
         return $this->deploymentName;
     }
+
     public function setDeploymentName(?string $deploymentName): self
     {
         $this->deploymentName = $deploymentName;
