@@ -27,13 +27,13 @@ class AppFixtures extends Fixture
         }
 
         $template = new OpenStackTemplate();
-        $template->setName('Fuga small');
+        $template->setName('fuga.small');
         $template->setImage('ac6c15cc-9073-4537-98d9-00f4ccfefa25');
         $template->setMasterFlavour('c3.small');
         $template->setNodeCount(2);
         $template->setVolumeSize(10);
-        $template->setVersionTag('v1.16.8');
-        $template->setDefaultKeyPair('Algemeen');
+        $template->setVersionTag('v1.13.10');
+        $template->setDefaultKeyPair('algemeen');
 
         $manager->persist($template);
         $manager->flush();

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Service;
-
 
 use App\Entity\Installation;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,13 +13,15 @@ class CysoDatabaseService
     private $dbPort;
     private $manager;
 
-    public function __construct(string $dbUrl, string $dbUser, string $dbPassword, int $dbPort, EntityManagerInterface $manager){
+    public function __construct(string $dbUrl, string $dbUser, string $dbPassword, int $dbPort, EntityManagerInterface $manager)
+    {
         $this->dbUrl = $dbUrl;
         $this->dbUser = $dbUser;
         $this->dbPassword = $dbPassword;
         $this->manager = $manager;
         $this->dbPort = $dbPort;
     }
+
     public function createDatabase(Installation $installation)
     {
 //        $dbName = "{$installation->getComponent()->getCode()}-{$installation->getEnvironment()->getName()}";
@@ -35,5 +35,4 @@ class CysoDatabaseService
 //        $stmt->execute();
 //        $installation->setDbUrl("pgsql://$dbName:$password@{$this->dbUrl}:{$this->dbPort}/$dbName?sslmode=require&serverVersion=10");
     }
-
 }

@@ -10488,7 +10488,7 @@ components:
           $ref: '#/components/schemas/ArrayCollection-read'
         health:
           readOnly: true
-          description: 'The amount of installations container on this cluster'
+          description: 'The amount of installations container on this cluster that are healthy'
           type: integer
         dateCreated:
           description: 'The moment this entity was created'
@@ -10648,7 +10648,7 @@ components:
           $ref: '#/components/schemas/ArrayCollection:jsonld-read'
         health:
           readOnly: true
-          description: 'The amount of installations container on this cluster'
+          description: 'The amount of installations container on this cluster that are healthy'
           type: integer
         dateCreated:
           description: 'The moment this entity was created'
@@ -11125,6 +11125,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation-read'
+        health:
+          readOnly: true
+          description: 'The amount of installations container on this cluster that are healthy'
+          type: integer
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -11220,6 +11224,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-read'
+        health:
+          readOnly: true
+          description: 'The amount of installations container on this cluster that are healthy'
+          type: integer
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -11742,10 +11750,10 @@ components:
           description: 'The OS image that should be used **WARNING: THIS IS PROVIDER DEPENDENT**'
           type: string
         masterFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT** Assumes nodeFlavour when not set'
+          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
           type: string
         nodeFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
+          description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
           type: string
           nullable: true
         volumeSize:
@@ -11762,10 +11770,13 @@ components:
         nodeCount:
           description: 'The number of nodes the cluster needs'
           type: integer
+        defaultKeyPair:
+          description: 'The default keypair for the template'
+          type: string
       required:
         - name
         - image
-        - nodeFlavour
+        - masterFlavour
         - volumeSize
         - versionTag
     OpenStackTemplate-write:
@@ -11774,7 +11785,7 @@ components:
       required:
         - name
         - image
-        - nodeFlavour
+        - masterFlavour
         - volumeSize
         - versionTag
       properties:
@@ -11785,10 +11796,10 @@ components:
           description: 'The OS image that should be used **WARNING: THIS IS PROVIDER DEPENDENT**'
           type: string
         masterFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT** Assumes nodeFlavour when not set'
+          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
           type: string
         nodeFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
+          description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
           type: string
           nullable: true
         volumeSize:
@@ -11805,6 +11816,9 @@ components:
         nodeCount:
           description: 'The number of nodes the cluster needs'
           type: integer
+        defaultKeyPair:
+          description: 'The default keypair for the template'
+          type: string
     'OpenStackTemplate:jsonld-read':
       type: object
       description: 'An entity describing OpenStack templates'
@@ -11832,10 +11846,10 @@ components:
           description: 'The OS image that should be used **WARNING: THIS IS PROVIDER DEPENDENT**'
           type: string
         masterFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT** Assumes nodeFlavour when not set'
+          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
           type: string
         nodeFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
+          description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
           type: string
           nullable: true
         volumeSize:
@@ -11852,10 +11866,13 @@ components:
         nodeCount:
           description: 'The number of nodes the cluster needs'
           type: integer
+        defaultKeyPair:
+          description: 'The default keypair for the template'
+          type: string
       required:
         - name
         - image
-        - nodeFlavour
+        - masterFlavour
         - volumeSize
         - versionTag
     'OpenStackTemplate:jsonld-write':
@@ -11864,7 +11881,7 @@ components:
       required:
         - name
         - image
-        - nodeFlavour
+        - masterFlavour
         - volumeSize
         - versionTag
       properties:
@@ -11884,10 +11901,10 @@ components:
           description: 'The OS image that should be used **WARNING: THIS IS PROVIDER DEPENDENT**'
           type: string
         masterFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT** Assumes nodeFlavour when not set'
+          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
           type: string
         nodeFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
+          description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
           type: string
           nullable: true
         volumeSize:
@@ -11904,6 +11921,9 @@ components:
         nodeCount:
           description: 'The number of nodes the cluster needs'
           type: integer
+        defaultKeyPair:
+          description: 'The default keypair for the template'
+          type: string
     Property-read:
       type: object
       properties:
@@ -12085,90 +12105,6 @@ definitions:
         type: \OpenStackTemplate
     required:
       - name
-  Component-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      core:
-        description: 'Is the component a core component'
-        type: bool
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-    required:
-      - name
-      - code
-      - githubRepository
-      - helmRepository
-  Component-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      githubToken:
-        description: 'A personal access token for github that can be used to trigger actions on this component'
-        type: string
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      core:
-        description: 'Is the component a core component'
-        type: bool
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - helmRepository
   Domain-read:
     properties:
       id:
@@ -12309,39 +12245,6 @@ definitions:
       - debug
       - cache
       - authorization
-  HealthLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      status:
-        description: 'The status of the checked resource'
-        type: string
-        example: OK
-      code:
-        description: 'The status code of the checked resource'
-        type: int
-        example: OK
-      endpoint:
-        description: 'The endpoint that was checked'
-        type: string
-        example: 'https://www.zuid-drecht.nl'
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      domain: []
-      installation: []
-    required: []
-  HealthLog-write:
-    properties:
-      domain: []
-      installation: []
-    required: []
   Installation-read:
     properties:
       id:
@@ -12462,6 +12365,90 @@ definitions:
         type: \Property
     required:
       - name
+  Component-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  Component-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      githubToken:
+        description: 'A personal access token for github that can be used to trigger actions on this component'
+        type: string
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
   OpenStackTemplate-read:
     properties:
       id:
@@ -12480,12 +12467,12 @@ definitions:
         example: 'Ubuntu 20.04LTS'
         maxLength: 255
       masterFlavour:
-        description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT** Assumes nodeFlavour when not set'
+        description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
         type: string
         example: c3.medium
         maxLength: 255
       nodeFlavour:
-        description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
+        description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
         type: string
         example: c3.small
         maxLength: 255
@@ -12502,13 +12489,16 @@ definitions:
       nodeCount:
         description: 'The number of nodes the cluster needs'
         type: int
+      defaultKeyPair:
+        description: 'The default keypair for the template'
+        type: string
       clusters:
         description: 'The clusters that use this template'
         type: \ArrayCollection
     required:
       - name
       - image
-      - nodeFlavour
+      - masterFlavour
       - volumeSize
       - versionTag
   OpenStackTemplate-write:
@@ -12524,12 +12514,12 @@ definitions:
         example: 'Ubuntu 20.04LTS'
         maxLength: 255
       masterFlavour:
-        description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT** Assumes nodeFlavour when not set'
+        description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
         type: string
         example: c3.medium
         maxLength: 255
       nodeFlavour:
-        description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
+        description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
         type: string
         example: c3.small
         maxLength: 255
@@ -12546,15 +12536,104 @@ definitions:
       nodeCount:
         description: 'The number of nodes the cluster needs'
         type: int
+      defaultKeyPair:
+        description: 'The default keypair for the template'
+        type: string
       clusters:
         description: 'The clusters that use this template'
         type: \ArrayCollection
     required:
       - name
       - image
-      - nodeFlavour
+      - masterFlavour
       - volumeSize
       - versionTag
+  HealthLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      status:
+        description: 'The status of the checked resource'
+        type: string
+        example: OK
+      code:
+        description: 'The status code of the checked resource'
+        type: int
+        example: OK
+      endpoint:
+        description: 'The endpoint that was checked'
+        type: string
+        example: 'https://www.zuid-drecht.nl'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      domain: []
+      installation: []
+    required: []
+  HealthLog-write:
+    properties:
+      domain: []
+      installation: []
+    required: []
+  ChangeLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+      action:
+        description: ''
+        type: string
+      objectId:
+        description: ''
+        type: string
+      objectClass:
+        description: ''
+        type: string
+      version:
+        description: ''
+        type: int
+      data:
+        description: ''
+        type: array
+      username:
+        description: ''
+        type: string
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      dateCreated:
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-07-13 12:34:36'
+      dateModified:
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-07-13 12:34:36'
+    required: []
+  ChangeLog-write:
+    properties:
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+    required: []
   AuditTrail-read:
     properties:
       id:
@@ -12659,12 +12738,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-09 11:19:27'
+        example: '2020-07-13 12:34:36'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-09 11:19:27'
+        example: '2020-07-13 12:34:36'
     required: []
   AuditTrail-write:
     properties:
@@ -12674,70 +12753,11 @@ definitions:
         example: 'This log line looks suspicius'
         maxLength: 2555
     required: []
-  ChangeLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this object'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-      action:
-        description: ''
-        type: string
-      objectId:
-        description: ''
-        type: string
-      objectClass:
-        description: ''
-        type: string
-      version:
-        description: ''
-        type: int
-      data:
-        description: ''
-        type: array
-      username:
-        description: ''
-        type: string
-      session:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this request was created'
-        type: string
-        format: date-time
-        example: '2020-07-09 11:19:27'
-      dateModified:
-        description: 'The moment this request last Modified'
-        type: string
-        format: date-time
-        example: '2020-07-09 11:19:27'
-    required: []
-  ChangeLog-write:
-    properties:
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-    required: []
 tags:
   -
     name: Cluster
     description: |
       This entity holds the information about a kubernetes cluster.
-      
-      
-  -
-    name: Component
-    description: |
-      
       
       
   -
@@ -12753,13 +12773,13 @@ tags:
       
       
   -
-    name: HealthLog
+    name: Installation
     description: |
       
       
       
   -
-    name: Installation
+    name: Component
     description: |
       
       
@@ -12771,13 +12791,19 @@ tags:
       
       This entity contains the fields that are needed to create openstack templates, which in tern are needed to create openstack clusters
   -
-    name: AuditTrail
+    name: HealthLog
+    description: |
+      
+      
+      
+  -
+    name: ChangeLog
     description: |
       An resource representing a log line.
       
       This entity represents a product that can be ordered via the OrderRegistratieComponent.
   -
-    name: ChangeLog
+    name: AuditTrail
     description: |
       An resource representing a log line.
       
@@ -12788,15 +12814,15 @@ securityDefinitions:
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
 host: irc.zaakonline.nl
 servers:
   -

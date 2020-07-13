@@ -1,3 +1,4 @@
+{{ if eq .Values.settings.env "prod" }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -236,3 +237,4 @@ spec:
             -   name: VARNISH_URL
                 value: {{ include "name" . }}-varnish
           restartPolicy: OnFailure
+{{ end }}

@@ -200,12 +200,11 @@ class Cluster
      *
      * @Groups({"read"})
      * @MaxDepth(1)
-     *
      */
     private $installations;
 
     /**
-     * @var int The amount of installations container on this cluster
+     * @var int The amount of installations container on this cluster that are healthy
      *
      * @Groups({"read"})
      */
@@ -463,11 +462,11 @@ class Cluster
      */
     public function getInstallations(): Collection
     {
-        $this->installations  = new ArrayCollection();
+        $this->installations = new ArrayCollection();
 
         // Lets use the enviroments to get all the installations for this cluster
-        foreach($this->environments as $environment){
-            foreach($environment->getInstallations() as $installation){
+        foreach ($this->environments as $environment) {
+            foreach ($environment->getInstallations() as $installation) {
                 if (!$this->installations->contains($installation)) {
                     $this->installations[] = $installation;
                 }
@@ -484,14 +483,13 @@ class Cluster
     {
         $health = 0;
 
-        foreach($this->getInstallations() as $installation){
-            if($installation->getStatus() == 'ok'){
+        foreach ($this->getInstallations() as $installation) {
+            if ($installation->getStatus() == 'ok') {
                 $health++;
             }
         }
 
         return $health;
-
     }
 
     public function hasEnvironment(string $name)

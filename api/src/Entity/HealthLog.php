@@ -77,7 +77,7 @@ class HealthLog
     private $status;
 
     /**
-     * @var integer The status code of the checked resource
+     * @var int The status code of the checked resource
      *
      * @example OK
      * @Groups({"read"})
@@ -118,7 +118,7 @@ class HealthLog
     private $dateCreated;
 
     /**
-     * @var Datetime The moment this entity last Modified
+     * @var Datetime The moment this entity last modified
      *
      * @Groups({"read"})
      * @Gedmo\Timestampable(on="update")

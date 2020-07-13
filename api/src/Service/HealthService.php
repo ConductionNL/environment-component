@@ -2,17 +2,12 @@
 
 namespace App\Service;
 
-use App\Entity\Installation;
 use App\Entity\HealthLog;
+use App\Entity\Installation;
 use Conduction\CommonGroundBundle\Service\CommonGroundService;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\BadResponseException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class HealthService
 {
@@ -20,7 +15,7 @@ class HealthService
     private $em;
     private $params;
 
-    public function __construct(ParameterBagInterface $params,  CommonGroundService $commonGroundService, EntityManagerInterface $em)
+    public function __construct(ParameterBagInterface $params, CommonGroundService $commonGroundService, EntityManagerInterface $em)
     {
         $this->commonGroundService = $commonGroundService;
         $this->em = $em;
@@ -43,8 +38,10 @@ class HealthService
             // Base URI is used with relative requests
             'http_errors' => false,
             //'base_uri' => 'https://wrc.zaakonline.nl/applications/536bfb73-63a5-4719-b535-d835607b88b2/',
-            // You can set any number of default request options.
-            'timeout'  => 200.0,
+            // Responce timeout in secondes
+            'timeout'  => 10,
+            // Connection timeout in secondes
+            'connect_timeout' => 5,
             // To work with NLX we need a couple of default headers
             'headers' => $this->headers,
             // Do not check certificates
@@ -60,18 +57,16 @@ class HealthService
         // Make the special health guzzle call
 
         // save the result
-        $health = New HealthLog();
+        $health = new HealthLog();
         $health->setInstallation($installation);
         $health->setDomain($installation->getDomain());
         $health->setCode(200);
         $health->setStatus('ok');
 
         // lets get the name
-        if($installation->getDeploymentName() && $installation->getDeploymentName() != '')
-        {
+        if ($installation->getDeploymentName() && $installation->getDeploymentName() != '') {
             $name = $installation->getDeploymentName();
-        }
-        else{
+        } else {
             $name = $installation->getComponent()->getCode();
         }
 
@@ -79,10 +74,9 @@ class HealthService
         $domain = $installation->getDomain()->getName();
 
         // lets detirmine a path for our healt check
-        if($installation->getEnvironment()->getName()== 'prod'){
+        if ($installation->getEnvironment()->getName() == 'prod') {
             $url = 'https://'.$name.'.'.$domain;
-        }
-        else{
+        } else {
             $url = 'https://'.$name.'.'.$installation->getEnvironment()->getName().'.'.$domain;
         }
         $health->setEndpoint($url);
@@ -104,7 +98,4 @@ class HealthService
 
         return $health;
     }
-
-
-
 }
