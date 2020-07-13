@@ -199,7 +199,6 @@ class Cluster
      *
      * @Groups({"read"})
      * @MaxDepth(1)
-     *
      */
     private $installations;
 
@@ -443,11 +442,11 @@ class Cluster
      */
     public function getInstallations(): Collection
     {
-        $this->installations  = new ArrayCollection();
+        $this->installations = new ArrayCollection();
 
         // Lets use the enviroments to get all the installations for this cluster
-        foreach($this->environments as $environment){
-            foreach($environment->getInstallations() as $installation){
+        foreach ($this->environments as $environment) {
+            foreach ($environment->getInstallations() as $installation) {
                 if (!$this->installations->contains($installation)) {
                     $this->installations[] = $installation;
                 }
@@ -471,7 +470,6 @@ class Cluster
         }
 
         return $health;
-
     }
 
     public function hasEnvironment(string $name)

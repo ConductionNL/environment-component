@@ -116,7 +116,6 @@ class Environment
      */
     private $debug = 0;
 
-
     /**
      * @var int Whether the components in this environment should run with caching on or off.
      *
@@ -300,7 +299,6 @@ class Environment
         }
 
         return $health;
-
     }
 
     public function getDateCreated(): ?\DateTimeInterface
