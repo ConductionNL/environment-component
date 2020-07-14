@@ -23,8 +23,8 @@ settings:
   locality: Amsterdam
   unit: Common-Ground
   env: dev
-  debug: 1
-  cache: 1
+  debug: 0
+  cache: 0
   replicaCount: 1
   corsAllowOrigin: ['*']
   trustedHosts: '^.+$'
@@ -50,8 +50,8 @@ security:
   commongroundKey: "9329d8d0-1d5e-433c-bb47-6991053c7fcb"
   applicationKey: "45c1a4b6-59d3-4a6e-86bf-88a872f35845"
   userKey: "79d5b14c-70ab-41fb-ac02-917e3288870b"
-  digitaloceanKey: "88e6848726c4416f5a3ec1023fc406dcd7a4f8d46d471fdce2ba6faa43178ab6"
-  githubKey: "15dc75198f0033110cda2170a57d02cc9a6dbc30"
+  digitaloceanKey: "!changeMe!"
+  githubKey: "!changeMe!"
   authorisationProviderUser: https://uc.larping.eu
   authorisationProviderApplication: https://ac.larping.eu
 
