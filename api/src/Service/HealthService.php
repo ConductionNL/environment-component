@@ -73,11 +73,31 @@ class HealthService
         // let establisch the domain
         $domain = $installation->getDomain()->getName();
 
+
+        // Lets estabblis the propper subdomain
+        $subdomain = $name.'.';
+
+        // Lets scheck for overwrites
+        // @todo make switch case
+        foreach($installation->getProperties() as $property){
+             if($property->getName()=="settings.subdomain"){
+                 $subdomain = $property->getValue();
+                 // The is the optional case of an empty sub domain, in wich case we dont want to add an dot
+                 if($subdomain && $subdomain!=""){
+                     $subdomain = $subdomain.'.';
+                 }
+             }
+
+            if($property->getName()=="settings.domain"){
+                $domain = $property->getValue();
+            }
+        }
+
         // lets detirmine a path for our healt check
         if ($installation->getEnvironment()->getName() == 'prod') {
-            $url = 'https://'.$name.'.'.$domain;
+            $url = 'https://'.$subdomain.$domain;
         } else {
-            $url = 'https://'.$name.'.'.$installation->getEnvironment()->getName().'.'.$domain;
+            $url = 'https://'.$subdomain.$installation->getEnvironment()->getName().'.'.$domain;
         }
         $health->setEndpoint($url);
 
