@@ -76,12 +76,30 @@ class OpenStackService
     }
     public function createKeyPair(Cluster $cluster):string{
         $process = new Process(['openstack','keypair','create', $cluster->getName()]);
+        $process->run();
         if($process->isSuccessful()){
             echo $process->getOutput();
             return $cluster->getName();
         }else{
             throw new ProcessFailedException($process);
         }
+    }
+
+    public function configureCluster(Cluster $cluster): Cluster
+    {
+        // Make sure we can only try to configure clusters in there installation procces
+        if (!$cluster->getStatus() != 'creating') {
+            return true;
+        }
+
+        if ($this->getStatus($cluster) == 'CREATE_COMPLETE') {
+            $cluster->setStatus('installing');
+            $cluster->setKubeconfig($this->getKubernetesCredentials($cluster->getName()));
+
+            return $cluster;
+        }
+
+        return false;
     }
 
     public function createKubernetesCluster(Cluster $cluster):Cluster{
@@ -119,6 +137,8 @@ class OpenStackService
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
+
+        $this->configureCluster($cluster);
 
         return $cluster;
     }
