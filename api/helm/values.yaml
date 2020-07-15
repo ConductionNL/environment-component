@@ -23,8 +23,8 @@ settings:
   locality: Amsterdam
   unit: Common-Ground
   env: dev
-  debug: 0
-  cache: 0
+  debug: 1
+  cache: 1
   replicaCount: 1
   corsAllowOrigin: ['*']
   trustedHosts: '^.+$'

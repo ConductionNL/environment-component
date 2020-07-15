@@ -41,8 +41,25 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "summary"="Audittrail",
  *                  "description"="Gets the audit trail for this resource"
  *              }
+ *          },
+ *
+ *     "dns_setup"={
+ *          "path"="/domains/{id}/dns_setup",
+ *          "method"="get",
+ *          "swagger_context" = {
+ *              "summary"="setup",
+ *              "description"="Sets the DNS records up"
  *          }
- * 		},
+ *     },
+ *     "dns_clear"={
+ *          "path"="/domains/{id}/dns_clear",
+ *          "method"="get",
+ *          "swagger_context" = {
+ *              "summary"="clear",
+ *              "description"="Clears the DNS records up"
+ *          }
+ *     }
+ *     },
  * )
  * @ORM\Entity(repositoryClass="App\Repository\DomainRepository")
  * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
@@ -154,9 +171,9 @@ class Domain
 
     /**
      * @var ArrayCollection the DNS Records related to this domain
-     * @Groups({"write"})
+     * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity=Records::class, mappedBy="domain", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Record::class, mappedBy="domain", orphanRemoval=true, cascade={"persist","remove"})
      */
     private $records;
 

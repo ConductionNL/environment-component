@@ -8,6 +8,11 @@ parameters:
   env(APP_COMMONGROUND_ID): ""
   env(APP_COMMONGROUND_KEY): ""
   env(APP_COMMONGROUND_SECRET): ""
+
+  env(APP_CLOUDFLARE_EMAIL): '!changeMe!'
+  env(APP_CLOUDFLARE_KEY): '!changeMe!'
+  env(APP_GITHUB_KEY): '!changeMe!'
+  env(APP_DIGITALOCEAN_KEY): '!changeMe!'
   
   common_ground.app.id: "%env(APP_COMMONGROUND_ID)%"
   app_commonground_id: "%env(APP_COMMONGROUND_ID)%"
@@ -16,6 +21,8 @@ parameters:
 
   app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)%'
   app_github_key: '%env(APP_GITHUB_KEY)%'
+  app_cloudflare_key: '%env(APP_CLOUDFLARE_KEY)%'
+  app_cloudflare_email: '%env(APP_CLOUDFLARE_EMAIL)%'
   
     # Application Parameters
   env(APP_ENV): "prod"
@@ -512,6 +519,8 @@ twig:
 
         app_digitalocean_key: '%env(APP_DIGITALOCEAN_KEY)%'
         app_github_key: '%env(APP_GITHUB_KEY)%'
+        app_cloudflare_key: '%env(APP_CLOUDFLARE_KEY)%'
+        app_cloudflare_email: '%env(APP_CLOUDFLARE_EMAIL)%'
             
         # Security Details
         app_commonground_id: '%env(APP_COMMONGROUND_ID)%'

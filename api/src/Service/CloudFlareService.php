@@ -38,9 +38,10 @@ class CloudFlareService
 
     public function addDNSRecord($name, $ip)
     {
-        if(strpos('commonground.nu',$name) === false){
+        if(strpos($name,'commonground.nu') === false){
             return false;
         }
+
         $data = [
             'type'=>'A',
             'name'=>$name,
@@ -48,39 +49,47 @@ class CloudFlareService
             'ttl'=>120,
             'proxied'=>false
         ];
-
+//        var_dump($data);
         $response = $this->client->post('zones/b8de3ea289b7c1f89d6b214531757bbf/dns_records',['body'=>json_encode($data)]);
-        if ($response->getStatusCode() != 201) {
+        if ($response->getStatusCode() != 200) {
             throw new HttpException($response->getStatusCode(), "zones/b8de3ea289b7c1f89d6b214531757bbf/dns_records".' returned: '.$response->getBody());
         }
-
-        return json_decode($response->getBody(),true)['id'];
+//        var_dump(json_decode($response->getBody(),true));
+        return json_decode($response->getBody(),true)['result']['id'];
     }
     public function removeDNSRecord($id)
     {
-        $response = $this->client->delete("zones/b8de3ea289b7c1f89d6b214531757bbf/dns_records/$id");
-        if ($response->getStatusCode() != 201) {
-            throw new HttpException($response->getStatusCode(), "zones/b8de3ea289b7c1f89d6b214531757bbf/dns_records".' returned: '.$response->getBody());
+        if($id){
+            $response = $this->client->delete("zones/b8de3ea289b7c1f89d6b214531757bbf/dns_records/$id");
+            if ($response->getStatusCode() != 200) {
+                throw new HttpException($response->getStatusCode(), "zones/b8de3ea289b7c1f89d6b214531757bbf/dns_records".' returned: '.$response->getBody());
+            }
         }
 
         return true;
     }
     public function removeDNSRecordsForDomain(Domain $domain){
         foreach($domain->getRecords() as $record){
-            $this->removeDNSRecord($record->getCloudFlareId());
-            $domain->removeRecord($record);
+            if($this->removeDNSRecord($record->getCloudFlareId())){
+                $domain->removeRecord($record);
+            }
         }
         return $domain;
     }
     public function createDNSRecordsForDomain(Domain $domain){
 
-        $record = new Record();
-        $record->setCloudFlareId($this->addDNSRecord($domain->getName(),$domain->getCluster()->getIp()));
-        $domain->addRecord($record);
-        $record = new Record();
-        $record->setCloudFlareId($this->addDNSRecord("*.{$domain->getName()}",$domain->getCluster()->getIp()));
-        $domain->addRecord($record);
 
+        if($id = $this->addDNSRecord($domain->getName(),$domain->getCluster()->getIp())){
+            $record = new Record();
+            $record->setCloudFlareId($id);
+            $domain->addRecord($record);
+        }
+
+        if($id = $this->addDNSRecord("*.{$domain->getName()}",$domain->getCluster()->getIp())){
+            $record = new Record();
+            $record->setCloudFlareId($id);
+            $domain->addRecord($record);
+        }
         return $domain;
     }
 }

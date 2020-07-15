@@ -5457,6 +5457,268 @@ paths:
           description: 'Resource not found'
       produces:
         - application/health+json
+  '/domains/{id}/dns_clear':
+    get:
+      tags:
+        - Domain
+      operationId: dns_clearDomainItem
+      summary: 'Retrieves a Domain resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Domain resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+  '/domains/{id}/dns_setup':
+    get:
+      tags:
+        - Domain
+      operationId: dns_setupDomainItem
+      summary: 'Retrieves a Domain resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Domain resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
   /environments:
     get:
       tags:
@@ -10180,6 +10442,11 @@ components:
           type: string
           format: date-time
           nullable: true
+        records:
+          description: 'the DNS Records related to this domain'
+          type: array
+          items:
+            $ref: '#/components/schemas/Record-read'
       required:
         - name
         - location
@@ -10215,6 +10482,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-write'
+        records:
+          description: 'the DNS Records related to this domain'
+          type: array
+          items:
+            $ref: '#/components/schemas/Record-write'
     'Domain:jsonld-read':
       type: object
       description: ''
@@ -10257,6 +10529,11 @@ components:
           type: string
           format: date-time
           nullable: true
+        records:
+          description: 'the DNS Records related to this domain'
+          type: array
+          items:
+            $ref: '#/components/schemas/Record:jsonld-read'
       required:
         - name
         - location
@@ -10301,6 +10578,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-write'
+        records:
+          description: 'the DNS Records related to this domain'
+          type: array
+          items:
+            $ref: '#/components/schemas/Record:jsonld-write'
     Environment-read:
       type: object
       description: ''
@@ -11011,6 +11293,34 @@ components:
         value:
           description: 'the value of the property'
           type: string
+    Record-read:
+      type: object
+    Record-write:
+      type: object
+    'Record:jsonld-read':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+    'Record:jsonld-write':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
 definitions:
   Cluster-read:
     properties:
@@ -11110,90 +11420,6 @@ definitions:
       environments: []
     required:
       - name
-  Component-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      core:
-        description: 'Is the component a core component'
-        type: bool
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-    required:
-      - name
-      - code
-      - githubRepository
-      - helmRepository
-  Component-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      githubToken:
-        description: 'A personal access token for github that can be used to trigger actions on this component'
-        type: string
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      core:
-        description: 'Is the component a core component'
-        type: bool
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - helmRepository
   Domain-read:
     properties:
       id:
@@ -11222,6 +11448,9 @@ definitions:
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
+      records:
+        description: 'the DNS Records related to this domain'
+        type: \ArrayCollection
     required:
       - name
       - location
@@ -11250,6 +11479,9 @@ definitions:
         type: \ArrayCollection
       healthLogs:
         description: 'the HealthLogs related to this domain'
+        type: \ArrayCollection
+      records:
+        description: 'the DNS Records related to this domain'
         type: \ArrayCollection
     required:
       - name
@@ -11334,39 +11566,6 @@ definitions:
       - debug
       - cache
       - authorization
-  HealthLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      status:
-        description: 'The status of the checked resource'
-        type: string
-        example: OK
-      code:
-        description: 'The status code of the checked resource'
-        type: int
-        example: OK
-      endpoint:
-        description: 'The endpoint that was checked'
-        type: string
-        example: 'https://www.zuid-drecht.nl'
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-      domain: []
-      installation: []
-    required: []
-  HealthLog-write:
-    properties:
-      domain: []
-      installation: []
-    required: []
   Installation-read:
     properties:
       id:
@@ -11487,6 +11686,176 @@ definitions:
         type: \Property
     required:
       - name
+  Component-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  Component-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      githubToken:
+        description: 'A personal access token for github that can be used to trigger actions on this component'
+        type: string
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  HealthLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      status:
+        description: 'The status of the checked resource'
+        type: string
+        example: OK
+      code:
+        description: 'The status code of the checked resource'
+        type: int
+        example: OK
+      endpoint:
+        description: 'The endpoint that was checked'
+        type: string
+        example: 'https://www.zuid-drecht.nl'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+      domain: []
+      installation: []
+    required: []
+  HealthLog-write:
+    properties:
+      domain: []
+      installation: []
+    required: []
+  ChangeLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+      action:
+        description: ''
+        type: string
+      objectId:
+        description: ''
+        type: string
+      objectClass:
+        description: ''
+        type: string
+      version:
+        description: ''
+        type: int
+      data:
+        description: ''
+        type: array
+      username:
+        description: ''
+        type: string
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      dateCreated:
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-07-15 11:55:14'
+      dateModified:
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-07-15 11:55:14'
+    required: []
+  ChangeLog-write:
+    properties:
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+    required: []
   AuditTrail-read:
     properties:
       id:
@@ -11591,12 +11960,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-15 09:06:35'
+        example: '2020-07-15 11:55:14'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-15 09:06:35'
+        example: '2020-07-15 11:55:14'
     required: []
   AuditTrail-write:
     properties:
@@ -11606,70 +11975,11 @@ definitions:
         example: 'This log line looks suspicius'
         maxLength: 2555
     required: []
-  ChangeLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this object'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-      action:
-        description: ''
-        type: string
-      objectId:
-        description: ''
-        type: string
-      objectClass:
-        description: ''
-        type: string
-      version:
-        description: ''
-        type: int
-      data:
-        description: ''
-        type: array
-      username:
-        description: ''
-        type: string
-      session:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this request was created'
-        type: string
-        format: date-time
-        example: '2020-07-15 09:06:35'
-      dateModified:
-        description: 'The moment this request last Modified'
-        type: string
-        format: date-time
-        example: '2020-07-15 09:06:35'
-    required: []
-  ChangeLog-write:
-    properties:
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-    required: []
 tags:
   -
     name: Cluster
     description: |
       This entity holds the information about a kubernetes cluster.
-      
-      
-  -
-    name: Component
-    description: |
-      
       
       
   -
@@ -11685,25 +11995,31 @@ tags:
       
       
   -
-    name: HealthLog
-    description: |
-      
-      
-      
-  -
     name: Installation
     description: |
       
       
       
   -
-    name: AuditTrail
+    name: Component
+    description: |
+      
+      
+      
+  -
+    name: HealthLog
+    description: |
+      
+      
+      
+  -
+    name: ChangeLog
     description: |
       An resource representing a log line.
       
       This entity represents a product that can be ordered via the OrderRegistratieComponent.
   -
-    name: ChangeLog
+    name: AuditTrail
     description: |
       An resource representing a log line.
       
@@ -11714,15 +12030,15 @@ securityDefinitions:
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
 host: irc.zaakonline.nl
 servers:
   -
