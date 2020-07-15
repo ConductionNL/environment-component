@@ -143,13 +143,6 @@ class OpenStackTemplate
      */
     private $nodeCount;
 
-    /**
-     * @var string The default keypair for the template
-     * @Groups({"read", "write"})
-     * @ORM\Column(type="string", length=255)
-     */
-    private $defaultKeyPair;
-
     public function __construct()
     {
         $this->clusters = new ArrayCollection();
@@ -271,18 +264,6 @@ class OpenStackTemplate
     public function setNodeCount(int $nodeCount): self
     {
         $this->nodeCount = $nodeCount;
-
-        return $this;
-    }
-
-    public function getDefaultKeyPair(): ?string
-    {
-        return $this->defaultKeyPair;
-    }
-
-    public function setDefaultKeyPair(string $defaultKeyPair): self
-    {
-        $this->defaultKeyPair = $defaultKeyPair;
 
         return $this;
     }

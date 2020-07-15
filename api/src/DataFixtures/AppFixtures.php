@@ -33,7 +33,6 @@ class AppFixtures extends Fixture
         $template->setNodeCount(2);
         $template->setVolumeSize(15);
         $template->setVersionTag('v1.13.10');
-        $template->setDefaultKeyPair('algemeen-robert');
 
         $manager->persist($template);
         $manager->flush();

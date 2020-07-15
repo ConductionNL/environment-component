@@ -74,6 +74,16 @@ class OpenStackService
             throw new ProcessFailedException($process);
         }
     }
+    public function createKeyPair(Cluster $cluster):string{
+        $process = new Process(['openstack','keypair','create', $cluster->getName()]);
+        if($process->isSuccessful()){
+            echo $process->getOutput();
+            return $cluster->getName();
+        }else{
+            throw new ProcessFailedException($process);
+        }
+    }
+
     public function createKubernetesCluster(Cluster $cluster):Cluster{
 
         echo "creating Kubernetes Cluster ".$cluster->getName()."\n";
@@ -90,7 +100,7 @@ class OpenStackService
             $this->createTemplate($cluster->getTemplate());
         }
         if(!$cluster->getKeyPair()){
-            $keypair = $cluster->getTemplate()->getDefaultKeyPair();
+            $keypair = $this->createKeyPair($cluster);
         }else{
             $keypair = $cluster->getKeyPair();
         }

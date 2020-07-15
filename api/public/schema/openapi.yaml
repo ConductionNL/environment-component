@@ -9302,746 +9302,6 @@ paths:
           description: 'Resource not found'
       produces:
         - application/health+json
-  /open_stack_templates:
-    get:
-      tags:
-        - OpenStackTemplate
-      operationId: getOpenStackTemplateCollection
-      summary: 'Retrieves the collection of OpenStackTemplate resources.'
-      responses:
-        200:
-          description: 'OpenStackTemplate collection response'
-          content:
-            application/ld+json:
-              schema:
-                type: object
-                properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/OpenStackTemplate:jsonld-read' } }
-                  'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
-                required:
-                  - 'hydra:member'
-            application/json+ld:
-              schema:
-                type: object
-                properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/OpenStackTemplate:jsonld-read' } }
-                  'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string }, required: { type: boolean } } } } } }
-                required:
-                  - 'hydra:member'
-            application/hal+json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+hal:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/vnd.api+json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+vnd.api:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/health+json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+health:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/x-yaml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/csv:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/html:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OpenStackTemplate-read'
-      parameters:
-        -
-          name: 'order[name]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: page
-          in: query
-          required: false
-          description: 'The collection page number'
-          schema:
-            type: integer
-            default: 1
-        -
-          name: limit
-          in: query
-          required: false
-          description: 'The number of items per page'
-          schema:
-            type: integer
-            default: 30
-            minimum: 0
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
-        -
-          name: Link
-          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
-          in: header
-        -
-          name: 'extend[]'
-          required: false
-          description: 'An array of nested objects to include in the return object'
-          in: query
-          schema:
-            type: array
-        -
-          name: 'fields[]'
-          required: false
-          description: 'An array of fields to return in output, wil return all fields is not supplied'
-          in: query
-          schema:
-            type: array
-        -
-          name: validOn
-          required: false
-          description: 'Returns object as valid on a given date time'
-          schema:
-            type: string
-            format: date-time
-          in: query
-        -
-          name: validFrom
-          required: false
-          description: 'Returns objects valid from a given date time'
-          schema:
-            type: string
-            format: date-time
-          in: query
-        -
-          name: validUntil
-          required: false
-          description: 'Returns objects valid until a given date time'
-          schema:
-            type: string
-            format: date-time
-          in: query
-      produces:
-        - application/health+json
-    post:
-      tags:
-        - OpenStackTemplate
-      operationId: postOpenStackTemplateCollection
-      summary: 'Creates a OpenStackTemplate resource.'
-      responses:
-        201:
-          description: 'OpenStackTemplate resource created'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate:jsonld-read'
-            application/json+ld:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate:jsonld-read'
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+hal:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+vnd.api:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/health+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+health:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-          links:
-            GetOpenStackTemplateItem:
-              parameters:
-                id: '$response.body#/id'
-              operationId: getOpenStackTemplateItem
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /open_stack_templates/{id}`.'
-        400:
-          description: 'Invalid input'
-        404:
-          description: 'Resource not found'
-      requestBody:
-        content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate:jsonld-write'
-          application/json+ld:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate:jsonld-write'
-          application/hal+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/json+hal:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/vnd.api+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/json+vnd.api:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/health+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/json+health:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/x-yaml:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          text/csv:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-        description: 'The new OpenStackTemplate resource'
-      parameters:
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
-  '/open_stack_templates/{id}':
-    get:
-      tags:
-        - OpenStackTemplate
-      operationId: getOpenStackTemplateItem
-      summary: 'Retrieves a OpenStackTemplate resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
-        -
-          name: Link
-          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
-          in: header
-        -
-          name: 'extend[]'
-          required: false
-          description: 'An array of nested objects to include in the return object'
-          in: query
-          schema:
-            type: array
-        -
-          name: 'fields[]'
-          required: false
-          description: 'An array of fields to return in output, wil return all fields is not supplied'
-          in: query
-          schema:
-            type: array
-        -
-          name: validOn
-          required: false
-          description: 'Returns object as valid on a given date time'
-          schema:
-            type: string
-            format: date-time
-          in: query
-        -
-          name: validFrom
-          required: false
-          description: 'Returns objects valid from a given date time'
-          schema:
-            type: string
-            format: date-time
-          in: query
-        -
-          name: validUntil
-          required: false
-          description: 'Returns objects valid until a given date time'
-          schema:
-            type: string
-            format: date-time
-          in: query
-      responses:
-        200:
-          description: 'OpenStackTemplate resource response'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate:jsonld-read'
-            application/json+ld:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate:jsonld-read'
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+hal:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+vnd.api:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/health+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+health:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-        404:
-          description: 'Resource not found'
-      produces:
-        - application/health+json
-    delete:
-      tags:
-        - OpenStackTemplate
-      operationId: deleteOpenStackTemplateItem
-      summary: 'Removes the OpenStackTemplate resource.'
-      responses:
-        204:
-          description: 'OpenStackTemplate resource deleted'
-        404:
-          description: 'Resource not found'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
-    put:
-      tags:
-        - OpenStackTemplate
-      operationId: putOpenStackTemplateItem
-      summary: 'Replaces the OpenStackTemplate resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
-      responses:
-        200:
-          description: 'OpenStackTemplate resource updated'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate:jsonld-read'
-            application/json+ld:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate:jsonld-read'
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+hal:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+vnd.api:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/health+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+health:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-        400:
-          description: 'Invalid input'
-        404:
-          description: 'Resource not found'
-      requestBody:
-        content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate:jsonld-write'
-          application/json+ld:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate:jsonld-write'
-          application/hal+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/json+hal:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/vnd.api+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/json+vnd.api:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/health+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/json+health:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/x-yaml:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          text/csv:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-        description: 'The updated OpenStackTemplate resource'
-    patch:
-      tags:
-        - OpenStackTemplate
-      operationId: patchOpenStackTemplateItem
-      summary: 'Updates the OpenStackTemplate resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        -
-          name: Authorization
-          description: 'The JWT of the entity performing the request'
-          in: header
-        -
-          name: API-Version
-          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
-          example: 1.0.1
-          in: header
-        -
-          name: X-NLX-Logrecord-ID
-          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
-          in: header
-        -
-          name: X-NLX-Request-Process-Id
-          description: 'A process id for purpose registration (doelbinding)'
-          in: header
-        -
-          name: X-NLX-Request-Data-Elements
-          description: 'A list of requested data elements'
-          in: header
-        -
-          name: X-NLX-Request-Data-Subject
-          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
-          in: header
-        -
-          name: X-NLX-Audit-Clarification
-          description: 'A clarification as to why a request has been made  (doelbinding)'
-          in: header
-      responses:
-        200:
-          description: 'OpenStackTemplate resource updated'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate:jsonld-read'
-            application/json+ld:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate:jsonld-read'
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+hal:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/vnd.api+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+vnd.api:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/health+json:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/json+health:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            application/x-yaml:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/csv:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/OpenStackTemplate-read'
-        400:
-          description: 'Invalid input'
-        404:
-          description: 'Resource not found'
-      requestBody:
-        content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate:jsonld-write'
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/hal+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/vnd.api+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/merge-patch+json:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          applications/x-yaml:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          text/csv:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-        description: 'The updated OpenStackTemplate resource'
 components:
   schemas:
     ArrayCollection-read:
@@ -10511,16 +9771,6 @@ components:
           items:
             type: string
           nullable: true
-        template:
-          description: 'The template used to create this cluster, only used in OpenStack environments'
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/OpenStackTemplate-read'
-        keyPair:
-          description: 'The name of the used keypair. Only used in OpenStack environments'
-          type: string
-          nullable: true
       required:
         - name
     Cluster-write:
@@ -10576,16 +9826,6 @@ components:
           type: array
           items:
             type: string
-          nullable: true
-        template:
-          description: 'The template used to create this cluster, only used in OpenStack environments'
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/OpenStackTemplate-write'
-        keyPair:
-          description: 'The name of the used keypair. Only used in OpenStack environments'
-          type: string
           nullable: true
     'Cluster:jsonld-read':
       type: object
@@ -10671,16 +9911,6 @@ components:
           items:
             type: string
           nullable: true
-        template:
-          description: 'The template used to create this cluster, only used in OpenStack environments'
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/OpenStackTemplate:jsonld-read'
-        keyPair:
-          description: 'The name of the used keypair. Only used in OpenStack environments'
-          type: string
-          nullable: true
       required:
         - name
     'Cluster:jsonld-write':
@@ -10745,16 +9975,6 @@ components:
           type: array
           items:
             type: string
-          nullable: true
-        template:
-          description: 'The template used to create this cluster, only used in OpenStack environments'
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/OpenStackTemplate:jsonld-write'
-        keyPair:
-          description: 'The name of the used keypair. Only used in OpenStack environments'
-          type: string
           nullable: true
     Component-read:
       type: object
@@ -11135,7 +10355,7 @@ components:
           format: date-time
           nullable: true
         dateModified:
-          description: 'The moment this entity last modified'
+          description: 'The moment this entity last Modified'
           type: string
           format: date-time
           nullable: true
@@ -11234,7 +10454,7 @@ components:
           format: date-time
           nullable: true
         dateModified:
-          description: 'The moment this entity last modified'
+          description: 'The moment this entity last Modified'
           type: string
           format: date-time
           nullable: true
@@ -11324,7 +10544,7 @@ components:
           format: date-time
           nullable: true
         dateModified:
-          description: 'The moment this entity last modified'
+          description: 'The moment this entity last Modified'
           type: string
           format: date-time
           nullable: true
@@ -11387,7 +10607,7 @@ components:
           format: date-time
           nullable: true
         dateModified:
-          description: 'The moment this entity last modified'
+          description: 'The moment this entity last Modified'
           type: string
           format: date-time
           nullable: true
@@ -11732,198 +10952,6 @@ components:
           description: 'The name of the deployment on the kubernetes cluster'
           type: string
           nullable: true
-    OpenStackTemplate-read:
-      type: object
-      description: 'An entity describing OpenStack templates'
-      properties:
-        id:
-          readOnly: true
-          description: 'The Uuid identifier of this openstack template'
-          externalDocs:
-            url: 'http://schema.org/identifier'
-          type: string
-          format: uuid
-        name:
-          description: 'The name of this openstack template'
-          type: string
-        image:
-          description: 'The OS image that should be used **WARNING: THIS IS PROVIDER DEPENDENT**'
-          type: string
-        masterFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
-          type: string
-        nodeFlavour:
-          description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
-          type: string
-          nullable: true
-        volumeSize:
-          description: 'Size of the volumes attached to the nodes in GB'
-          type: string
-        versionTag:
-          description: 'The version tag of the Kubernetes version'
-          type: string
-        clusters:
-          description: 'The clusters that use this template'
-          type: array
-          items:
-            $ref: '#/components/schemas/Cluster-read'
-        nodeCount:
-          description: 'The number of nodes the cluster needs'
-          type: integer
-        defaultKeyPair:
-          description: 'The default keypair for the template'
-          type: string
-      required:
-        - name
-        - image
-        - masterFlavour
-        - volumeSize
-        - versionTag
-    OpenStackTemplate-write:
-      type: object
-      description: 'An entity describing OpenStack templates'
-      required:
-        - name
-        - image
-        - masterFlavour
-        - volumeSize
-        - versionTag
-      properties:
-        name:
-          description: 'The name of this openstack template'
-          type: string
-        image:
-          description: 'The OS image that should be used **WARNING: THIS IS PROVIDER DEPENDENT**'
-          type: string
-        masterFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
-          type: string
-        nodeFlavour:
-          description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
-          type: string
-          nullable: true
-        volumeSize:
-          description: 'Size of the volumes attached to the nodes in GB'
-          type: string
-        versionTag:
-          description: 'The version tag of the Kubernetes version'
-          type: string
-        clusters:
-          description: 'The clusters that use this template'
-          type: array
-          items:
-            $ref: '#/components/schemas/Cluster-write'
-        nodeCount:
-          description: 'The number of nodes the cluster needs'
-          type: integer
-        defaultKeyPair:
-          description: 'The default keypair for the template'
-          type: string
-    'OpenStackTemplate:jsonld-read':
-      type: object
-      description: 'An entity describing OpenStack templates'
-      properties:
-        '@context':
-          readOnly: true
-          type: string
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
-        id:
-          readOnly: true
-          description: 'The Uuid identifier of this openstack template'
-          externalDocs:
-            url: 'http://schema.org/identifier'
-          type: string
-          format: uuid
-        name:
-          description: 'The name of this openstack template'
-          type: string
-        image:
-          description: 'The OS image that should be used **WARNING: THIS IS PROVIDER DEPENDENT**'
-          type: string
-        masterFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
-          type: string
-        nodeFlavour:
-          description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
-          type: string
-          nullable: true
-        volumeSize:
-          description: 'Size of the volumes attached to the nodes in GB'
-          type: string
-        versionTag:
-          description: 'The version tag of the Kubernetes version'
-          type: string
-        clusters:
-          description: 'The clusters that use this template'
-          type: array
-          items:
-            $ref: '#/components/schemas/Cluster:jsonld-read'
-        nodeCount:
-          description: 'The number of nodes the cluster needs'
-          type: integer
-        defaultKeyPair:
-          description: 'The default keypair for the template'
-          type: string
-      required:
-        - name
-        - image
-        - masterFlavour
-        - volumeSize
-        - versionTag
-    'OpenStackTemplate:jsonld-write':
-      type: object
-      description: 'An entity describing OpenStack templates'
-      required:
-        - name
-        - image
-        - masterFlavour
-        - volumeSize
-        - versionTag
-      properties:
-        '@context':
-          readOnly: true
-          type: string
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
-        name:
-          description: 'The name of this openstack template'
-          type: string
-        image:
-          description: 'The OS image that should be used **WARNING: THIS IS PROVIDER DEPENDENT**'
-          type: string
-        masterFlavour:
-          description: 'The type of node that should be used as master **WARNING: THIS IS PROVIDER DEPENDENT**'
-          type: string
-        nodeFlavour:
-          description: 'The type of node that should be used as nodes **WARNING: THIS IS PROVIDER DEPENDENT** Assumes masterFlavour when not set'
-          type: string
-          nullable: true
-        volumeSize:
-          description: 'Size of the volumes attached to the nodes in GB'
-          type: string
-        versionTag:
-          description: 'The version tag of the Kubernetes version'
-          type: string
-        clusters:
-          description: 'The clusters that use this template'
-          type: array
-          items:
-            $ref: '#/components/schemas/Cluster:jsonld-write'
-        nodeCount:
-          description: 'The number of nodes the cluster needs'
-          type: integer
-        defaultKeyPair:
-          description: 'The default keypair for the template'
-          type: string
     Property-read:
       type: object
       properties:
@@ -12105,90 +11133,6 @@ definitions:
         type: \OpenStackTemplate
     required:
       - name
-  Component-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      core:
-        description: 'Is the component a core component'
-        type: bool
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last Modified'
-        type: \Datetime
-    required:
-      - name
-      - code
-      - githubRepository
-      - helmRepository
-  Component-write:
-    properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: 'environment component'
-        maxLength: 255
-      code:
-        description: 'The unique commonground short code for this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      githubRepository:
-        description: 'the Github Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component'
-        maxLength: 255
-      githubToken:
-        description: 'A personal access token for github that can be used to trigger actions on this component'
-        type: string
-        maxLength: 255
-      helmRepository:
-        description: 'the Helm Repository that contains this component'
-        type: string
-        example: 'https://github.com/ConductionNL/environment-component/api/helm'
-        maxLength: 255
-      core:
-        description: 'Is the component a core component'
-        type: bool
-      installations: []
-    required:
-      - name
-      - code
-      - githubRepository
-      - helmRepository
   Domain-read:
     properties:
       id:
@@ -12329,39 +11273,6 @@ definitions:
       - debug
       - cache
       - authorization
-  HealthLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this resource'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      status:
-        description: 'The status of the checked resource'
-        type: string
-        example: OK
-      code:
-        description: 'The status code of the checked resource'
-        type: int
-        example: OK
-      endpoint:
-        description: 'The endpoint that was checked'
-        type: string
-        example: 'https://www.zuid-drecht.nl'
-      dateCreated:
-        description: 'The moment this entity was created'
-        type: \Datetime
-      dateModified:
-        description: 'The moment this entity last modified'
-        type: \Datetime
-      domain: []
-      installation: []
-    required: []
-  HealthLog-write:
-    properties:
-      domain: []
-      installation: []
-    required: []
   Installation-read:
     properties:
       id:
@@ -12482,6 +11393,123 @@ definitions:
         type: \Property
     required:
       - name
+  Component-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last Modified'
+        type: \Datetime
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  Component-write:
+    properties:
+      name:
+        description: 'The name of this component'
+        type: string
+        example: 'environment component'
+        maxLength: 255
+      code:
+        description: 'The unique commonground short code for this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      githubRepository:
+        description: 'the Github Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component'
+        maxLength: 255
+      githubToken:
+        description: 'A personal access token for github that can be used to trigger actions on this component'
+        type: string
+        maxLength: 255
+      helmRepository:
+        description: 'the Helm Repository that contains this component'
+        type: string
+        example: 'https://github.com/ConductionNL/environment-component/api/helm'
+        maxLength: 255
+      core:
+        description: 'Is the component a core component'
+        type: bool
+      installations: []
+    required:
+      - name
+      - code
+      - githubRepository
+      - helmRepository
+  HealthLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this resource'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      status:
+        description: 'The status of the checked resource'
+        type: string
+        example: OK
+      code:
+        description: 'The status code of the checked resource'
+        type: int
+        example: OK
+      endpoint:
+        description: 'The endpoint that was checked'
+        type: string
+        example: 'https://www.zuid-drecht.nl'
+      dateCreated:
+        description: 'The moment this entity was created'
+        type: \Datetime
+      dateModified:
+        description: 'The moment this entity last modified'
+        type: \Datetime
+      domain: []
+      installation: []
+    required: []
+  HealthLog-write:
+    properties:
+      domain: []
+      installation: []
+    required: []
   OpenStackTemplate-read:
     properties:
       id:
@@ -12522,9 +11550,6 @@ definitions:
       nodeCount:
         description: 'The number of nodes the cluster needs'
         type: int
-      defaultKeyPair:
-        description: 'The default keypair for the template'
-        type: string
       clusters:
         description: 'The clusters that use this template'
         type: \ArrayCollection
@@ -12569,9 +11594,6 @@ definitions:
       nodeCount:
         description: 'The number of nodes the cluster needs'
         type: int
-      defaultKeyPair:
-        description: 'The default keypair for the template'
-        type: string
       clusters:
         description: 'The clusters that use this template'
         type: \ArrayCollection
@@ -12581,6 +11603,59 @@ definitions:
       - masterFlavour
       - volumeSize
       - versionTag
+  ChangeLog-read:
+    properties:
+      id:
+        description: 'The UUID identifier of this object'
+        type: string
+        example: e2984465-190a-4562-829e-a8cca81aa35d
+        format: uuid
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+      action:
+        description: ''
+        type: string
+      objectId:
+        description: ''
+        type: string
+      objectClass:
+        description: ''
+        type: string
+      version:
+        description: ''
+        type: int
+      data:
+        description: ''
+        type: array
+      username:
+        description: ''
+        type: string
+      session:
+        description: 'The moment this request was created'
+        type: string
+        maxLength: 255
+      dateCreated:
+        description: 'The moment this request was created'
+        type: string
+        format: date-time
+        example: '2020-07-15 07:49:19'
+      dateModified:
+        description: 'The moment this request last Modified'
+        type: string
+        format: date-time
+        example: '2020-07-15 07:49:19'
+    required: []
+  ChangeLog-write:
+    properties:
+      note:
+        description: 'A note conserning this log lin'
+        type: string
+        example: 'This log line is suspicius'
+        maxLength: 2555
+    required: []
   AuditTrail-read:
     properties:
       id:
@@ -12685,12 +11760,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-13 14:18:46'
+        example: '2020-07-15 07:49:19'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-13 14:18:46'
+        example: '2020-07-15 07:49:19'
     required: []
   AuditTrail-write:
     properties:
@@ -12700,70 +11775,11 @@ definitions:
         example: 'This log line looks suspicius'
         maxLength: 2555
     required: []
-  ChangeLog-read:
-    properties:
-      id:
-        description: 'The UUID identifier of this object'
-        type: string
-        example: e2984465-190a-4562-829e-a8cca81aa35d
-        format: uuid
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-      action:
-        description: ''
-        type: string
-      objectId:
-        description: ''
-        type: string
-      objectClass:
-        description: ''
-        type: string
-      version:
-        description: ''
-        type: int
-      data:
-        description: ''
-        type: array
-      username:
-        description: ''
-        type: string
-      session:
-        description: 'The moment this request was created'
-        type: string
-        maxLength: 255
-      dateCreated:
-        description: 'The moment this request was created'
-        type: string
-        format: date-time
-        example: '2020-07-13 14:18:46'
-      dateModified:
-        description: 'The moment this request last Modified'
-        type: string
-        format: date-time
-        example: '2020-07-13 14:18:46'
-    required: []
-  ChangeLog-write:
-    properties:
-      note:
-        description: 'A note conserning this log lin'
-        type: string
-        example: 'This log line is suspicius'
-        maxLength: 2555
-    required: []
 tags:
   -
     name: Cluster
     description: |
       This entity holds the information about a kubernetes cluster.
-      
-      
-  -
-    name: Component
-    description: |
-      
       
       
   -
@@ -12779,13 +11795,19 @@ tags:
       
       
   -
-    name: HealthLog
+    name: Installation
     description: |
       
       
       
   -
-    name: Installation
+    name: Component
+    description: |
+      
+      
+      
+  -
+    name: HealthLog
     description: |
       
       
@@ -12797,13 +11819,13 @@ tags:
       
       This entity contains the fields that are needed to create openstack templates, which in tern are needed to create openstack clusters
   -
-    name: AuditTrail
+    name: ChangeLog
     description: |
       An resource representing a log line.
       
       This entity represents a product that can be ordered via the OrderRegistratieComponent.
   -
-    name: ChangeLog
+    name: AuditTrail
     description: |
       An resource representing a log line.
       
@@ -12814,15 +11836,15 @@ securityDefinitions:
     authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
     flow: implicit
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
   JWT-Token:
     type: apiKey
     in: header
     name: Authorization
     scopes:
-      read: 'read right to the ChangeLog resource'
-      write: 'write right to the ChangeLog resource'
+      read: 'read right to the AuditTrail resource'
+      write: 'write right to the AuditTrail resource'
 host: irc.zaakonline.nl
 servers:
   -
