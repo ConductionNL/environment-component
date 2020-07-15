@@ -152,10 +152,21 @@ class Domain
      */
     private $healthLogs;
 
+    /**
+     * @var ArrayCollection the DNS Records related to this domain
+     * @Groups({"write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity=Records::class, mappedBy="domain", orphanRemoval=true)
+     */
+    private $records;
+
+
+
     public function __construct()
     {
         $this->installations = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
+        $this->records = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -291,6 +302,37 @@ class Domain
             // set the owning side to null (unless already changed)
             if ($healthLog->getDomain() === $this) {
                 $healthLog->setDomain(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Record[]
+     */
+    public function getRecords(): Collection
+    {
+        return $this->records;
+    }
+
+    public function addRecord(Record $record): self
+    {
+        if (!$this->records->contains($record)) {
+            $this->records[] = $record;
+            $record->setDomain($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecord(Record $record): self
+    {
+        if ($this->records->contains($record)) {
+            $this->records->removeElement($record);
+            // set the owning side to null (unless already changed)
+            if ($record->getDomain() === $this) {
+                $record->setDomain(null);
             }
         }
 
