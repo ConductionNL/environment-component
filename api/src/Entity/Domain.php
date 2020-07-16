@@ -177,8 +177,6 @@ class Domain
      */
     private $records;
 
-
-
     public function __construct()
     {
         $this->installations = new ArrayCollection();
