@@ -5,7 +5,7 @@
 namespace App\Command;
 
 use App\Service\HealthService;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,10 +16,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class HealthCommand extends Command
 {
     private $em;
-    private $healthService;
+    private $queueService;
 
-    public function __construct(HealthService $healthService)
+    public function __construct(EntityManagerInterface $em, HealthService $healthService)
     {
+        $this->em = $em;
         $this->healthService = $healthService;
 
         parent::__construct();
@@ -53,9 +54,9 @@ class HealthCommand extends Command
         $componentId = $input->getOption('cluster');
 
         if ($componentId) {
-            $clusters = $this->em->getRepository('App\Entity\Clusters')->findBy();
+            $clusters = $this->em->getRepository('App\Entity\Cluster')->findBy();
         } else {
-            $clusters = $this->em->getRepository('App\Entity\Clusters')->getAll();
+            $clusters = $this->em->getRepository('App\Entity\Cluster')->findAll();
         }
 
         if (!$clusters || count($clusters) < 1) {
@@ -64,11 +65,10 @@ class HealthCommand extends Command
 
         $io->title('Starting health checks');
 
-        $installations = new ArrayCollection();
-        foreach ($cluster as $clusters) {
-            $installations = new ArrayCollection(
-                array_merge($installations->toArray(), $cluster->getInstallations())
-            );
+        $installations = [];
+
+        foreach ($clusters as $cluster) {
+            $installations = array_merge($installations, $cluster->getInstallations()->toArray());
         }
 
         $io->text('Found '.count($clusters).' clusters to check');
@@ -81,7 +81,7 @@ class HealthCommand extends Command
         $results = [];
         foreach ($installations as $installation) {
             $health = $this->healthService->check($installation);
-            $results[] = [$health->getDomain()->getName(), $health->getInstallation()->getEnviroment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
+            $results[] = [$health->getDomain()->getName(), $health->getInstallation()->getEnvironment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
 
             $io->progressAdvance();
         }

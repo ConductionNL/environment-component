@@ -104,7 +104,7 @@ class Environment
     private $description;
 
     /**
-     * @var string Should components be deployed to this environment with debuggin on or off?
+     * @var int Whether the components in this environment should run with debugging on or off.
      *
      * @example 1
      *
@@ -117,7 +117,19 @@ class Environment
     private $debug = 0;
 
     /**
-     * @var string Should components be deployed to this environment with debuggin on or off?
+     * @var int Whether the components in this environment should run with caching on or off.
+     *
+     * @example 1
+     *
+     * @Gedmo\Versioned
+     * @Groups({"read", "write"})
+     * @Assert\NotNull
+     * @ORM\Column(type="integer")
+     */
+    private $cache = 0;
+
+    /**
+     * @var int Whether the components in this environment should run with an exposed backend or not.
      *
      * @example 1
      *
@@ -161,6 +173,13 @@ class Environment
     private $installations;
 
     /**
+     * @var int The amount of installations container on this cluster that are healthy
+     *
+     * @Groups({"read"})
+     */
+    private $health;
+
+    /**
      * @var Datetime The moment this entity was created
      *
      * @Groups({"read"})
@@ -168,7 +187,6 @@ class Environment
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateCreated;
-
     /**
      * @var Datetime The moment this entity last Modified
      *
@@ -177,18 +195,6 @@ class Environment
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $dateModified;
-
-    /**
-     * @var int Should components be deployed to this environment with caching on or off?
-     *
-     * @example 1
-     *
-     * @Gedmo\Versioned
-     * @Groups({"read", "write"})
-     * @Assert\NotNull
-     * @ORM\Column(type="integer")
-     */
-    private $cache;
 
     public function __construct()
     {
@@ -260,7 +266,7 @@ class Environment
     {
         if (!$this->installations->contains($installation)) {
             $this->installations[] = $installation;
-            $installation->setEnviroment($this);
+            $installation->setEnvironment($this);
         }
 
         return $this;
@@ -271,12 +277,28 @@ class Environment
         if ($this->installations->contains($installation)) {
             $this->installations->removeElement($installation);
             // set the owning side to null (unless already changed)
-            if ($installation->getEnviroment() === $this) {
-                $installation->setEnviroment(null);
+            if ($installation->getEnvironment() === $this) {
+                $installation->setEnvironment(null);
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHealth(): int
+    {
+        $health = 0;
+
+        foreach ($this->getInstallations() as $installation) {
+            if (in_array($installation->getStatus(), ['ok', 'OK', 'Found'])) {
+                $health++;
+            }
+        }
+
+        return $health;
     }
 
     public function getDateCreated(): ?\DateTimeInterface

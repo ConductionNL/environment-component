@@ -41,8 +41,25 @@ use Symfony\Component\Validator\Constraints as Assert;
  *                  "summary"="Audittrail",
  *                  "description"="Gets the audit trail for this resource"
  *              }
+ *          },
+ *
+ *     "dns_setup"={
+ *          "path"="/domains/{id}/dns_setup",
+ *          "method"="get",
+ *          "swagger_context" = {
+ *              "summary"="setup",
+ *              "description"="Sets the DNS records up"
  *          }
- * 		},
+ *     },
+ *     "dns_clear"={
+ *          "path"="/domains/{id}/dns_clear",
+ *          "method"="get",
+ *          "swagger_context" = {
+ *              "summary"="clear",
+ *              "description"="Clears the DNS records up"
+ *          }
+ *     }
+ *     },
  * )
  * @ORM\Entity(repositoryClass="App\Repository\DomainRepository")
  * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
@@ -110,28 +127,6 @@ class Domain
     private $location;
 
     /**
-     * @var string the IP Address of this domain
-     * @TODO: maybe this should not be here, as clusters also contain ip addresses
-     *
-     * @Groups({"read","write"})
-     *
-     * @example 255.255.255.0
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $ip;
-
-    /**
-     * @var string the base url for the managed database that this domain uses
-     * @TODO: Shouldn't this be removed?
-     *
-     * @Groups({"read","write"})
-     *
-     * @example pgsql://db-cluster.vuga.com:25060/
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $databaseUrl;
-
-    /**
      * @var Datetime The moment this entity was created
      *
      * @Groups({"read"})
@@ -150,6 +145,7 @@ class Domain
     private $dateModified;
 
     /**
+     * @var Cluster the cluster this domain is hosted on
      * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="domains")
@@ -158,6 +154,7 @@ class Domain
     private $cluster;
 
     /**
+     * @var ArrayCollection the installations in this domain
      * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="domain")
@@ -165,16 +162,26 @@ class Domain
     private $installations;
 
     /**
-     * @Groups({"read","write"})
+     * @var ArrayCollection the HealthLogs related to this domain
+     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="domain", orphanRemoval=true)
      */
     private $healthLogs;
 
+    /**
+     * @var ArrayCollection the DNS Records related to this domain
+     * @Groups({"read","write"})
+     * @MaxDepth(1)
+     * @ORM\OneToMany(targetEntity=Record::class, mappedBy="domain", orphanRemoval=true, cascade={"persist","remove"})
+     */
+    private $records;
+
     public function __construct()
     {
         $this->installations = new ArrayCollection();
         $this->healthLogs = new ArrayCollection();
+        $this->records = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -218,18 +225,6 @@ class Domain
         return $this;
     }
 
-    public function getIp(): ?string
-    {
-        return $this->ip;
-    }
-
-    public function setIp(string $ip): self
-    {
-        $this->ip = $ip;
-
-        return $this;
-    }
-
     public function getDateCreated(): ?\DateTimeInterface
     {
         return $this->dateCreated;
@@ -262,18 +257,6 @@ class Domain
     public function setCluster(?Cluster $cluster): self
     {
         $this->cluster = $cluster;
-
-        return $this;
-    }
-
-    public function getDatabaseUrl(): ?string
-    {
-        return $this->databaseUrl;
-    }
-
-    public function setDatabaseUrl(?string $databaseUrl): self
-    {
-        $this->databaseUrl = $databaseUrl;
 
         return $this;
     }
@@ -334,6 +317,37 @@ class Domain
             // set the owning side to null (unless already changed)
             if ($healthLog->getDomain() === $this) {
                 $healthLog->setDomain(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Record[]
+     */
+    public function getRecords(): Collection
+    {
+        return $this->records;
+    }
+
+    public function addRecord(Record $record): self
+    {
+        if (!$this->records->contains($record)) {
+            $this->records[] = $record;
+            $record->setDomain($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecord(Record $record): self
+    {
+        if ($this->records->contains($record)) {
+            $this->records->removeElement($record);
+            // set the owning side to null (unless already changed)
+            if ($record->getDomain() === $this) {
+                $record->setDomain(null);
             }
         }
 

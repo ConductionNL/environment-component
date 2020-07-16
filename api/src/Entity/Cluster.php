@@ -195,10 +195,19 @@ class Cluster
     private $environments;
 
     /**
+     * @var ArrayCollection The installations on this cluster
+     *
      * @Groups({"read"})
      * @MaxDepth(1)
      */
     private $installations;
+
+    /**
+     * @var int The amount of installations container on this cluster that are healthy
+     *
+     * @Groups({"read"})
+     */
+    private $health;
 
     /**
      * @var Datetime The moment this entity was created
@@ -433,6 +442,8 @@ class Cluster
      */
     public function getInstallations(): Collection
     {
+        $this->installations = new ArrayCollection();
+
         // Lets use the enviroments to get all the installations for this cluster
         foreach ($this->environments as $environment) {
             foreach ($environment->getInstallations() as $installation) {
@@ -443,6 +454,22 @@ class Cluster
         }
 
         return $this->installations;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHealth(): int
+    {
+        $health = 0;
+
+        foreach ($this->getInstallations() as $installation) {
+            if (in_array($installation->getStatus(), ['ok', 'OK', 'Found'])) {
+                $health++;
+            }
+        }
+
+        return $health;
     }
 
     public function hasEnvironment(string $name)

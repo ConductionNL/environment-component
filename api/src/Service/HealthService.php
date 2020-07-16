@@ -33,11 +33,15 @@ class HealthService
 
         // We might want to overwrite the guzle config, so we declare it as a separate array that we can then later adjust, merge or otherwise influence
         $this->guzzleConfig = [
+            // Allow redirect
+            'allow_redirects' => false,
             // Base URI is used with relative requests
             'http_errors' => false,
             //'base_uri' => 'https://wrc.zaakonline.nl/applications/536bfb73-63a5-4719-b535-d835607b88b2/',
-            // You can set any number of default request options.
-            'timeout'  => 4000.0,
+            // Responce timeout in secondes
+            'timeout'  => 10,
+            // Connection timeout in secondes
+            'connect_timeout' => 5,
             // To work with NLX we need a couple of default headers
             'headers' => $this->headers,
             // Do not check certificates
@@ -55,7 +59,9 @@ class HealthService
         // save the result
         $health = new HealthLog();
         $health->setInstallation($installation);
-        $health->setDomain($installation);
+        $health->setDomain($installation->getDomain());
+        $health->setCode(200);
+        $health->setStatus('ok');
 
         // lets get the name
         if ($installation->getDeploymentName() && $installation->getDeploymentName() != '') {
@@ -65,29 +71,48 @@ class HealthService
         }
 
         // let establisch the domain
-        $domain = $installation->getDomain()->getLocation();
+        $domain = $installation->getDomain()->getName();
+
+        // Lets estabblis the propper subdomain
+        $subdomain = $name.'.';
+
+        // Lets scheck for overwrites
+        // @todo make switch case
+        foreach ($installation->getProperties() as $property) {
+            if ($property->getName() == 'settings.subdomain') {
+                $subdomain = $property->getValue();
+                // The is the optional case of an empty sub domain, in wich case we dont want to add an dot
+                if ($subdomain && $subdomain != '') {
+                    $subdomain = $subdomain.'.';
+                }
+            }
+
+            if ($property->getName() == 'settings.domain') {
+                $domain = $property->getValue();
+            }
+        }
 
         // lets detirmine a path for our healt check
         if ($installation->getEnvironment()->getName() == 'prod') {
-            $url = 'https://'.$name.$domain;
+            $url = 'https://'.$subdomain.$domain;
         } else {
-            $url = 'https://'.$name.$domain;
+            $url = 'https://'.$subdomain.$installation->getEnvironment()->getName().'.'.$domain;
         }
         $health->setEndpoint($url);
 
         // Lets actually do a health check
         $headers = $this->headers;
-        $headers['Authorization'] = $installation->getEnviroment()->getAuthorization();
+        $headers['Authorization'] = $installation->getEnvironment()->getAuthorization();
 
-        $response = $this->client->request('GET', $url, ['headers' => $headers]);
-        $health->setCode($response->getStatusCode());
-        $health->setCode($response->getReasonPhrase());
-
-        // Lets save the results
-        $installation->setStatus($health->getStatus());
+        try {
+            $response = $this->client->request('GET', $url, ['headers' => $headers, 'http_errors' => false]);
+            $health->setCode($response->getStatusCode());
+            $health->setStatus($response->getReasonPhrase());
+        } catch (\Exception $e) {
+            $health->setStatus($e->getMessage());
+        }
 
         $this->em->persist($health);
-        $this->em->persist($installation);
         $this->em->flush();
 
         return $health;

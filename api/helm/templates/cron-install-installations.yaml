@@ -1,3 +1,4 @@
+{{ if eq .Values.settings.env "prod" }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -18,7 +19,7 @@ spec:
           containers:
           - name: {{ include "name" . }}-php
             image: "{{ .Values.settings.registryBase }}/{{ .Values.settings.projectName }}-php:{{ .Values.settings.env }}"
-            imagePullPolicy: always
+            imagePullPolicy: Always
             args:
             - bin/console 
             - app:installations:install
@@ -236,3 +237,4 @@ spec:
             -   name: VARNISH_URL
                 value: {{ include "name" . }}-varnish
           restartPolicy: OnFailure
+{{ end }}

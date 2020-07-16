@@ -4587,24 +4587,6 @@ paths:
               - asc
               - desc
         -
-          name: 'order[ip]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[databaseUrl]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
           name: 'order[dateCreated]'
           in: query
           required: false
@@ -5475,6 +5457,268 @@ paths:
           description: 'Resource not found'
       produces:
         - application/health+json
+  '/domains/{id}/dns_clear':
+    get:
+      tags:
+        - Domain
+      operationId: dns_clearDomainItem
+      summary: 'Retrieves a Domain resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Domain resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
+  '/domains/{id}/dns_setup':
+    get:
+      tags:
+        - Domain
+      operationId: dns_setupDomainItem
+      summary: 'Retrieves a Domain resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        -
+          name: Authorization
+          description: 'The JWT of the entity performing the request'
+          in: header
+        -
+          name: API-Version
+          description: 'The version of the API conform [Landelijke API-strategie.](https://geonovum.github.io/KP-APIs/#versioning)'
+          example: 1.0.1
+          in: header
+        -
+          name: X-NLX-Logrecord-ID
+          description: 'A  globally unique id of the request, which makes a request traceable throughout the network.'
+          in: header
+        -
+          name: X-NLX-Request-Process-Id
+          description: 'A process id for purpose registration (doelbinding)'
+          in: header
+        -
+          name: X-NLX-Request-Data-Elements
+          description: 'A list of requested data elements'
+          in: header
+        -
+          name: X-NLX-Request-Data-Subject
+          description: 'A key-value list of data subjects related to this request. e.g. `bsn=12345678, kenteken=ab-12-fg`'
+          in: header
+        -
+          name: X-NLX-Audit-Clarification
+          description: 'A clarification as to why a request has been made  (doelbinding)'
+          in: header
+        -
+          name: Link
+          description: 'A [websub](https://www.w3.org/TR/websub/#discovery) header like <https://hub.example.com/>; rel="hub"'
+          in: header
+        -
+          name: 'extend[]'
+          required: false
+          description: 'An array of nested objects to include in the return object'
+          in: query
+          schema:
+            type: array
+        -
+          name: 'fields[]'
+          required: false
+          description: 'An array of fields to return in output, wil return all fields is not supplied'
+          in: query
+          schema:
+            type: array
+        -
+          name: validOn
+          required: false
+          description: 'Returns object as valid on a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validFrom
+          required: false
+          description: 'Returns objects valid from a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+        -
+          name: validUntil
+          required: false
+          description: 'Returns objects valid until a given date time'
+          schema:
+            type: string
+            format: date-time
+          in: query
+      responses:
+        200:
+          description: 'Domain resource response'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld-read'
+            application/json+ld:
+              schema:
+                $ref: '#/components/schemas/Domain:jsonld-read'
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+hal:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+vnd.api:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/health+json:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/json+health:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Domain-read'
+        404:
+          description: 'Resource not found'
+      produces:
+        - application/health+json
   /environments:
     get:
       tags:
@@ -5598,6 +5842,15 @@ paths:
               - asc
               - desc
         -
+          name: 'order[cache]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'order[web]'
           in: query
           required: false
@@ -5626,15 +5879,6 @@ paths:
               - desc
         -
           name: 'order[dateModified]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
-          name: 'order[cache]'
           in: query
           required: false
           schema:
@@ -7805,15 +8049,6 @@ paths:
               - asc
               - desc
         -
-          name: 'order[status]'
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        -
           name: 'order[dbUsername]'
           in: query
           required: false
@@ -9322,6 +9557,20 @@ paths:
         - application/health+json
 components:
   schemas:
+    ArrayCollection-read:
+      type: object
+    'ArrayCollection:jsonld-read':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
     AuditTrail-read:
       type: object
       description: 'An resource representing a log line.'
@@ -9748,7 +9997,12 @@ components:
             $ref: '#/components/schemas/Environment-read'
         installations:
           readOnly: true
-          $ref: '#/components/schemas/Collection-read'
+          description: 'The installations on this cluster'
+          $ref: '#/components/schemas/ArrayCollection-read'
+        health:
+          readOnly: true
+          description: 'The amount of installations container on this cluster that are healthy'
+          type: integer
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -9883,7 +10137,12 @@ components:
             $ref: '#/components/schemas/Environment:jsonld-read'
         installations:
           readOnly: true
-          $ref: '#/components/schemas/Collection:jsonld-read'
+          description: 'The installations on this cluster'
+          $ref: '#/components/schemas/ArrayCollection:jsonld-read'
+        health:
+          readOnly: true
+          description: 'The amount of installations container on this cluster that are healthy'
+          type: integer
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -9970,20 +10229,6 @@ components:
           items:
             type: string
           nullable: true
-    Collection-read:
-      type: object
-    'Collection:jsonld-read':
-      type: object
-      properties:
-        '@context':
-          readOnly: true
-          type: string
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
     Component-read:
       type: object
       description: ''
@@ -10187,14 +10432,6 @@ components:
           externalDocs:
             url: 'http://schema.org/url'
           type: string
-        ip:
-          description: 'the IP Address of this domain'
-          type: string
-          nullable: true
-        databaseUrl:
-          description: 'the base url for the managed database that this domain uses'
-          type: string
-          nullable: true
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10205,10 +10442,11 @@ components:
           type: string
           format: date-time
           nullable: true
-        healthLogs:
+        records:
+          description: 'the DNS Records related to this domain'
           type: array
           items:
-            $ref: '#/components/schemas/HealthLog-read'
+            $ref: '#/components/schemas/Record-read'
       required:
         - name
         - location
@@ -10231,24 +10469,24 @@ components:
           externalDocs:
             url: 'http://schema.org/url'
           type: string
-        ip:
-          description: 'the IP Address of this domain'
-          type: string
-          nullable: true
-        databaseUrl:
-          description: 'the base url for the managed database that this domain uses'
-          type: string
-          nullable: true
         cluster:
+          description: 'the cluster this domain is hosted on'
           $ref: '#/components/schemas/Cluster-write'
         installations:
+          description: 'the installations in this domain'
           type: array
           items:
             $ref: '#/components/schemas/Installation-write'
         healthLogs:
+          description: 'the HealthLogs related to this domain'
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-write'
+        records:
+          description: 'the DNS Records related to this domain'
+          type: array
+          items:
+            $ref: '#/components/schemas/Record-write'
     'Domain:jsonld-read':
       type: object
       description: ''
@@ -10281,14 +10519,6 @@ components:
           externalDocs:
             url: 'http://schema.org/url'
           type: string
-        ip:
-          description: 'the IP Address of this domain'
-          type: string
-          nullable: true
-        databaseUrl:
-          description: 'the base url for the managed database that this domain uses'
-          type: string
-          nullable: true
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10299,10 +10529,11 @@ components:
           type: string
           format: date-time
           nullable: true
-        healthLogs:
+        records:
+          description: 'the DNS Records related to this domain'
           type: array
           items:
-            $ref: '#/components/schemas/HealthLog:jsonld-read'
+            $ref: '#/components/schemas/Record:jsonld-read'
       required:
         - name
         - location
@@ -10334,24 +10565,24 @@ components:
           externalDocs:
             url: 'http://schema.org/url'
           type: string
-        ip:
-          description: 'the IP Address of this domain'
-          type: string
-          nullable: true
-        databaseUrl:
-          description: 'the base url for the managed database that this domain uses'
-          type: string
-          nullable: true
         cluster:
+          description: 'the cluster this domain is hosted on'
           $ref: '#/components/schemas/Cluster:jsonld-write'
         installations:
+          description: 'the installations in this domain'
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-write'
         healthLogs:
+          description: 'the HealthLogs related to this domain'
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-write'
+        records:
+          description: 'the DNS Records related to this domain'
+          type: array
+          items:
+            $ref: '#/components/schemas/Record:jsonld-write'
     Environment-read:
       type: object
       description: ''
@@ -10371,10 +10602,13 @@ components:
           type: string
           nullable: true
         debug:
-          description: 'Should components be deployed to this environment with debuggin on or off?'
+          description: 'Whether the components in this environment should run with debugging on or off.'
+          type: integer
+        cache:
+          description: 'Whether the components in this environment should run with caching on or off.'
           type: integer
         web:
-          description: 'Should components be deployed to this environment with debuggin on or off?'
+          description: 'Whether the components in this environment should run with an exposed backend or not.'
           type: integer
           nullable: true
         cluster:
@@ -10384,6 +10618,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation-read'
+        health:
+          readOnly: true
+          description: 'The amount of installations container on this cluster that are healthy'
+          type: integer
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10394,9 +10632,6 @@ components:
           type: string
           format: date-time
           nullable: true
-        cache:
-          description: 'Should components be deployed to this environment with caching on or off?'
-          type: integer
       required:
         - name
         - debug
@@ -10407,8 +10642,8 @@ components:
       required:
         - name
         - debug
-        - authorization
         - cache
+        - authorization
       properties:
         name:
           description: 'The name of this component'
@@ -10418,10 +10653,13 @@ components:
           type: string
           nullable: true
         debug:
-          description: 'Should components be deployed to this environment with debuggin on or off?'
+          description: 'Whether the components in this environment should run with debugging on or off.'
+          type: integer
+        cache:
+          description: 'Whether the components in this environment should run with caching on or off.'
           type: integer
         web:
-          description: 'Should components be deployed to this environment with debuggin on or off?'
+          description: 'Whether the components in this environment should run with an exposed backend or not.'
           type: integer
           nullable: true
         authorization:
@@ -10435,9 +10673,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation-write'
-        cache:
-          description: 'Should components be deployed to this environment with caching on or off?'
-          type: integer
     'Environment:jsonld-read':
       type: object
       description: ''
@@ -10466,10 +10701,13 @@ components:
           type: string
           nullable: true
         debug:
-          description: 'Should components be deployed to this environment with debuggin on or off?'
+          description: 'Whether the components in this environment should run with debugging on or off.'
+          type: integer
+        cache:
+          description: 'Whether the components in this environment should run with caching on or off.'
           type: integer
         web:
-          description: 'Should components be deployed to this environment with debuggin on or off?'
+          description: 'Whether the components in this environment should run with an exposed backend or not.'
           type: integer
           nullable: true
         cluster:
@@ -10479,6 +10717,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-read'
+        health:
+          readOnly: true
+          description: 'The amount of installations container on this cluster that are healthy'
+          type: integer
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10489,9 +10731,6 @@ components:
           type: string
           format: date-time
           nullable: true
-        cache:
-          description: 'Should components be deployed to this environment with caching on or off?'
-          type: integer
       required:
         - name
         - debug
@@ -10502,8 +10741,8 @@ components:
       required:
         - name
         - debug
-        - authorization
         - cache
+        - authorization
       properties:
         '@context':
           readOnly: true
@@ -10522,10 +10761,13 @@ components:
           type: string
           nullable: true
         debug:
-          description: 'Should components be deployed to this environment with debuggin on or off?'
+          description: 'Whether the components in this environment should run with debugging on or off.'
+          type: integer
+        cache:
+          description: 'Whether the components in this environment should run with caching on or off.'
           type: integer
         web:
-          description: 'Should components be deployed to this environment with debuggin on or off?'
+          description: 'Whether the components in this environment should run with an exposed backend or not.'
           type: integer
           nullable: true
         authorization:
@@ -10539,9 +10781,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-write'
-        cache:
-          description: 'Should components be deployed to this environment with caching on or off?'
-          type: integer
     HealthLog-read:
       type: object
       description: ''
@@ -10687,9 +10926,9 @@ components:
           type: string
           nullable: true
         status:
-          description: 'The stastus of this installation'
+          readOnly: true
+          description: 'The status of this installation'
           type: string
-          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
@@ -10702,26 +10941,25 @@ components:
           description: 'the helm version of the helm instalaltion files'
           type: string
         component:
+          description: 'the component that this installation contains'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Component-read'
         domain:
+          description: 'the domain under which the installation is installed'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Domain-read'
         environment:
+          description: 'the environment the installation is installed in'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Environment-read'
-        healthLogs:
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog-read'
         dateInstalled:
-          description: 'The moment this entity was last installed'
+          description: 'The moment this installation was last installed'
           type: string
           format: date-time
           nullable: true
@@ -10772,37 +11010,41 @@ components:
           type: string
           nullable: true
         authorization:
-          description: 'The authentication token that is needed to access this token'
+          description: 'The authorization token that is needed to access this token'
           type: string
           nullable: true
         dbUrl:
-          description: 'the Github Repository that contains this component'
+          description: 'The database url for this installation'
           type: string
           nullable: true
         helmVersion:
           description: 'the helm version of the helm instalaltion files'
           type: string
         component:
+          description: 'the component that this installation contains'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Component-write'
         domain:
+          description: 'the domain under which the installation is installed'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Domain-write'
         environment:
+          description: 'the environment the installation is installed in'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Environment-write'
         healthLogs:
+          description: 'the Health logs for this installation'
           type: array
           items:
             $ref: '#/components/schemas/HealthLog-write'
         dateInstalled:
-          description: 'The moment this entity was last installed'
+          description: 'The moment this installation was last installed'
           type: string
           format: date-time
           nullable: true
@@ -10843,9 +11085,9 @@ components:
           type: string
           nullable: true
         status:
-          description: 'The stastus of this installation'
+          readOnly: true
+          description: 'The status of this installation'
           type: string
-          nullable: true
         dbUsername:
           description: 'The username that is needed to log into the cluster database'
           type: string
@@ -10858,26 +11100,25 @@ components:
           description: 'the helm version of the helm instalaltion files'
           type: string
         component:
+          description: 'the component that this installation contains'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Component:jsonld-read'
         domain:
+          description: 'the domain under which the installation is installed'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Domain:jsonld-read'
         environment:
+          description: 'the environment the installation is installed in'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Environment:jsonld-read'
-        healthLogs:
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog:jsonld-read'
         dateInstalled:
-          description: 'The moment this entity was last installed'
+          description: 'The moment this installation was last installed'
           type: string
           format: date-time
           nullable: true
@@ -10937,37 +11178,41 @@ components:
           type: string
           nullable: true
         authorization:
-          description: 'The authentication token that is needed to access this token'
+          description: 'The authorization token that is needed to access this token'
           type: string
           nullable: true
         dbUrl:
-          description: 'the Github Repository that contains this component'
+          description: 'The database url for this installation'
           type: string
           nullable: true
         helmVersion:
           description: 'the helm version of the helm instalaltion files'
           type: string
         component:
+          description: 'the component that this installation contains'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Component:jsonld-write'
         domain:
+          description: 'the domain under which the installation is installed'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Domain:jsonld-write'
         environment:
+          description: 'the environment the installation is installed in'
           nullable: true
           anyOf:
             -
               $ref: '#/components/schemas/Environment:jsonld-write'
         healthLogs:
+          description: 'the Health logs for this installation'
           type: array
           items:
             $ref: '#/components/schemas/HealthLog:jsonld-write'
         dateInstalled:
-          description: 'The moment this entity was last installed'
+          description: 'The moment this installation was last installed'
           type: string
           format: date-time
           nullable: true
@@ -11047,6 +11292,34 @@ components:
           type: string
         value:
           description: 'the value of the property'
+          type: string
+    Record-read:
+      type: object
+    Record-write:
+      type: object
+    'Record:jsonld-read':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+    'Record:jsonld-write':
+      type: object
+      properties:
+        '@context':
+          readOnly: true
+          type: string
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
           type: string
 definitions:
   Cluster-read:
@@ -11169,21 +11442,15 @@ definitions:
         example: conduction.nl
         format: url
         maxLength: 255
-      ip:
-        description: 'the IP Address of this domain'
-        type: string
-        example: 255.255.255.0
-      databaseUrl:
-        description: 'the base url for the managed database that this domain uses'
-        type: string
-        example: 'pgsql://db-cluster.vuga.com:25060/'
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
-      healthLogs: []
+      records:
+        description: 'the DNS Records related to this domain'
+        type: \ArrayCollection
     required:
       - name
       - location
@@ -11204,53 +11471,101 @@ definitions:
         example: conduction.nl
         format: url
         maxLength: 255
-      ip:
-        description: 'the IP Address of this domain'
-        type: string
-        example: 255.255.255.0
-      databaseUrl:
-        description: 'the base url for the managed database that this domain uses'
-        type: string
-        example: 'pgsql://db-cluster.vuga.com:25060/'
-      cluster: []
-      installations: []
-      healthLogs: []
+      cluster:
+        description: 'the cluster this domain is hosted on'
+        type: \Cluster
+      installations:
+        description: 'the installations in this domain'
+        type: \ArrayCollection
+      healthLogs:
+        description: 'the HealthLogs related to this domain'
+        type: \ArrayCollection
+      records:
+        description: 'the DNS Records related to this domain'
+        type: \ArrayCollection
     required:
       - name
       - location
-  HealthLog-read:
+  Environment-read:
     properties:
       id:
         description: 'The UUID identifier of this resource'
         type: string
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
-      status:
-        description: 'The status of the checked resource'
+      name:
+        description: 'The name of this component'
         type: string
-        example: OK
-      code:
-        description: 'The status code of the checked resource'
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Whether the components in this environment should run with debugging on or off.'
         type: int
-        example: OK
-      endpoint:
-        description: 'The endpoint that was checked'
-        type: string
-        example: 'https://www.zuid-drecht.nl'
+        example: '1'
+      cache:
+        description: 'Whether the components in this environment should run with caching on or off.'
+        type: int
+        example: '1'
+      web:
+        description: 'Whether the components in this environment should run with an exposed backend or not.'
+        type: int
+        example: '1'
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
-      domain: []
-      installation: []
-    required: []
-  HealthLog-write:
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - cache
+      - authorization
+  Environment-write:
     properties:
-      domain: []
-      installation: []
-    required: []
+      name:
+        description: 'The name of this component'
+        type: string
+        example: evc
+        maxLength: 255
+      description:
+        description: 'the description of this component'
+        type: string
+        example: 'This common ground component describes common ground components'
+      debug:
+        description: 'Whether the components in this environment should run with debugging on or off.'
+        type: int
+        example: '1'
+      cache:
+        description: 'Whether the components in this environment should run with caching on or off.'
+        type: int
+        example: '1'
+      web:
+        description: 'Whether the components in this environment should run with an exposed backend or not.'
+        type: int
+        example: '1'
+      authorization:
+        description: 'The authentication token that is needed to access this token'
+        type: string
+        example: evc-dev
+        maxLength: 255
+      cluster: []
+      installations:
+        description: 'The installations in this environment'
+        type: \ArrayCollection
+    required:
+      - name
+      - debug
+      - cache
+      - authorization
   Installation-read:
     properties:
       id:
@@ -11267,11 +11582,6 @@ definitions:
         description: 'the description of this component'
         type: string
         example: 'This common ground component describes common ground components'
-      status:
-        description: 'The stastus of this installation'
-        type: string
-        example: ok
-        maxLength: 25
       dbUsername:
         description: 'The username that is needed to log into the cluster database'
         type: string
@@ -11287,7 +11597,7 @@ definitions:
         example: 'https://github.com/ConductionNL/environment-component'
         maxLength: 255
       dateInstalled:
-        description: 'The moment this entity was last installed'
+        description: 'The moment this installation was last installed'
         type: \Datetime
       dateCreated:
         description: 'The moment this entity was created'
@@ -11299,10 +11609,15 @@ definitions:
         description: 'The name of the deployment on the kubernetes cluster'
         type: string
         example: pc-dev
-      component: []
-      domain: []
-      environment: []
-      healthLogs: []
+      component:
+        description: 'the component that this installation contains'
+        type: \Component
+      domain:
+        description: 'the domain under which the installation is installed'
+        type: \Domain
+      environment:
+        description: 'the environment the installation is installed in'
+        type: \Environment
       properties:
         description: 'additional properties that are required for this installation, i.e. external API keys'
         type: \Property
@@ -11333,12 +11648,12 @@ definitions:
         type: string
         maxLength: 255
       authorization:
-        description: 'The authentication token that is needed to access this token'
+        description: 'The authorization token that is needed to access this token'
         type: string
         example: evc-dev
         maxLength: 255
       dbUrl:
-        description: 'the Github Repository that contains this component'
+        description: 'The database url for this installation'
         type: string
         example: 'https://github.com/ConductionNL/environment-component'
         maxLength: 255
@@ -11348,16 +11663,24 @@ definitions:
         example: 'https://github.com/ConductionNL/environment-component'
         maxLength: 255
       dateInstalled:
-        description: 'The moment this entity was last installed'
+        description: 'The moment this installation was last installed'
         type: \Datetime
       deploymentName:
         description: 'The name of the deployment on the kubernetes cluster'
         type: string
         example: pc-dev
-      component: []
-      domain: []
-      environment: []
-      healthLogs: []
+      component:
+        description: 'the component that this installation contains'
+        type: \Component
+      domain:
+        description: 'the domain under which the installation is installed'
+        type: \Domain
+      environment:
+        description: 'the environment the installation is installed in'
+        type: \Environment
+      healthLogs:
+        description: 'the Health logs for this installation'
+        type: \ArrayCollection
       properties:
         description: 'additional properties that are required for this installation, i.e. external API keys'
         type: \Property
@@ -11447,86 +11770,39 @@ definitions:
       - code
       - githubRepository
       - helmRepository
-  Environment-read:
+  HealthLog-read:
     properties:
       id:
         description: 'The UUID identifier of this resource'
         type: string
         example: e2984465-190a-4562-829e-a8cca81aa35d
         format: uuid
-      name:
-        description: 'The name of this component'
+      status:
+        description: 'The status of the checked resource'
         type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
+        example: OK
+      code:
+        description: 'The status code of the checked resource'
+        type: int
+        example: OK
+      endpoint:
+        description: 'The endpoint that was checked'
         type: string
-        example: 'This common ground component describes common ground components'
-      debug:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
-      web:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
+        example: 'https://www.zuid-drecht.nl'
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
       dateModified:
         description: 'The moment this entity last Modified'
         type: \Datetime
-      cache:
-        description: 'Should components be deployed to this environment with caching on or off?'
-        type: int
-        example: '1'
-      cluster: []
-      installations:
-        description: 'The installations in this environment'
-        type: \ArrayCollection
-    required:
-      - name
-      - debug
-      - authorization
-      - cache
-  Environment-write:
+      domain: []
+      installation: []
+    required: []
+  HealthLog-write:
     properties:
-      name:
-        description: 'The name of this component'
-        type: string
-        example: evc
-        maxLength: 255
-      description:
-        description: 'the description of this component'
-        type: string
-        example: 'This common ground component describes common ground components'
-      debug:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
-      web:
-        description: 'Should components be deployed to this environment with debuggin on or off?'
-        type: string
-        example: '1'
-      authorization:
-        description: 'The authentication token that is needed to access this token'
-        type: string
-        example: evc-dev
-        maxLength: 255
-      cache:
-        description: 'Should components be deployed to this environment with caching on or off?'
-        type: int
-        example: '1'
-      cluster: []
-      installations:
-        description: 'The installations in this environment'
-        type: \ArrayCollection
-    required:
-      - name
-      - debug
-      - authorization
-      - cache
+      domain: []
+      installation: []
+    required: []
   ChangeLog-read:
     properties:
       id:
@@ -11565,12 +11841,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-02 09:10:22'
+        example: '2020-07-15 11:55:14'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-02 09:10:22'
+        example: '2020-07-15 11:55:14'
     required: []
   ChangeLog-write:
     properties:
@@ -11684,12 +11960,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-02 09:10:22'
+        example: '2020-07-15 11:55:14'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-02 09:10:22'
+        example: '2020-07-15 11:55:14'
     required: []
   AuditTrail-write:
     properties:
@@ -11713,7 +11989,7 @@ tags:
       
       
   -
-    name: HealthLog
+    name: Environment
     description: |
       
       
@@ -11731,7 +12007,7 @@ tags:
       
       
   -
-    name: Environment
+    name: HealthLog
     description: |
       
       

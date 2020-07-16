@@ -8,6 +8,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -127,16 +128,11 @@ class Installation
     private $description;
 
     /**
-     * @var string The stastus of this installation
+     * @var string The status of this installation
      *
      * @example ok
      *
-     * @Gedmo\Versioned
-     * @Assert\Length(
-     *      max = 25
-     * )
      * @Groups({"read"})
-     * @ORM\Column(type="string", length=25, nullable=true)
      */
     private $status;
 
@@ -182,7 +178,7 @@ class Installation
     private $dbName;
 
     /**
-     * @var string The authentication token that is needed to access this token
+     * @var string The authorization token that is needed to access this token
      *
      * @example evc-dev
      *
@@ -196,7 +192,7 @@ class Installation
     private $authorization;
 
     /**
-     * @var string the Github Repository that contains this component
+     * @var string The database url for this installation
      *
      * @example https://github.com/ConductionNL/environment-component
      * @Gedmo\Versioned
@@ -219,9 +215,11 @@ class Installation
      * @Groups({"read","write"})
      * @ORM\Column(type="string", length=255)
      */
-    private $helmVersion = '2.16.6';
+    private $helmVersion = '3.2.1';
 
     /**
+     * @var Component the component that this installation contains
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Component", inversedBy="installations")
@@ -229,6 +227,8 @@ class Installation
     private $component;
 
     /**
+     * @var Domain the domain under which the installation is installed
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="installations")
@@ -236,6 +236,8 @@ class Installation
     private $domain;
 
     /**
+     * @var Environment the environment the installation is installed in
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\ManyToOne(targetEntity="App\Entity\Environment", inversedBy="installations")
@@ -243,14 +245,17 @@ class Installation
     private $environment;
 
     /**
-     * @Groups({"read","write"})
+     * @var ArrayCollection the Health logs for this installation
+     *
+     * @Groups({"write"})
      * @MaxDepth(1)
+     * @ORM\OrderBy({"dateCreated" = "DESC"})
      * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installation")
      */
     private $healthLogs;
 
     /**
-     * @var Datetime The moment this entity was last installed
+     * @var Datetime The moment this installation was last installed
      *
      * @Groups({"read", "write"})
      * @ORM\Column(type="datetime", nullable=true)
@@ -277,6 +282,7 @@ class Installation
 
     /**
      * @var Property additional properties that are required for this installation, i.e. external API keys
+     *
      * @Groups({"read","write"})
      * @MaxDepth(1)
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="installation", cascade={"persist","remove"}, orphanRemoval=true)
@@ -330,14 +336,11 @@ class Installation
 
     public function getStatus(): ?string
     {
-        return $this->status;
-    }
+        if (count($this->getHealthLogs()) < 1) {
+            return null;
+        }
 
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
-
-        return $this;
+        return $this->getHealthLogs()->first()->getStatus();
     }
 
     public function getEnvironment(): ?Environment
@@ -348,6 +351,7 @@ class Installation
     public function setEnvironment(Environment $environment): self
     {
         $this->environment = $environment;
+        $environment->addInstallation($this);
 
         return $this;
     }
@@ -436,7 +440,7 @@ class Installation
     {
         if (!$this->healthLogs->contains($healthLog)) {
             $this->healthLogs[] = $healthLog;
-            $healthLog->setComponent($this);
+            $healthLog->setInstallation($this);
         }
 
         return $this;
@@ -447,22 +451,10 @@ class Installation
         if ($this->healthLogs->contains($healthLog)) {
             $this->healthLogs->removeElement($healthLog);
             // set the owning side to null (unless already changed)
-            if ($healthLog->getComponent() === $this) {
-                $healthLog->setComponent(null);
+            if ($healthLog->getInstallation() === $this) {
+                $healthLog->setInstallation(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
 
         return $this;
     }
@@ -562,35 +554,13 @@ class Installation
 
     public function getDeploymentName(): ?string
     {
-        if ($this->deploymentName) {
-            return $this->deploymentName;
-        } else {
-            return "{$this->getComponent()->getCode()}-{$this->getEnvironment()->getName()}";
-        }
+        return $this->deploymentName;
     }
 
     public function setDeploymentName(?string $deploymentName): self
     {
         $this->deploymentName = $deploymentName;
-        $subdomain = new Property();
-        $subdomain->setName('settings.subdomain');
-        $subdomain->setValue($deploymentName);
-        $this->addProperty($subdomain);
-
-        $name = new Property();
-        $name->setName('settings.name');
-        $name->setValue($deploymentName);
-        $this->addProperty($name);
 
         return $this;
-    }
-
-    public function hasDeploymentName(): bool
-    {
-        if ($this->deploymentName) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }

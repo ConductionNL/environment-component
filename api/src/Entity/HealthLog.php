@@ -131,24 +131,24 @@ class HealthLog
         return $this->id;
     }
 
-    public function getStatus(): ?string
+    public function getStatus()
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus($status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getCode(): ?integer
+    public function getCode()
     {
         return $this->code;
     }
 
-    public function setCode(integer $code): self
+    public function setCode($code): self
     {
         $this->code = $code;
 
@@ -179,12 +179,12 @@ class HealthLog
         return $this;
     }
 
-    public function getEndpoint(): ?string
+    public function getEndpoint()
     {
         return $this->endpoint;
     }
 
-    public function setEndpoint(string $endpoint): self
+    public function setEndpoint($endpoint): self
     {
         $this->endpoint = $endpoint;
 
