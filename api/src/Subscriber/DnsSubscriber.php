@@ -6,7 +6,6 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Component;
 use App\Entity\Domain;
 use App\Service\CloudFlareService;
-use App\Service\InstallService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -69,12 +68,10 @@ class DnsSubscriber implements EventSubscriberInterface
                 $contentType = 'application/json';
                 $renderType = 'json';
         }
-        if ($domain instanceof Domain){
-
+        if ($domain instanceof Domain) {
             if (!strpos($route, '_dns_setup')) {
                 $domain = $this->cloudFlareService->removeDNSRecordsForDomain($domain);
-            }
-            else{
+            } else {
                 $domain = $this->cloudFlareService->createDNSRecordsForDomain($domain);
             }
             $this->em->persist($domain);
