@@ -24,11 +24,18 @@ class OpenStackService
     }
 
     public function getKubernetesCredentials(string $name){
-        $process = new Process(['openstack', 'coe', 'cluster', 'config', $name]);
-        $process->run();
+        $stamp = microtime();
+        mkdir("/var/openstack-$stamp");
 
-        return 'flubberwup';
-//        return $kubeconfig;
+        $process = new Process(['openstack', 'coe', 'cluster', 'config', $name,'--dir',"/var/openstack-$stamp"]);
+        $process->run();
+        if(!$process->isSuccessful() &&  $process->getErrorOutput() !="'SHELL'\n"){
+            throw new ProcessFailedException($process);
+        }
+        $kubeconfig = file_get_contents("/var/openstack-$stamp/config");
+        unlink("/var/openstack-$stamp/config");
+        rmdir("/var/openstack-$stamp");
+        return $kubeconfig;
     }
     public function getTemplates():array{
         echo "collecting templates\n";
@@ -134,6 +141,13 @@ class OpenStackService
 
         $process->run();
         $cluster->setStatus('creating');
+        foreach($this->getKubernetesClusters() as $k8cluster){
+            if($cluster->getName() == $k8cluster['name']){
+                $cluster->setProviderId($k8cluster['id']);
+            }
+        }
+        $this->em->persist($cluster);
+        $this->em->flush();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
@@ -147,24 +161,25 @@ class OpenStackService
         $process->run();
         $clusters = [];
         if($process->isSuccessful()) {
-            $clusters = explode('\n', $process->getOutput());
+            $k8clusters = explode("\n", $process->getOutput());
             $iterator = 0;
-            foreach ($clusters as $k8cluster) {
+            foreach ($k8clusters as $k8cluster) {
                 if (
                     $iterator > 2
                     && count($array = explode('|', $k8cluster)) > 1
                 ){
-                    $cluster = ['id'=>trim($array[0]),'name'=>trim($array[1]),'keypair'=>trim($array[2]),'node_count'=>trim($array[3]),'master_count'=>trim($array[4]),'status'=>trim($array[5]),'health_status'=>trim($array[6])];
+                    $cluster = ['id'=>trim($array[1]),'name'=>trim($array[2]),'keypair'=>trim($array[3]),'node_count'=>trim($array[4]),'master_count'=>trim($array[5]),'status'=>trim($array[6]),'health_status'=>trim($array[7])];
                     $clusters[] = $cluster;
                 }
+                $iterator++;
             }
         }
-
+        return $clusters;
     }
     public function getStatus(Cluster $cluster){
         foreach($this->getKubernetesClusters() as $k8cluster){
             if($k8cluster['name'] == $cluster->getName()){
-                return $cluster['status'];
+                return $k8cluster['status'];
             }
         }
 

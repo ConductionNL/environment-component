@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\Service\ClusterService;
 use App\Service\DigitalOceanService;
+use App\Service\OpenStackService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,12 +17,14 @@ class ConfigureClustersCommand extends Command
 {
     private $clusterService;
     private $digitalOceanService;
+    private $openStackService;
     private $em;
 
-    public function __construct(ClusterService $clusterService, EntityManagerInterface $em, DigitalOceanService $digitalOceanService)
+    public function __construct(ClusterService $clusterService, EntityManagerInterface $em, DigitalOceanService $digitalOceanService, OpenStackService $openStackService)
     {
         $this->clusterService = $clusterService;
         $this->digitalOceanService = $digitalOceanService;
+        $this->openStackService = $openStackService;
         $this->em = $em;
 
         parent::__construct();
@@ -57,15 +60,19 @@ class ConfigureClustersCommand extends Command
 
             if ($cluster->getProvider() == 'Digital Ocean') {
                 $cluster->setStatus($this->digitalOceanService->getStatus($cluster));
-            } else {
+            } elseif($cluster->getProvider() == 'OpenStack'){
+                $cluster->setStatus($this->openStackService->getStatus($cluster));
+            }else {
                 $io->text('Not a Digital Ocean cluster');
             }
 
             // check if the cluster is running
-            if ($cluster->getStatus() == 'running') {
+            if ($cluster->getStatus() == 'running' || $cluster->getStatus('CREATE_COMPLETED')) {
                 $io->text("configuring {$cluster->getName()}");
                 if ($cluster->getProvider() == 'Digital Ocean') {
                     $cluster = $this->digitalOceanService->createKubeConfig($cluster);
+                }elseif($cluster->getProvider() == 'OpenStack'){
+                    $cluster = $this->openStackService->createKubeConfig($cluster);
                 } else {
                     $io->text('Not a Digital Ocean cluster');
                 }
