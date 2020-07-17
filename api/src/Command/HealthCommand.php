@@ -73,15 +73,16 @@ class HealthCommand extends Command
             '- Report its results',
         ]);
 
-        $io->title('Starting health checks');
+        $io->section('Starting health checks');
 
         $io->text('Found '.count($installations).' installations to check');
 
         $io->progressStart(count($installations));
 
         $results = [];
-        $clusters =[];
-        $environments =[];
+        $clustersHealth = [];
+        $clustersInstallations =[];
+        $environmentsHealth =[];
 
         foreach ($installations as $installation) {
             $health = $this->healthService->check($installation);
@@ -89,6 +90,7 @@ class HealthCommand extends Command
 
 
             // Lets create some statistical data
+            /*
             if(!array_key_exists( $health->getInstallation()->getEnvironment()->getCluster(), $clusters)){
                 $clusters[$health->getInstallation()->getEnvironment()->getCluster()] = ['health' => 0, 'installations' => 0 ];
             }
@@ -104,6 +106,10 @@ class HealthCommand extends Command
 
             $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] = $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] + 1;
             $environments[$health->getInstallation()->getEnvironment()]['installations'] = $environments[$health->getInstallation()->getEnvironment()]['installations'] +1;
+            */
+            $clustersHealth[$health->getInstallation()->getEnvironment()->getCluster()->getId()] = 1;
+            $clustersInstallations[$health->getInstallation()->getEnvironment()->getCluster()->getId()] = 1;
+            $environmentsHealth[$health->getInstallation()->getEnvironment()->getId()] = 1;
 
             $io->progressAdvance();
         }
@@ -115,11 +121,13 @@ class HealthCommand extends Command
         // Let registr the statistical results to there proper entities
         foreach ($clusters as $key => $value){
 
+            /*
             $key->setHealth($value['health']);
             $key->setInstallations($value['installations']);
 
             $io->text('Updating cluster:'.$key->getId());
             $this->em->persist($key);
+            */
             $io->progressAdvance();
         }
         $io->progressFinish();
@@ -129,11 +137,13 @@ class HealthCommand extends Command
 
         foreach ($environments as $key => $value){
 
+            /*
             $key->setHealth($value['health']);
 
             $io->text('Updating $environments:'.$key->getId());
 
             $this->em->persist($key);
+            */
             $io->progressAdvance();
         }
         $io->progressFinish();
