@@ -107,6 +107,7 @@ class HealthCommand extends Command
             $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] = $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] + 1;
             $environments[$health->getInstallation()->getEnvironment()]['installations'] = $environments[$health->getInstallation()->getEnvironment()]['installations'] +1;
             */
+
             $clustersHealth[$health->getInstallation()->getEnvironment()->getCluster()->getId()] = 1;
             $clustersInstallations[$health->getInstallation()->getEnvironment()->getCluster()->getId()] = 1;
             $environmentsHealth[$health->getInstallation()->getEnvironment()->getId()] = 1;
@@ -116,6 +117,7 @@ class HealthCommand extends Command
         $io->progressFinish();
 
         $io->section('Updating clusters health');
+        $io->text('Found '.count($clustersHealth).' clusters to update');
         $io->progressStart(count($clustersHealth));
 
         // Let registr the statistical results to there proper entities
@@ -133,6 +135,7 @@ class HealthCommand extends Command
         $io->progressFinish();
 
         $io->section('Updating clusters installations');
+        $io->text('Found '.count($clustersInstallations).' clusters to update');
         $io->progressStart(count($clustersInstallations));
 
         // Let registr the statistical results to there proper entities
@@ -150,6 +153,7 @@ class HealthCommand extends Command
         $io->progressFinish();
 
         $io->section('Updating enviroments');
+        $io->text('Found '.count($environmentsHealth).' enviroments to update');
         $io->progressStart(count($environmentsHealth));
 
         foreach ($environmentsHealth as $key => $value){
