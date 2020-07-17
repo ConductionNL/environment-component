@@ -191,8 +191,7 @@ class Cluster
     private $domains;
 
     /**
-     * @Groups({"read","write"})
-     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")
+     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster", fetch="EXTRA_LAZY")
      * @ApiSubresource()
      */
     private $environments;
