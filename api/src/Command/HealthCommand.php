@@ -115,11 +115,28 @@ class HealthCommand extends Command
         }
         $io->progressFinish();
 
-        $io->section('Updating clusters');
-        $io->progressStart(count($clusters));
+        $io->section('Updating clusters health');
+        $io->progressStart(count($clustersHealth));
 
         // Let registr the statistical results to there proper entities
-        foreach ($clusters as $key => $value){
+        foreach ($clustersHealth as $key => $value){
+
+            /*
+            $key->setHealth($value['health']);
+            $key->setInstallations($value['installations']);
+
+            $io->text('Updating cluster:'.$key->getId());
+            $this->em->persist($key);
+            */
+            $io->progressAdvance();
+        }
+        $io->progressFinish();
+
+        $io->section('Updating clusters installations');
+        $io->progressStart(count($clustersInstallations));
+
+        // Let registr the statistical results to there proper entities
+        foreach ($clustersInstallations as $key => $value){
 
             /*
             $key->setHealth($value['health']);
@@ -133,9 +150,9 @@ class HealthCommand extends Command
         $io->progressFinish();
 
         $io->section('Updating enviroments');
-        $io->progressStart(count($environments));
+        $io->progressStart(count($environmentsHealth));
 
-        foreach ($environments as $key => $value){
+        foreach ($environmentsHealth as $key => $value){
 
             /*
             $key->setHealth($value['health']);
