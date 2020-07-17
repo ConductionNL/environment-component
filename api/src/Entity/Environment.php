@@ -168,7 +168,7 @@ class Environment
      *
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="environment", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="environment")
      */
     private $installations;
 
@@ -292,8 +292,8 @@ class Environment
     {
         $health = 0;
 
-        foreach ($this->getInstallations() as $installation) {
-            if (in_array($installation->getStatus(), ['ok', 'OK', 'Found'])) {
+        foreach($this->getInstallations() as $installation){
+            if(in_array($installation->getStatus(), ['ok','OK','Found'])){
                 $health++;
             }
         }

@@ -192,7 +192,7 @@ class Cluster
      * @Groups({"read","write"})
      * @MaxDepth(1)
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")
      */
     private $environments;
 
@@ -200,15 +200,17 @@ class Cluster
      * @var int The amount of installations container on this cluster
      *
      * @Groups({"read"})
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $installations;
+    private $installations = 0;
 
     /**
      * @var int The amount of installations container on this cluster that are healthy
      *
      * @Groups({"read"})
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $health;
+    private $health = 0;
 
     /**
      * @var Datetime The moment this entity was created
@@ -251,30 +253,28 @@ class Cluster
         $this->installations = new ArrayCollection();
     }
 
-    /**
-     * @ORM\PostLoad
-     */
-    public function postLoad()
-    {
-        // Lets calculate the instalations and health for this entity
-        $this->installations = 0;
-        $this->health = 0;
-
-        foreach($this->environments as $environment){
-            $this->health = $this->health + $environment->getHealth();
-            $this->installations = $this->installations + $environment->getInstallations()->count();
-        }
-
-    }
-
     public function getHealth(): ?int
     {
         return $this->health;
     }
 
+    public function setHealth(int $health): self
+    {
+        $this->health = $health;
+
+        return $this;
+    }
+
     public function getInstallations(): ?int
     {
         return $this->installations;
+    }
+
+    public function setInstallations(int $installations): self
+    {
+        $this->installations = $installations;
+
+        return $this;
     }
 
     public function getId(): ?Uuid
