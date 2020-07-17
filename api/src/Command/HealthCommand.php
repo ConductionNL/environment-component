@@ -72,7 +72,7 @@ class HealthCommand extends Command
 
         $results = [];
         $clusters =[];
-        $environment =[];
+        $environments =[];
 
         foreach ($installations as $installation) {
             $health = $this->healthService->check($installation);
@@ -85,34 +85,38 @@ class HealthCommand extends Command
             }
 
             if(!array_key_exists( $health->getInstallation()->getEnvironment(), $environment)){
-                $environment[$health->getInstallation()->getEnvironment()] = ['health' => 0, 'installations' => 0 ];
+                $environments[$health->getInstallation()->getEnvironment()] = ['health' => 0, 'installations' => 0 ];
             }
 
             if($health->getStatus() == "OK"){
                 $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['health'] ++;
-                $environment[$health->getInstallation()->getEnvironment()]['health']  ++;
+                $environments[$health->getInstallation()->getEnvironment()]['health']  ++;
             }
 
             $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] ++;
-            $environment[$health->getInstallation()->getEnvironment()]['installations']  ++;
+            $environments[$health->getInstallation()->getEnvironment()]['installations']  ++;
 
             $io->progressAdvance();
         }
 
+        $io->text('Updating clusters');
         // Let registr the statistical results to there proper entities
         foreach ($clusters as $key => $value){
 
             $key->setHealth($value['health']);
             $key->setInstallations($value['installations']);
 
+            var_dump($key->getId());
             $this->em->persist($key);
         }
 
 
-        foreach ($clusters as $key => $value){
+        $io->text('Updating clusters');
+        foreach ($environments as $key => $value){
 
             $key->setHealth($value['health']);
 
+            var_dump($key->getId());
             $this->em->persist($key);
         }
 
@@ -124,5 +128,8 @@ class HealthCommand extends Command
             ['Domain', 'Enviroment', 'Installation', 'Endpoint', 'Status'],
             $results
         );
+
+
+
     }
 }
