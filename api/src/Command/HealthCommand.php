@@ -68,9 +68,7 @@ class HealthCommand extends Command
 
         $io->text('Found '.count($installations).' installations to check');
 
-        if (count($installations) > 0) {
-            $io->progressStart(count($installations));
-        }
+        $io->progressStart(count($installations));
 
         $results = [];
         $clusters =[];
