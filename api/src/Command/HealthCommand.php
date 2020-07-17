@@ -98,12 +98,12 @@ class HealthCommand extends Command
             }
 
             if($health->getStatus() == "OK"){
-                $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['health'] ++;
-                $environments[$health->getInstallation()->getEnvironment()]['health']  ++;
+                $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['health'] = $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['health'] + 1;
+                $environments[$health->getInstallation()->getEnvironment()]['health'] =  $environments[$health->getInstallation()->getEnvironment()]['health'] + 1;
             }
 
-            $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] ++;
-            $environments[$health->getInstallation()->getEnvironment()]['installations']  ++;
+            $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] = $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] + 1;
+            $environments[$health->getInstallation()->getEnvironment()]['installations'] = $environments[$health->getInstallation()->getEnvironment()]['installations'] +1;
 
             $io->progressAdvance();
         }
