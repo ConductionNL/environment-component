@@ -2119,6 +2119,24 @@ paths:
               - asc
               - desc
         -
+          name: 'order[installations]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[health]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
           name: 'order[dateCreated]'
           in: query
           required: false
@@ -5599,6 +5617,15 @@ paths:
               - desc
         -
           name: 'order[authorization]'
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        -
+          name: 'order[health]'
           in: query
           required: false
           schema:
@@ -9720,13 +9747,13 @@ components:
           items:
             $ref: '#/components/schemas/Environment-read'
         installations:
-          readOnly: true
           description: 'The amount of installations container on this cluster'
           type: integer
+          nullable: true
         health:
-          readOnly: true
           description: 'The amount of installations container on this cluster that are healthy'
           type: integer
+          nullable: true
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -9860,13 +9887,13 @@ components:
           items:
             $ref: '#/components/schemas/Environment:jsonld-read'
         installations:
-          readOnly: true
           description: 'The amount of installations container on this cluster'
           type: integer
+          nullable: true
         health:
-          readOnly: true
           description: 'The amount of installations container on this cluster that are healthy'
           type: integer
+          nullable: true
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10323,9 +10350,9 @@ components:
           items:
             $ref: '#/components/schemas/Installation-read'
         health:
-          readOnly: true
           description: 'The amount of installations container on this cluster that are healthy'
           type: integer
+          nullable: true
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -10422,9 +10449,9 @@ components:
           items:
             $ref: '#/components/schemas/Installation:jsonld-read'
         health:
-          readOnly: true
           description: 'The amount of installations container on this cluster that are healthy'
           type: integer
+          nullable: true
         dateCreated:
           description: 'The moment this entity was created'
           type: string
@@ -11025,6 +11052,12 @@ definitions:
         description: 'the IP Address of this cluster'
         type: string
         example: 255.255.255.0
+      installations:
+        description: 'The amount of installations container on this cluster'
+        type: int
+      health:
+        description: 'The amount of installations container on this cluster that are healthy'
+        type: int
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
@@ -11258,6 +11291,9 @@ definitions:
         description: 'Whether the components in this environment should run with an exposed backend or not.'
         type: int
         example: '1'
+      health:
+        description: 'The amount of installations container on this cluster that are healthy'
+        type: int
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
@@ -11564,12 +11600,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-17 07:27:09'
+        example: '2020-07-17 08:24:24'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-17 07:27:09'
+        example: '2020-07-17 08:24:24'
     required: []
   AuditTrail-write:
     properties:
@@ -11617,12 +11653,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-17 07:27:09'
+        example: '2020-07-17 08:24:24'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-17 07:27:09'
+        example: '2020-07-17 08:24:24'
     required: []
   ChangeLog-write:
     properties:
