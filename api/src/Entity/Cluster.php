@@ -260,11 +260,10 @@ class Cluster
         $this->installations = 0;
         $this->health = 0;
 
-        foreach($this->environments() as $environment){
+        foreach ($this->environments() as $environment) {
             $this->health = $this->health + $environment->getHealth();
             $this->installations = $this->installations + $environment->getInstallations()->count();
         }
-
     }
 
     public function getHealth(): ?int
@@ -463,7 +462,6 @@ class Cluster
 
         return $this;
     }
-
 
     public function hasEnvironment(string $name)
     {
