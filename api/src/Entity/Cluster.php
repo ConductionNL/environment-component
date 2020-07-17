@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
@@ -190,14 +192,15 @@ class Cluster
 
     /**
      * @Groups({"read","write"})
-     * @MaxDepth(1)
-     *
      * @ORM\OneToMany(targetEntity="App\Entity\Environment", mappedBy="cluster")
+     * @ApiSubresource()
      */
     private $environments;
 
     /**
      * @var int The amount of installations container on this cluster
+     *
+     * @example 1
      *
      * @Groups({"read"})
      * @ORM\Column(type="integer", nullable=true)
@@ -206,6 +209,8 @@ class Cluster
 
     /**
      * @var int The amount of installations container on this cluster that are healthy
+     *
+     * @example 1
      *
      * @Groups({"read"})
      * @ORM\Column(type="integer", nullable=true)
