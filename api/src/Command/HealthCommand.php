@@ -85,7 +85,7 @@ class HealthCommand extends Command
 
         foreach ($installations as $installation) {
             $health = $this->healthService->check($installation);
-            $results[] = [$health->getDomain()->getName(), $health->getInstallation()->getEnvironment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
+            $results[] = [$health->getInstallation()->getEnvironment()->->getCluster()->getName(),$health->getDomain()->getName(), $health->getInstallation()->getEnvironment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
 
 
             // Lets create some statistical data
@@ -97,7 +97,7 @@ class HealthCommand extends Command
                 $environments[$health->getInstallation()->getEnvironment()] = ['health' => 0, 'installations' => 0 ];
             }
 
-            if($health->getStatus() == "OK"){
+            if($health->getStatus() == "OK" || $health->getStatus() == "Found"){
                 $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['health'] = $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['health'] + 1;
                 $environments[$health->getInstallation()->getEnvironment()]['health'] =  $environments[$health->getInstallation()->getEnvironment()]['health'] + 1;
             }
@@ -144,7 +144,7 @@ class HealthCommand extends Command
 
         $io->section('results');
         $io->table(
-            ['Domain', 'Enviroment', 'Installation', 'Endpoint', 'Status'],
+            ['Cluster', 'Domain', 'Enviroment', 'Installation', 'Endpoint', 'Status'],
             $results
         );
 
