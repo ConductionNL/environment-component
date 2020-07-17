@@ -261,7 +261,7 @@ class Cluster
 
         foreach($this->environments() as $environment){
             $this->health = $this->health + $environment->getHealth();
-            $this->installations = $this->installations + $environment->getInstallations()->count()
+            $this->installations = $this->installations + $environment->getInstallations()->count();
         }
 
     }
