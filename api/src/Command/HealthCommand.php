@@ -60,11 +60,20 @@ class HealthCommand extends Command
         }
 
         if (!$installations || count($installations) < 1) {
-            throw new InvalidOptionException(sprintf('No installations could be found'));
+            $io->error('Found no installations to check');
+            return;
         }
 
-        $io->title('Starting health checks');
+        $io->title('Health checks for commonground installations');
+        $io->text([
+            'This command will',
+            '- Make a API based JSON health check on all known installations',
+            '- Update the cluster information accordingly',
+            '- Update the enviroment information accordingly',
+            '- Report its results',
+        ]);
 
+        $io->title('Starting health checks');
 
         $io->text('Found '.count($installations).' installations to check');
 
@@ -98,8 +107,9 @@ class HealthCommand extends Command
 
             $io->progressAdvance();
         }
+        $io->progressFinish();
 
-        $io->text('Updating clusters');
+        $io->section('Updating clusters');
         $io->progressStart(count($clusters));
 
         // Let registr the statistical results to there proper entities
@@ -108,34 +118,35 @@ class HealthCommand extends Command
             $key->setHealth($value['health']);
             $key->setInstallations($value['installations']);
 
-            var_dump($key->getId());
+            $io->text('Updating cluster:'.$key->getId());
             $this->em->persist($key);
             $io->progressAdvance();
         }
+        $io->progressFinish();
 
-
-        $io->text('Updating clusters');
+        $io->section('Updating enviroments');
         $io->progressStart(count($environments));
 
         foreach ($environments as $key => $value){
 
             $key->setHealth($value['health']);
 
-            var_dump($key->getId());
+            $io->text('Updating $environments:'.$key->getId());
+
             $this->em->persist($key);
             $io->progressAdvance();
         }
+        $io->progressFinish();
 
         $this->em->flush();
 
-        $io->text('All done');
+        $io->success('All done');
 
+        $io->section('results');
         $io->table(
             ['Domain', 'Enviroment', 'Installation', 'Endpoint', 'Status'],
             $results
         );
-
-
 
     }
 }
