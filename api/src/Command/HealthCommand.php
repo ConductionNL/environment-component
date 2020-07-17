@@ -86,7 +86,7 @@ class HealthCommand extends Command
 
         foreach ($installations as $installation) {
             $health = $this->healthService->check($installation);
-            $results[] = [$health->getInstallation()->getEnvironment()->->getCluster()->getName(),$health->getDomain()->getName(), $health->getInstallation()->getEnvironment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
+            $results[] = [$health->getInstallation()->getEnvironment()->getCluster()->getName(),$health->getDomain()->getName(), $health->getInstallation()->getEnvironment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
 
 
             // Lets create some statistical data
