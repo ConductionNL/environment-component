@@ -9295,20 +9295,6 @@ paths:
         - application/health+json
 components:
   schemas:
-    ArrayCollection-read:
-      type: object
-    'ArrayCollection:jsonld-read':
-      type: object
-      properties:
-        '@context':
-          readOnly: true
-          type: string
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
     AuditTrail-read:
       type: object
       description: 'An resource representing a log line.'
@@ -9735,8 +9721,8 @@ components:
             $ref: '#/components/schemas/Environment-read'
         installations:
           readOnly: true
-          description: 'The installations on this cluster'
-          $ref: '#/components/schemas/ArrayCollection-read'
+          description: 'The amount of installations container on this cluster'
+          type: integer
         health:
           readOnly: true
           description: 'The amount of installations container on this cluster that are healthy'
@@ -9875,8 +9861,8 @@ components:
             $ref: '#/components/schemas/Environment:jsonld-read'
         installations:
           readOnly: true
-          description: 'The installations on this cluster'
-          $ref: '#/components/schemas/ArrayCollection:jsonld-read'
+          description: 'The amount of installations container on this cluster'
+          type: integer
         health:
           readOnly: true
           description: 'The amount of installations container on this cluster that are healthy'
@@ -10756,11 +10742,6 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/Environment-write'
-        healthLogs:
-          description: 'the Health logs for this installation'
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog-write'
         dateInstalled:
           description: 'The moment this installation was last installed'
           type: string
@@ -10924,11 +10905,6 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/Environment:jsonld-write'
-        healthLogs:
-          description: 'the Health logs for this installation'
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog:jsonld-write'
         dateInstalled:
           description: 'The moment this installation was last installed'
           type: string
@@ -11479,9 +11455,6 @@ definitions:
       environment:
         description: 'the environment the installation is installed in'
         type: \Environment
-      healthLogs:
-        description: 'the Health logs for this installation'
-        type: \ArrayCollection
       properties:
         description: 'additional properties that are required for this installation, i.e. external API keys'
         type: \Property
@@ -11591,12 +11564,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-10 07:34:52'
+        example: '2020-07-17 07:01:23'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-10 07:34:52'
+        example: '2020-07-17 07:01:23'
     required: []
   AuditTrail-write:
     properties:
@@ -11644,12 +11617,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-10 07:34:52'
+        example: '2020-07-17 07:01:23'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-10 07:34:52'
+        example: '2020-07-17 07:01:23'
     required: []
   ChangeLog-write:
     properties:
