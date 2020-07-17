@@ -73,22 +73,21 @@ class HealthService
         // let establisch the domain
         $domain = $installation->getDomain()->getName();
 
-
         // Lets estabblis the propper subdomain
         $subdomain = $name.'.';
 
         // Lets scheck for overwrites
         // @todo make switch case
-        foreach($installation->getProperties() as $property){
-             if($property->getName()=="settings.subdomain"){
-                 $subdomain = $property->getValue();
-                 // The is the optional case of an empty sub domain, in wich case we dont want to add an dot
-                 if($subdomain && $subdomain!=""){
-                     $subdomain = $subdomain.'.';
-                 }
-             }
+        foreach ($installation->getProperties() as $property) {
+            if ($property->getName() == 'settings.subdomain') {
+                $subdomain = $property->getValue();
+                // The is the optional case of an empty sub domain, in wich case we dont want to add an dot
+                if ($subdomain && $subdomain != '') {
+                    $subdomain = $subdomain.'.';
+                }
+            }
 
-            if($property->getName()=="settings.domain"){
+            if ($property->getName() == 'settings.domain') {
                 $domain = $property->getValue();
             }
         }
