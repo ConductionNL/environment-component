@@ -339,7 +339,7 @@ class Installation
         if($healthLog = $healthLogs->get(0)){
             return $healthLog->getStatus();
         }
-        
+
         return null;
     }
 

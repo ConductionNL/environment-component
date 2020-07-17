@@ -48,7 +48,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ClusterRepository")
- * @ORM\HasLifecycleCallbacks()
  * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
@@ -202,6 +201,13 @@ class Cluster
      * @MaxDepth(1)
      */
     private $installations;
+
+    /**
+     * @var int The amount of installations container on this cluster that are healthy
+     *
+     * @Groups({"read"})
+     */
+    private $health;
 
     /**
      * @var Datetime The moment this entity was created
@@ -448,6 +454,22 @@ class Cluster
         }
 
         return $this->installations;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHealth(): int
+    {
+        $health = 0;
+
+        foreach($this->getInstallations() as $installation){
+            if(in_array($installation->getStatus(), ['ok','OK','Found'])){
+                $health++;
+            }
+        }
+
+        return $health;
     }
 
     public function hasEnvironment(string $name)
