@@ -168,7 +168,7 @@ class Environment
      *
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="environment")
+     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="environment", fetch="EAGER")
      */
     private $installations;
 

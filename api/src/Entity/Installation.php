@@ -247,10 +247,9 @@ class Installation
     /**
      * @var ArrayCollection the Health logs for this installation
      *
-     * @Groups({"write"})
      * @MaxDepth(1)
      * @ORM\OrderBy({"dateCreated" = "DESC"})
-     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installation")
+     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installation", fetch="EXTRA_LAZY")
      */
     private $healthLogs;
 
@@ -336,11 +335,12 @@ class Installation
 
     public function getStatus(): ?string
     {
-        if (count($this->getHealthLogs()) < 1) {
-            return null;
+        // Get the first health log
+        if($healthLog = $healthLogs->get(0)){
+            return $healthLog->getStatus();
         }
-
-        return $this->getHealthLogs()->first()->getStatus();
+        
+        return null;
     }
 
     public function getEnvironment(): ?Environment
