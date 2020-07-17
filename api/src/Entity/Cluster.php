@@ -48,6 +48,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * 		},
  * )
  * @ORM\Entity(repositoryClass="App\Repository\ClusterRepository")
+ * @ORM\HasLifecycleCallbacks()
  * @Gedmo\Loggable(logEntryClass="Conduction\CommonGroundBundle\Entity\ChangeLog")
  *
  * @ApiFilter(BooleanFilter::class)
@@ -195,10 +196,9 @@ class Cluster
     private $environments;
 
     /**
-     * @var ArrayCollection The installations on this cluster
+     * @var int The amount of installations container on this cluster
      *
      * @Groups({"read"})
-     * @MaxDepth(1)
      */
     private $installations;
 
@@ -248,6 +248,32 @@ class Cluster
         $this->domains = new ArrayCollection();
         $this->environments = new ArrayCollection();
         $this->installations = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\postLoad
+     */
+    public function postLoad()
+    {
+        // Lets calculate the instalations and health for this entity
+        $this->installations = 0;
+        $this->health = 0;
+
+        foreach($this->environments() as $environment){
+            $this->health = $this->health + $environment->getHealth();
+            $this->installations = $this->installations + $environment->getInstallations()->count()
+        }
+
+    }
+
+    public function getHealth(): ?int
+    {
+        return $this->health;
+    }
+
+    public function getInstallations(): ?int
+    {
+        return $this->installations;
     }
 
     public function getId(): ?Uuid
@@ -437,40 +463,6 @@ class Cluster
         return $this;
     }
 
-    /**
-     * @return Collection|Environment[]
-     */
-    public function getInstallations(): Collection
-    {
-        $this->installations = new ArrayCollection();
-
-        // Lets use the enviroments to get all the installations for this cluster
-        foreach ($this->environments as $environment) {
-            foreach ($environment->getInstallations() as $installation) {
-                if (!$this->installations->contains($installation)) {
-                    $this->installations[] = $installation;
-                }
-            }
-        }
-
-        return $this->installations;
-    }
-
-    /**
-     * @return int
-     */
-    public function getHealth(): int
-    {
-        $health = 0;
-
-        foreach($this->getInstallations() as $installation){
-            if(in_array($installation->getStatus(), ['ok','OK','Found'])){
-                $health++;
-            }
-        }
-
-        return $health;
-    }
 
     public function hasEnvironment(string $name)
     {
