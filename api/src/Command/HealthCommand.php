@@ -100,6 +100,8 @@ class HealthCommand extends Command
         }
 
         $io->text('Updating clusters');
+        $io->progressStart(count($clusters));
+
         // Let registr the statistical results to there proper entities
         foreach ($clusters as $key => $value){
 
@@ -108,16 +110,20 @@ class HealthCommand extends Command
 
             var_dump($key->getId());
             $this->em->persist($key);
+            $io->progressAdvance();
         }
 
 
         $io->text('Updating clusters');
+        $io->progressStart(count($environments));
+
         foreach ($environments as $key => $value){
 
             $key->setHealth($value['health']);
 
             var_dump($key->getId());
             $this->em->persist($key);
+            $io->progressAdvance();
         }
 
         $this->em->flush();
