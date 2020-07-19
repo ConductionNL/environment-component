@@ -7,7 +7,6 @@ namespace App\Command;
 use App\Service\HealthService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -61,6 +60,7 @@ class HealthCommand extends Command
 
         if (!$installations || count($installations) < 1) {
             $io->error('Found no installations to check');
+
             return;
         }
 
@@ -81,13 +81,12 @@ class HealthCommand extends Command
 
         $results = [];
         $clustersHealth = [];
-        $clustersInstallations =[];
-        $environmentsHealth =[];
+        $clustersInstallations = [];
+        $environmentsHealth = [];
 
         foreach ($installations as $installation) {
             $health = $this->healthService->check($installation);
-            $results[] = [$health->getInstallation()->getEnvironment()->getCluster()->getName(),$health->getDomain()->getName(), $health->getInstallation()->getEnvironment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
-
+            $results[] = [$health->getInstallation()->getEnvironment()->getCluster()->getName(), $health->getDomain()->getName(), $health->getInstallation()->getEnvironment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
 
             // Lets create some statistical data
             /*
@@ -121,7 +120,7 @@ class HealthCommand extends Command
         $io->progressStart(count($clustersHealth));
 
         // Let registr the statistical results to there proper entities
-        foreach ($clustersHealth as $key => $value){
+        foreach ($clustersHealth as $key => $value) {
 
             /*
             $key->setHealth($value['health']);
@@ -139,7 +138,7 @@ class HealthCommand extends Command
         $io->progressStart(count($clustersInstallations));
 
         // Let registr the statistical results to there proper entities
-        foreach ($clustersInstallations as $key => $value){
+        foreach ($clustersInstallations as $key => $value) {
 
             /*
             $key->setHealth($value['health']);
@@ -156,7 +155,7 @@ class HealthCommand extends Command
         $io->text('Found '.count($environmentsHealth).' enviroments to update');
         $io->progressStart(count($environmentsHealth));
 
-        foreach ($environmentsHealth as $key => $value){
+        foreach ($environmentsHealth as $key => $value) {
 
             /*
             $key->setHealth($value['health']);
@@ -178,6 +177,5 @@ class HealthCommand extends Command
             ['Cluster', 'Domain', 'Enviroment', 'Installation', 'Endpoint', 'Status'],
             $results
         );
-
     }
 }
