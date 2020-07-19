@@ -336,7 +336,7 @@ class Installation
     public function getStatus(): ?string
     {
         // Get the first health log
-        if($healthLog = $this->healthLogs->get(0)){
+        if ($healthLog = $this->healthLogs->get(0)) {
             return $healthLog->getStatus();
         }
 
