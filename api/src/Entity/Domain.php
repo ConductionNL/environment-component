@@ -131,7 +131,7 @@ class Domain
      * @var Cluster the cluster this domain is hosted on
      * @Groups({"write"})
      * @MaxDepth(1)
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="domains")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cluster", inversedBy="domains", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(nullable=false)
      */
     private $cluster;
@@ -140,7 +140,7 @@ class Domain
      * @var ArrayCollection the installations in this domain
      * @Groups({"write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="domain")
+     * @ORM\OneToMany(targetEntity="App\Entity\Installation", mappedBy="domain", fetch="EXTRA_LAZY")
      */
     private $installations;
 
@@ -148,7 +148,7 @@ class Domain
      * @var ArrayCollection the HealthLogs related to this domain
      * @Groups({"write"})
      * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="domain", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="domain", orphanRemoval=true, fetch="EXTRA_LAZY")
      */
     private $healthLogs;
 
