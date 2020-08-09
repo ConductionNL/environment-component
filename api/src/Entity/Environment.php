@@ -293,8 +293,7 @@ class Environment
         $healty = ['OK','ok','found'];
 
         $criteria = Criteria::create()
-            ->andWhere(Criteria::expr()->eq('status', $healty))
-            ->orderBy(['createdAt' => 'DESC']);
+            ->andWhere(Criteria::expr()->eq('status', $healty));
 
         return $this->installations->matching($criteria);
     }
