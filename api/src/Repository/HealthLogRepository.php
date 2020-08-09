@@ -19,6 +19,18 @@ class HealthLogRepository extends ServiceEntityRepository
         parent::__construct($registry, HealthLog::class);
     }
 
+    public function removeOld($date)
+    {
+        $date = new \DateTime($date);
+
+        $qd = $this->createQueryBuilder('h');
+        $qd->delete()
+            ->where('h.dateCreated < :date')
+            ->setParameter('date', $date);
+        $query = $qd->getQuery();
+        return $query->getResult();
+    }
+
     // /**
     //  * @return HealthLog[] Returns an array of HealthLog objects
     //  */

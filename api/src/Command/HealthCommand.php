@@ -73,6 +73,9 @@ class HealthCommand extends Command
             '- Report its results',
         ]);
 
+        $io->section('Removing old health checks');
+        $this->em->getRepository('App\Entity\HealthLog')->removeOld();
+
         $io->section('Starting health checks');
 
         $io->text('Found '.count($installations).' installations to check');

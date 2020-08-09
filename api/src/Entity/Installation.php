@@ -325,12 +325,14 @@ class Installation
 
     public function getStatus(): ?string
     {
-        // Get the first health log
-        if ($healthLog = $this->healthLogs->get(0)) {
-            return $healthLog->getStatus();
-        }
+        return $this->status;
+    }
 
-        return null;
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
     }
 
     public function getEnvironment(): ?Environment
