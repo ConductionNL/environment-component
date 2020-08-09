@@ -12,7 +12,7 @@ info:
     - Docker Image: [online](https://hub.docker.com/repository/docker/conduction/evc-php) 
     - Datamodel: [postman](/schema/evc.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [modelio (zip)](/schema/Datamodel_Modelio.zip) 
     
-    'Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.'         
+    Naast deze JSON rest API is er ook een [graphql](/graphql) interface beschikbaar.         
     
 paths:
   /audit_trails:
@@ -10546,11 +10546,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation-write'
-        healthLogs:
-          description: 'the HealthLogs related to this domain'
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog-write'
     'Domain:jsonld-read':
       type: object
       description: ''
@@ -10632,11 +10627,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Installation:jsonld-write'
-        healthLogs:
-          description: 'the HealthLogs related to this domain'
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthLog:jsonld-write'
     Environment-read:
       type: object
       description: ''
@@ -10980,7 +10970,6 @@ components:
           type: string
           nullable: true
         status:
-          readOnly: true
           description: 'The status of this installation'
           type: string
         dbUsername:
@@ -11134,7 +11123,6 @@ components:
           type: string
           nullable: true
         status:
-          readOnly: true
           description: 'The status of this installation'
           type: string
         dbUsername:
@@ -11378,9 +11366,11 @@ definitions:
       installations:
         description: 'The amount of installations container on this cluster'
         type: int
+        example: '1'
       health:
         description: 'The amount of installations container on this cluster that are healthy'
         type: int
+        example: '1'
       dateCreated:
         description: 'The moment this entity was created'
         type: \Datetime
@@ -11577,9 +11567,6 @@ definitions:
         type: \Cluster
       installations:
         description: 'the installations in this domain'
-        type: \ArrayCollection
-      healthLogs:
-        description: 'the HealthLogs related to this domain'
         type: \ArrayCollection
     required:
       - name
@@ -11921,12 +11908,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-17 09:12:06'
+        example: '2020-08-09 11:40:27'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-17 09:12:06'
+        example: '2020-08-09 11:40:27'
     required: []
   AuditTrail-write:
     properties:
@@ -11974,12 +11961,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-07-17 09:12:06'
+        example: '2020-08-09 11:40:27'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-07-17 09:12:06'
+        example: '2020-08-09 11:40:27'
     required: []
   ChangeLog-write:
     properties:

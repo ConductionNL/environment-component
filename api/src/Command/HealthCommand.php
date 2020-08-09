@@ -32,12 +32,10 @@ class HealthCommand extends Command
     {
         $this
         ->setName('app:health:check')
-        // the short description shown while running "php bin/console list"
-        ->setDescription('Creates a new helm chart.')
-
         // the full command description shown when running the command with
         // the "--help" option
         ->setHelp('This command will perform a health check on all or a single installation')
+            // the short description shown while running "php bin/console list"
         ->setDescription('Perform health check on cluster')
         ->addOption('installation', null, InputOption::VALUE_OPTIONAL, 'the installation that you want to health check');
     }
@@ -48,6 +46,18 @@ class HealthCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
+
+        $io->title('Health checks for commonground installations');
+        $io->text([
+            'This command will',
+            '- Make a API based JSON health check on all known installations',
+            '- Update the cluster information accordingly',
+            '- Update the enviroment information accordingly',
+            '- Report its results',
+        ]);
+
+        //$io->section('Removing old health checks');
+        //$this->em->getRepository('App\Entity\HealthLog')->removeOld();
 
         /** @var string $version */
         $installationId = $input->getOption('installation');
@@ -63,18 +73,6 @@ class HealthCommand extends Command
 
             return;
         }
-
-        $io->title('Health checks for commonground installations');
-        $io->text([
-            'This command will',
-            '- Make a API based JSON health check on all known installations',
-            '- Update the cluster information accordingly',
-            '- Update the enviroment information accordingly',
-            '- Report its results',
-        ]);
-
-        $io->section('Removing old health checks');
-        $this->em->getRepository('App\Entity\HealthLog')->removeOld();
 
         $io->section('Starting health checks');
 
