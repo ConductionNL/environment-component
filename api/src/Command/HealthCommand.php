@@ -89,86 +89,45 @@ class HealthCommand extends Command
             $health = $this->healthService->check($installation);
             $results[] = [$health->getInstallation()->getEnvironment()->getCluster()->getName(), $health->getDomain()->getName(), $health->getInstallation()->getEnvironment()->getName(), $health->getInstallation()->getName(), $health->getEndpoint(), $health->getStatus()];
 
-            // Lets create some statistical data
-            /*
-            if(!array_key_exists( $health->getInstallation()->getEnvironment()->getCluster(), $clusters)){
-                $clusters[$health->getInstallation()->getEnvironment()->getCluster()] = ['health' => 0, 'installations' => 0 ];
-            }
-
-            if(!array_key_exists( $health->getInstallation()->getEnvironment(), $environment)){
-                $environments[$health->getInstallation()->getEnvironment()] = ['health' => 0, 'installations' => 0 ];
-            }
-
-            if($health->getStatus() == "OK" || $health->getStatus() == "Found"){
-                $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['health'] = $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['health'] + 1;
-                $environments[$health->getInstallation()->getEnvironment()]['health'] =  $environments[$health->getInstallation()->getEnvironment()]['health'] + 1;
-            }
-
-            $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] = $clusters[$health->getInstallation()->getEnvironment()->getCluster()]['installations'] + 1;
-            $environments[$health->getInstallation()->getEnvironment()]['installations'] = $environments[$health->getInstallation()->getEnvironment()]['installations'] +1;
-            */
-
-            $clustersHealth[$health->getInstallation()->getEnvironment()->getCluster()->getId()] = 1;
-            $clustersInstallations[$health->getInstallation()->getEnvironment()->getCluster()->getId()] = 1;
-            $environmentsHealth[$health->getInstallation()->getEnvironment()->getId()] = 1;
-
-            $io->progressAdvance();
-        }
-        $io->progressFinish();
-
-        $io->section('Updating clusters health');
-        $io->text('Found '.count($clustersHealth).' clusters to update');
-        $io->progressStart(count($clustersHealth));
-
-        // Let registr the statistical results to there proper entities
-        foreach ($clustersHealth as $key => $value) {
-
-            /*
-            $key->setHealth($value['health']);
-            $key->setInstallations($value['installations']);
-
-            $io->text('Updating cluster:'.$key->getId());
-            $this->em->persist($key);
-            */
-            $io->progressAdvance();
-        }
-        $io->progressFinish();
-
-        $io->section('Updating clusters installations');
-        $io->text('Found '.count($clustersInstallations).' clusters to update');
-        $io->progressStart(count($clustersInstallations));
-
-        // Let registr the statistical results to there proper entities
-        foreach ($clustersInstallations as $key => $value) {
-
-            /*
-            $key->setHealth($value['health']);
-            $key->setInstallations($value['installations']);
-
-            $io->text('Updating cluster:'.$key->getId());
-            $this->em->persist($key);
-            */
             $io->progressAdvance();
         }
         $io->progressFinish();
 
         $io->section('Updating enviroments');
-        $io->text('Found '.count($environmentsHealth).' enviroments to update');
-        $io->progressStart(count($environmentsHealth));
+        $enviroments = $this->em->getRepository('App\Entity\Enviroment')->findAll();
+        $io->text('Found '.count($enviroments).' enviroments to update');
+        $io->progressStart(count($enviroments));
 
-        foreach ($environmentsHealth as $key => $value) {
+        foreach ($enviroments as $enviroment) {
+            $enviroment->setHealth(count($enviroment->getHealthyInstallations()));
+            $this->em->persist($enviroment);
 
-            /*
-            $key->setHealth($value['health']);
-
-            $io->text('Updating $environments:'.$key->getId());
-
-            $this->em->persist($key);
-            */
             $io->progressAdvance();
         }
         $io->progressFinish();
+        $this->em->flush();
 
+        $io->section('Updating clusters health');
+        $clusters = $this->em->getRepository('App\Entity\Cluster')->findAll();
+        $io->text('Found '.count($clusters).' clusters to update');
+        $io->progressStart(count($clusters));
+
+        // Let registr the statistical results to there proper entities
+        foreach ($clusters as $cluster) {
+
+            $installations = 0;
+            $health = 0;
+            foreach($cluster->getEnviroments() as $enviroment){
+                $installations = $installations + count( $enviroment->getInstallations());
+                $health = $health + $enviroment->getHealth();
+            }
+            $cluster->setInstallations($installations);
+            $cluster->setHealth($health);
+            $this->em->persist($cluster);
+
+            $io->progressAdvance();
+        }
+        $io->progressFinish();
         $this->em->flush();
 
         $io->success('All done');

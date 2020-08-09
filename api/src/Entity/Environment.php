@@ -286,6 +286,12 @@ class Environment
         return $this;
     }
 
+
+    public function getHealthyInstallations(): Collection
+    {
+        return $this->installations;
+    }
+
     public function getHealth(): ?int
     {
         return $this->health;

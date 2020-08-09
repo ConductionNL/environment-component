@@ -108,12 +108,16 @@ class HealthService
             $response = $this->client->request('GET', $url, ['headers' => $headers, 'http_errors' => false]);
             $health->setCode($response->getStatusCode());
             $health->setStatus($response->getReasonPhrase());
-            $health->getInstallation()->setStatus($response->getReasonPhrase());
-            $this->em->persist($health->getInstallation());
+
         } catch (\Exception $e) {
             $health->setStatus($e->getMessage());
         }
 
+        // Lets also set status text to the installation
+        $installation = $health->getInstallation();
+        $installation->setStatus($health->getStatus());
+
+        $this->em->persist($installation);
         $this->em->persist($health);
         $this->em->flush();
 
