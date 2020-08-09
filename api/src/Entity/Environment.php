@@ -293,7 +293,7 @@ class Environment
         $healty = ['OK','ok','found'];
 
         $criteria = Criteria::create()
-            ->andWhere(Criteria::expr()->eq('status', $healty));
+            ->andWhere(Criteria::expr()->in('status', $healty));
 
         return $this->installations->matching($criteria);
     }
