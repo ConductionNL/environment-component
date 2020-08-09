@@ -132,7 +132,9 @@ class Installation
      *
      * @example ok
      *
+     * @Gedmo\Versioned
      * @Groups({"read"})
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $status;
 
