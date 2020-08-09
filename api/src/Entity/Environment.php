@@ -10,6 +10,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
@@ -286,10 +287,16 @@ class Environment
         return $this;
     }
 
-
     public function getHealthyInstallations(): Collection
     {
-        return $this->installations;
+        // Lets define what we consider a healthy installation status
+        $healty = ['OK','ok','found'];
+
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq('status', $healty))
+            ->orderBy(['createdAt' => 'DESC']);
+
+        return $this->installations->matching($criteria);
     }
 
     public function getHealth(): ?int
