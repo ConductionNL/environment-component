@@ -290,7 +290,7 @@ class Environment
     public function getHealthyInstallations(): Collection
     {
         // Lets define what we consider a healthy installation status
-        $healty = ['OK','ok','found'];
+        $healty = ['OK','ok','Found','found'];
 
         $criteria = Criteria::create()
             ->andWhere(Criteria::expr()->in('status', $healty));
