@@ -144,18 +144,9 @@ class Domain
      */
     private $installations;
 
-    /**
-     * @var ArrayCollection the HealthLogs related to this domain
-     * @Groups({"write"})
-     * @MaxDepth(1)
-     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="domain", orphanRemoval=true, fetch="EXTRA_LAZY")
-     */
-    private $healthLogs;
-
     public function __construct()
     {
         $this->installations = new ArrayCollection();
-        $this->healthLogs = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -260,37 +251,6 @@ class Domain
             // set the owning side to null (unless already changed)
             if ($installation->getDomain() === $this) {
                 $installation->setDomain(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|HealthLog[]
-     */
-    public function getHealthLogs(): Collection
-    {
-        return $this->healthLogs;
-    }
-
-    public function addHealthLog(HealthLog $healthLog): self
-    {
-        if (!$this->healthLogs->contains($healthLog)) {
-            $this->healthLogs[] = $healthLog;
-            $healthLog->setDomain($this);
-        }
-
-        return $this;
-    }
-
-    public function removeHealthLog(HealthLog $healthLog): self
-    {
-        if ($this->healthLogs->contains($healthLog)) {
-            $this->healthLogs->removeElement($healthLog);
-            // set the owning side to null (unless already changed)
-            if ($healthLog->getDomain() === $this) {
-                $healthLog->setDomain(null);
             }
         }
 

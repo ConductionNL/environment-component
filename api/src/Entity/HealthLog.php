@@ -88,14 +88,14 @@ class HealthLog
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\ManyToOne(targetEntity="App\Entity\Domain", inversedBy="healthLogs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Domain")
      */
     private $domain;
 
     /**
      * @Groups({"read","write"})
      * @MaxDepth(1)
-     * @ORM\ManyToOne(targetEntity="App\Entity\Installation", inversedBy="healthLogs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Installation")
      */
     private $installation;
 

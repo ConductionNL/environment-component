@@ -245,15 +245,6 @@ class Installation
     private $environment;
 
     /**
-     * @var ArrayCollection the Health logs for this installation
-     *
-     * @MaxDepth(1)
-     * @ORM\OrderBy({"dateCreated" = "DESC"})
-     * @ORM\OneToMany(targetEntity="App\Entity\HealthLog", mappedBy="installation", fetch="EXTRA_LAZY")
-     */
-    private $healthLogs;
-
-    /**
      * @var Datetime The moment this installation was last installed
      *
      * @Groups({"read", "write"})
@@ -300,7 +291,6 @@ class Installation
 
     public function __construct()
     {
-        $this->healthLogs = new ArrayCollection();
         $this->properties = new ArrayCollection();
     }
 
@@ -424,37 +414,6 @@ class Installation
     public function setDateModified(?\DateTimeInterface $dateModified): self
     {
         $this->dateModified = $dateModified;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|HealthLog[]
-     */
-    public function getHealthLogs(): Collection
-    {
-        return $this->healthLogs;
-    }
-
-    public function addHealthLog(HealthLog $healthLog): self
-    {
-        if (!$this->healthLogs->contains($healthLog)) {
-            $this->healthLogs[] = $healthLog;
-            $healthLog->setInstallation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeHealthLog(HealthLog $healthLog): self
-    {
-        if ($this->healthLogs->contains($healthLog)) {
-            $this->healthLogs->removeElement($healthLog);
-            // set the owning side to null (unless already changed)
-            if ($healthLog->getInstallation() === $this) {
-                $healthLog->setInstallation(null);
-            }
-        }
 
         return $this;
     }
