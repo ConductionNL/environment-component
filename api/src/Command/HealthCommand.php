@@ -94,13 +94,13 @@ class HealthCommand extends Command
         $io->progressFinish();
 
         $io->section('Updating enviroments');
-        $enviroments = $this->em->getRepository('App\Entity\Enviroment')->findAll();
-        $io->text('Found '.count($enviroments).' enviroments to update');
-        $io->progressStart(count($enviroments));
+        $environments = $this->em->getRepository('App\Entity\Environment')->findAll();
+        $io->text('Found '.count($environments).' enviroments to update');
+        $io->progressStart(count($environments));
 
-        foreach ($enviroments as $enviroment) {
-            $enviroment->setHealth(count($enviroment->getHealthyInstallations()));
-            $this->em->persist($enviroment);
+        foreach ($environments as $environment) {
+            $environment->setHealth(count($environment->getHealthyInstallations()));
+            $this->em->persist($environment);
 
             $io->progressAdvance();
         }
@@ -117,9 +117,9 @@ class HealthCommand extends Command
 
             $installations = 0;
             $health = 0;
-            foreach($cluster->getEnviroments() as $enviroment){
-                $installations = $installations + count( $enviroment->getInstallations());
-                $health = $health + $enviroment->getHealth();
+            foreach($cluster->getEnvironments() as $environment){
+                $installations = $installations + count( $environment->getInstallations());
+                $health = $health + $environment->getHealth();
             }
             $cluster->setInstallations($installations);
             $cluster->setHealth($health);
