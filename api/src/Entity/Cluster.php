@@ -252,7 +252,6 @@ class Cluster
     {
         $this->domains = new ArrayCollection();
         $this->environments = new ArrayCollection();
-        $this->installations = new ArrayCollection();
     }
 
     public function getHealth(): ?int
