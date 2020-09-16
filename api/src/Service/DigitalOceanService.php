@@ -99,7 +99,7 @@ class DigitalOceanService
         $kubernetesCluster = [
             'name'       => $cluster->getName(),
             'region'     => 'ams3',
-            'version'    => '1.17.5-do.0', //TODO: dit mag nog dynamisch
+            'version'    => '1.18.8-do.0', //TODO: dit mag nog dynamisch
             'node_pools' => [[
                 'size'  => 's-4vcpu-8gb', //TODO: dit mag nog dynamisch
                 'count' => 3, //TODO: dit mag nog dynamisch
