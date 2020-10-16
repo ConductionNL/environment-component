@@ -3,14 +3,14 @@ entries:
   evc:
   - apiVersion: v1
     appVersion: V1.0
-    created: "2020-10-16T09:41:21.3112027Z"
+    created: "2020-10-16T10:26:02.3152423Z"
     description: '&#039;Naast deze JSON rest API is er ook een [graphql](/graphql)
       interface beschikbaar.&#039;'
-    digest: 093bd5ac41afc2bedbaac4e2a96f228b35086edd670426d47ed092bfa22de1de
+    digest: 2a2736570a8ac7d93cea509d8f9e8e08076c667d6dc58954c66cce612a49dd6e
     home: evc.zaakonline.nl
     icon: evc.zaakonline.nl
     name: evc
     urls:
     - evc-0.1.0.tgz
     version: 0.1.0
-generated: "2020-10-16T09:41:21.303342Z"
+generated: "2020-10-16T10:26:02.2987851Z"

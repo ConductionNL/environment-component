@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: 'Environment Component'
-  version: V1.0
+  version: V.1.0
   description: |
     API Details
     - Component: Environment Component
     - Reference: evc
     - Enviroment: dev
-    - Version: V1.0
+    - Version: V.1.0
     - Repository: [online](https://github.com/ConductionNL/proto-component) / [zip](https://github.com/ConductionNL/proto-component/archive/master.zip)
     - Docker Image: [online](https://hub.docker.com/repository/docker/conduction/evc-php) 
     - Datamodel: [postman](/schema/evc.postman_collection.json) / [oas](/schema/openapi.yaml) / [pdf](/schema/datamodel.pdf) / [modelio (zip)](/schema/Datamodel_Modelio.zip) 
@@ -11919,12 +11919,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-10-16 09:47:40'
+        example: '2020-10-16 10:27:45'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-10-16 09:47:40'
+        example: '2020-10-16 10:27:45'
     required: []
   AuditTrail-write:
     properties:
@@ -11972,12 +11972,12 @@ definitions:
         description: 'The moment this request was created'
         type: string
         format: date-time
-        example: '2020-10-16 09:47:40'
+        example: '2020-10-16 10:27:45'
       dateModified:
         description: 'The moment this request last Modified'
         type: string
         format: date-time
-        example: '2020-10-16 09:47:40'
+        example: '2020-10-16 10:27:45'
     required: []
   ChangeLog-write:
     properties:
