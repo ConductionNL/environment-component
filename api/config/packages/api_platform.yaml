@@ -50,7 +50,7 @@ api_platform:
         pagination:
             client_items_per_page: true # Disabled by default
             items_per_page_parameter_name: limit # Default value
-    
+            
     # In the NL api strategie we use snake case for naming
     # name_converter: 'Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter'
     
